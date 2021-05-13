@@ -1,0 +1,7 @@
+<apex:page showHeader="true">
+
+    <div id="root"></div>
+
+    <script type="text/javascript" src="{! $Resource.ppdmEditorJS}"/>
+
+</apex:page>

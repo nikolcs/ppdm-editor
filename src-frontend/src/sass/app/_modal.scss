@@ -1,0 +1,54 @@
+.cp-details-modal, .cp-details-modal-second {
+    .cs-modal-body {
+        .prepopulate-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .cs-input-text {
+            margin-bottom: 1rem;
+        }
+        .column-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            > * {
+                width: 50%;
+                &:nth-child(n) {
+                    padding-right: 0.5rem;
+                }
+                &:nth-child(2n) {
+                    padding-left: 0.5rem;
+                }
+            }
+            .field-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+                > label {
+                    color: #3e3e3c;
+                    font-size: 0.75rem;
+                    margin-bottom: 0.25rem;
+                    @include overflow-ellipsis;
+                }
+                .lookup-btn-wrapper {
+                    display: flex;
+                    width: 100%;
+                    .cs-lookup-wrapper {
+                        flex: 1;
+                        .cs-lookup-input {
+                            z-index: var(--z-index-lookup-focus);
+                        }
+                    }
+                    .cs-btn {
+                        margin-left: -2px;
+                    }
+                }
+            }
+        }
+    }
+}

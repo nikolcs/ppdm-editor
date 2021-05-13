@@ -1,0 +1,26 @@
+html {
+    height: 100%;
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        #root {
+            height: 100%;
+        }
+        .cs-app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    }
+}
+
+.table-wrapper {
+    flex: 1 1 0;
+    overflow-y: auto;
+    .action-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+    }
+}
