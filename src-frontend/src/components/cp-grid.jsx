@@ -15,12 +15,6 @@ import {
     CSLookup
 } from '@cloudsense/cs-ui-components';
 
-// interface CSModalPreviewState {
-//     visibleModal?: string;
-//     secondModalVisible: boolean;
-//     thirdModalVisible: boolean;
-// }
-
 const sampleLookup = {
     columns: [
         { key: 'Account', label: 'Account' },
@@ -101,35 +95,7 @@ class CPGrid extends React.Component {
                                         label="Account"
                                         labelHidden
                                         lookupColumns={sampleLookup.columns}
-                                        lookupOptions={[
-                                            { Id: 1, Account: 'Acme', Industry: 'Manufacturing' },
-                                            { Id: 2, Account: 'Global Media', Industry: 'Industry' },
-                                            { Id: 3, Account: 'Salesforce', Industry: 'Software' },
-                                            { Id: 4, Account: 'Elisa', Industry: 'Telecommunications' },
-                                            { Id: 5, Account: 'Facebook', Industry: 'Social media' },
-                                            { Id: 6, Account: 'Google', Industry: 'Technology' },
-                                            { Id: 7, Account: 'Spotify', Industry: 'Streaming and media' },
-                                            { Id: 8, Account: 'British Gas', Industry: 'Energy' },
-                                            { Id: 9, Account: 'Columbia Pictures', Industry: 'Film' },
-                                            { Id: 10, Account: 'Rimac', Industry: 'Car manufacturing' },
-                                            { Id: 11, Account: 'News Corp', Industry: 'Mass media' },
-                                            { Id: 12, Account: 'Telstra', Industry: 'Telecommunications' },
-                                            { Id: 13, Account: 'Netflix', Industry: 'Production' },
-                                            { Id: 14, Account: 'Instagram', Industry: 'Social media' },
-                                            { Id: 15, Account: 'Vodafone', Industry: 'Telecommunications' },
-                                            { Id: 16, Account: 'Apple', Industry: 'Software' },
-                                            { Id: 17, Account: 'Amazon', Industry: 'E-commerce' },
-                                            { Id: 18, Account: 'Ikea', Industry: 'Furniture retail' },
-                                            { Id: 19, Account: 'Microsoft', Industry: 'Software' },
-                                            { Id: 20, Account: 'Visa', Industry: 'Finance' },
-                                            { Id: 21, Account: 'IBM', Industry: 'Software' },
-                                            { Id: 22, Account: 'eBay', Industry: 'E-commerce' },
-                                            { Id: 23, Account: 'Oracle', Industry: 'Software' },
-                                            { Id: 24, Account: 'Tesla', Industry: 'Car manufacturing' },
-                                            { Id: 25, Account: 'YouTube', Industry: 'Streaming and media' },
-                                            { Id: 26, Account: 'O2', Industry: 'Telecommunications' },
-                                            { Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film' }
-                                        ]}
+                                        lookupOptions={sampleLookup.data}
                                         borderRadius="0.25rem 0 0 0.25rem"
                                         mode="client"
                                     />
@@ -149,35 +115,7 @@ class CPGrid extends React.Component {
                                         label="Account"
                                         labelHidden
                                         lookupColumns={sampleLookup.columns}
-                                        lookupOptions={[
-                                            { Id: 1, Account: 'Acme', Industry: 'Manufacturing' },
-                                            { Id: 2, Account: 'Global Media', Industry: 'Industry' },
-                                            { Id: 3, Account: 'Salesforce', Industry: 'Software' },
-                                            { Id: 4, Account: 'Elisa', Industry: 'Telecommunications' },
-                                            { Id: 5, Account: 'Facebook', Industry: 'Social media' },
-                                            { Id: 6, Account: 'Google', Industry: 'Technology' },
-                                            { Id: 7, Account: 'Spotify', Industry: 'Streaming and media' },
-                                            { Id: 8, Account: 'British Gas', Industry: 'Energy' },
-                                            { Id: 9, Account: 'Columbia Pictures', Industry: 'Film' },
-                                            { Id: 10, Account: 'Rimac', Industry: 'Car manufacturing' },
-                                            { Id: 11, Account: 'News Corp', Industry: 'Mass media' },
-                                            { Id: 12, Account: 'Telstra', Industry: 'Telecommunications' },
-                                            { Id: 13, Account: 'Netflix', Industry: 'Production' },
-                                            { Id: 14, Account: 'Instagram', Industry: 'Social media' },
-                                            { Id: 15, Account: 'Vodafone', Industry: 'Telecommunications' },
-                                            { Id: 16, Account: 'Apple', Industry: 'Software' },
-                                            { Id: 17, Account: 'Amazon', Industry: 'E-commerce' },
-                                            { Id: 18, Account: 'Ikea', Industry: 'Furniture retail' },
-                                            { Id: 19, Account: 'Microsoft', Industry: 'Software' },
-                                            { Id: 20, Account: 'Visa', Industry: 'Finance' },
-                                            { Id: 21, Account: 'IBM', Industry: 'Software' },
-                                            { Id: 22, Account: 'eBay', Industry: 'E-commerce' },
-                                            { Id: 23, Account: 'Oracle', Industry: 'Software' },
-                                            { Id: 24, Account: 'Tesla', Industry: 'Car manufacturing' },
-                                            { Id: 25, Account: 'YouTube', Industry: 'Streaming and media' },
-                                            { Id: 26, Account: 'O2', Industry: 'Telecommunications' },
-                                            { Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film' }
-                                        ]}
+                                        lookupOptions={sampleLookup.data}
                                         borderRadius="0.25rem 0 0 0.25rem"
                                         mode="client"
                                     />
