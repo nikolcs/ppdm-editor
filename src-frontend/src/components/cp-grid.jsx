@@ -51,6 +51,64 @@ const sampleLookup = {
     ]
 };
 
+const tableMockData = {
+    "columnHeaders": [
+        { "key": "Details", "label": "Details", "width": "4rem" },
+        { "key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2 },
+        { "key": "ListRecurringCharge", "label": "List Recurring charge" },
+        { "key": "PricingRule", "label": "Pricing Rule" },
+        { "key": "ListOneOffCharge", "label": "List One Off Charge" },
+        { "key": "PricingRuleGroup", "label": "Pricing Rule Group" }
+    ],
+    "rows": [
+        {
+            "Id": 1,
+            "Details": "Acme",
+            "CommercialProductDescription": "Manufacturing",
+            "ListRecurringCharge": 11,
+            "PricingRule": "test1",
+            "ListOneOffCharge": 21,
+            "PricingRuleGroup": "test2"
+        },
+        {
+            "Id": 2,
+            "Details": "Acme2",
+            "CommercialProductDescription": "Manufacturing",
+            "ListRecurringCharge": 12,
+            "PricingRule": "test2",
+            "ListOneOffCharge": 22,
+            "PricingRuleGroup": "test2"
+        },
+        {
+            "Id": 3,
+            "Details": "Acme3",
+            "CommercialProductDescription": "Manufacturing",
+            "ListRecurringCharge": 13,
+            "PricingRule": "test3",
+            "ListOneOffCharge": 23,
+            "PricingRuleGroup": "test2"
+        },
+        {
+            "Id": 4,
+            "Details": "Acme4",
+            "CommercialProductDescription": "Manufacturing",
+            "ListRecurringCharge": 14,
+            "PricingRule": "test4",
+            "ListOneOffCharge": 24,
+            "PricingRuleGroup": "test2"
+        },
+        {
+            "Id": 5,
+            "Details": "Acme5",
+            "CommercialProductDescription": "Manufacturing",
+            "ListRecurringCharge": 15,
+            "PricingRule": "test5",
+            "ListOneOffCharge": 25,
+            "PricingRuleGroup": "test2"
+        }
+    ]
+};
+
 class CPGrid extends React.Component {
     state = {
         visibleModal: undefined,
@@ -68,7 +126,6 @@ class CPGrid extends React.Component {
     render() {
         return (
             <div className="table-wrapper">
-
                 <CSModal
                     visible={this.state.visibleModal === 'commercial-product-details'}
                     size="medium"
@@ -252,31 +309,43 @@ class CPGrid extends React.Component {
                 </div>
                 <CSTable>
                     <CSTableHeader>
-                        <CSTableCell text="Details" maxWidth="4rem" />
-                        <CSTableCell text="Commercial Product Description" grow={2} />
-                        <CSTableCell text="List Recurring Charge" />
-                        <CSTableCell text="Pricing Rule" />
-                        <CSTableCell text="List One Off Charge" />
-                        <CSTableCell text="Pricing Rule Group" />
+                        {tableMockData.columnHeaders.map((item) => (
+                            <CSTableCell text={item.label} maxWidth={item.width} grow={item.grow} key={item.key} />
+                        ))}
                     </CSTableHeader>
                     <CSTableBody>
-                        <CSTableRow>
-                            <CSTableCell maxWidth="4rem">
-                                <CSButton
-                                    label="label"
-                                    labelHidden
-                                    btnType="default"
-                                    iconName="apps"
-                                    size="xsmall"
-                                    onClick={() => this.openModal('commercial-product-details')}
-                                />
-                            </CSTableCell>
-                            <CSTableCell text="First Row Item 1" grow={2} />
-                            <CSTableCell text="First Row Item 2" />
-                            <CSTableCell text="First Row Item 3" />
-                            <CSTableCell text="First Row Item 4" />
-                            <CSTableCell text="First Row Item 5" />
-                        </CSTableRow>
+                        {tableMockData.rows.map((row, index) => (
+                            <CSTableRow key={row.Id}>
+                                <CSTableCell maxWidth="4rem">
+                                    <CSButton
+                                        label="open commercial product"
+                                        labelHidden
+                                        btnType="default"
+                                        iconName="apps"
+                                        size="xsmall"
+                                        onClick={() => this.openModal('commercial-product-details')}
+                                    />
+                                </CSTableCell>
+                                <CSTableCell grow={2}>
+                                    {row.Details}
+                                </CSTableCell>
+                                <CSTableCell>
+                                    {row.CommercialProductDescription}
+                                </CSTableCell>
+                                <CSTableCell>
+                                    {row.ListRecurringCharge}
+                                </CSTableCell>
+                                <CSTableCell>
+                                    {row.PricingRule}
+                                </CSTableCell>
+                                <CSTableCell>
+                                    {row.ListOneOffCharge}
+                                </CSTableCell>
+                                <CSTableCell>
+                                    {row.PricingRuleGroup}
+                                </CSTableCell>
+                            </CSTableRow>
+                        ))}
                     </CSTableBody>
                 </CSTable>
             </div>
