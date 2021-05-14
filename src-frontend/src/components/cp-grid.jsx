@@ -113,7 +113,8 @@ class CPGrid extends React.Component {
     state = {
         visibleModal: undefined,
         secondModalVisible: false,
-        thirdModalVisible: false
+        thirdModalVisible: false,
+        searchTerm: ''
     };
 
     openModal = (modalId) => {
@@ -121,6 +122,16 @@ class CPGrid extends React.Component {
     }
     closeModal = () => {
         this.setState({ visibleModal: undefined });
+    }
+
+    onSearchChange = (event) => {
+        this.setState({
+            searchTerm: event.target.value
+        });
+    }
+
+    rowSort(ob1, ob2) {
+        return 0;
     }
 
     render() {
@@ -305,47 +316,64 @@ class CPGrid extends React.Component {
 
                 <div className="action-row">
                     <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')} />
-                    <CSInputSearch placeholder="Search" width="20rem" />
+                    <CSInputSearch
+                        placeholder="Search"
+                        width="20rem"
+                        onChange={this.onSearchChange}
+                        value={this.props.searchTerm}
+                    />
                 </div>
                 <CSTable>
                     <CSTableHeader>
+                        <CSTableCell maxWidth="4rem" />
                         {tableMockData.columnHeaders.map((item) => (
-                            <CSTableCell text={item.label} maxWidth={item.width} grow={item.grow} key={item.key} />
+                            <CSTableCell text={item.label} maxWidth={item.width} key={item.key} grow={item.grow} />
                         ))}
                     </CSTableHeader>
                     <CSTableBody>
-                        {tableMockData.rows.map((row, index) => (
-                            <CSTableRow key={row.Id}>
-                                <CSTableCell maxWidth="4rem">
-                                    <CSButton
-                                        label="open commercial product"
-                                        labelHidden
-                                        btnType="default"
-                                        iconName="apps"
-                                        size="xsmall"
-                                        onClick={() => this.openModal('commercial-product-details')}
-                                    />
-                                </CSTableCell>
-                                <CSTableCell grow={2}>
-                                    {row.Details}
-                                </CSTableCell>
-                                <CSTableCell>
-                                    {row.CommercialProductDescription}
-                                </CSTableCell>
-                                <CSTableCell>
-                                    {row.ListRecurringCharge}
-                                </CSTableCell>
-                                <CSTableCell>
-                                    {row.PricingRule}
-                                </CSTableCell>
-                                <CSTableCell>
-                                    {row.ListOneOffCharge}
-                                </CSTableCell>
-                                <CSTableCell>
-                                    {row.PricingRuleGroup}
-                                </CSTableCell>
-                            </CSTableRow>
-                        ))}
+
+                        {Object.values(tableMockData.rows)
+                            .sort(this.rowSort)
+                            .filter(item => {
+                                if(this.state.searchTerm) {
+                                    if (
+                                        (item.Details || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        || (item.CommercialProductDescription || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        || (String(item.ListRecurringCharge) || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        || (item.PricingRule || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        || (String(item.ListOneOffCharge) || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        || (item.PricingRuleGroup || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                } else return true;
+                            })
+                            .map((row, index) => {
+                                return (
+                                    <CSTableRow key={row.Id}>
+                                        <CSTableCell maxWidth="4rem">
+                                            <CSButton
+                                                label="open commercial product"
+                                                labelHidden
+                                                btnType="default"
+                                                iconName="apps"
+                                                size="xsmall"
+                                                onClick={() => this.openModal('commercial-product-details')}
+                                            />
+                                        </CSTableCell>
+                                        {tableMockData.columnHeaders.map(item => {
+                                            return (
+                                                <CSTableCell maxWidth={item.width} grow={item.grow}>
+                                                    {row[item.key]}
+                                                </CSTableCell>
+                                            );
+                                        })}
+                                    </CSTableRow>
+                                )
+                            })
+                        }
                     </CSTableBody>
                 </CSTable>
             </div>
