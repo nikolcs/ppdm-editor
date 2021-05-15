@@ -1,0 +1,48 @@
+<!--
+ - Created by nikol.badanjak on 13-May-21.
+ -->
+
+<apex:component access="GLOBAL" controller="CSRemoteActionDelegation">
+
+    <!--    <script type="text/javascript" src="{! $Resource.JSforce}"></script>-->
+    <!--    <script>-->
+    <!--        var conn = new jsforce.Connection({ accessToken: '{!$API.Session_Id}' });-->
+    <!--        conn.query('SELECT Id, Name FROM Account', function(err, res) {-->
+    <!--            if (err) { return console.error(err); }-->
+    <!--            console.log(res);-->
+    <!--        });-->
+    <!--    </script>-->
+
+    <script type='text/javascript'>
+
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape = false;
+        Visualforce.remoting.buffer = true;
+
+        window.CS = window.CS || {};
+
+        window.CS.JILE = {
+            vfRemotingManager: Visualforce.remoting.Manager,
+            actions: {
+                getAccount: '{!$RemoteAction.CSRemoteActionDelegation.getAccount}',
+            },
+            session: {
+                id: '{!$Api.Session_Id}'
+            },
+            userInfo: {
+                userId: '{!JSENCODE($User.id)}',
+                themeDisplayed: '{!JSENCODE($User.uiTheme)}',
+                profileId: '{!JSENCODE($User.profileId)}',
+                profileName: '{!JSENCODE($Profile.name)}',
+                roleId: '{!JSENCODE($UserRole.id)}',
+                roleName: '{!JSENCODE($UserRole.name)}',
+                userType: '{!JSENCODE(TEXT($User.userType))}',
+            }
+        };
+    </script>
+
+    <div id="root"></div>
+
+    <script type="text/javascript" src="{! $Resource.ppdmEditorJS}"></script>
+
+</apex:component>

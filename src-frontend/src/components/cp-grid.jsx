@@ -15,6 +15,8 @@ import {
     CSLookup
 } from '@cloudsense/cs-ui-components';
 
+import {VFRemotingService} from '../remote'
+
 const sampleLookup = {
     columns: [
         { key: 'Account', label: 'Account' },
@@ -117,6 +119,7 @@ class CPGrid extends React.Component {
         searchTerm: ''
     };
 
+
     openModal = (modalId) => {
         this.setState({ visibleModal: modalId });
     }
@@ -135,6 +138,9 @@ class CPGrid extends React.Component {
     }
 
     render() {
+
+        VFRemotingService.getAccount("GenePoint").then(console.log);
+
         return (
             <div className="table-wrapper">
                 <CSModal
