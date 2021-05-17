@@ -17,108 +17,17 @@ import {
 
 import {VFRemotingService} from '../remote'
 
-const sampleLookup = {
-    columns: [
-        { key: 'Account', label: 'Account' },
-        { key: 'Industry', label: 'Industry' }
-    ],
-    data: [
-        { Id: 1, Account: 'Acme', Industry: 'Manufacturing' },
-        { Id: 2, Account: 'Global Media', Industry: 'Industry' },
-        { Id: 3, Account: 'Salesforce', Industry: 'Software' },
-        { Id: 4, Account: 'Elisa', Industry: 'Telecommunications' },
-        { Id: 5, Account: 'Facebook', Industry: 'Social media' },
-        { Id: 6, Account: 'Google', Industry: 'Technology' },
-        { Id: 7, Account: 'Spotify', Industry: 'Streaming and media' },
-        { Id: 8, Account: 'British Gas', Industry: 'Energy' },
-        { Id: 9, Account: 'Columbia Pictures', Industry: 'Film' },
-        { Id: 10, Account: 'Rimac', Industry: 'Car manufacturing' },
-        { Id: 11, Account: 'News Corp', Industry: 'Mass media' },
-        { Id: 12, Account: 'Telstra', Industry: 'Telecommunications' },
-        { Id: 13, Account: 'Netflix', Industry: 'Production' },
-        { Id: 14, Account: 'Instagram', Industry: 'Social media' },
-        { Id: 15, Account: 'Vodafone', Industry: 'Telecommunications' },
-        { Id: 16, Account: 'Apple', Industry: 'Software' },
-        { Id: 17, Account: 'Amazon', Industry: 'E-commerce' },
-        { Id: 18, Account: 'Ikea', Industry: 'Furniture retail' },
-        { Id: 19, Account: 'Microsoft', Industry: 'Software' },
-        { Id: 20, Account: 'Visa', Industry: 'Finance' },
-        { Id: 21, Account: 'IBM', Industry: 'Software' },
-        { Id: 22, Account: 'eBay', Industry: 'E-commerce' },
-        { Id: 23, Account: 'Oracle', Industry: 'Software' },
-        { Id: 24, Account: 'Tesla', Industry: 'Car manufacturing' },
-        { Id: 25, Account: 'YouTube', Industry: 'Streaming and media' },
-        { Id: 26, Account: 'O2', Industry: 'Telecommunications' },
-        { Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film' }
-    ]
-};
-
-const tableMockData = {
-    "columnHeaders": [
-        { "key": "Details", "label": "Details", "width": "4rem" },
-        { "key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2 },
-        { "key": "ListRecurringCharge", "label": "List Recurring charge" },
-        { "key": "PricingRule", "label": "Pricing Rule" },
-        { "key": "ListOneOffCharge", "label": "List One Off Charge" },
-        { "key": "PricingRuleGroup", "label": "Pricing Rule Group" }
-    ],
-    "rows": [
-        {
-            "Id": 1,
-            "Details": "Acme",
-            "CommercialProductDescription": "Manufacturing",
-            "ListRecurringCharge": 11,
-            "PricingRule": "test1",
-            "ListOneOffCharge": 21,
-            "PricingRuleGroup": "test2"
-        },
-        {
-            "Id": 2,
-            "Details": "Acme2",
-            "CommercialProductDescription": "Manufacturing",
-            "ListRecurringCharge": 12,
-            "PricingRule": "test2",
-            "ListOneOffCharge": 22,
-            "PricingRuleGroup": "test2"
-        },
-        {
-            "Id": 3,
-            "Details": "Acme3",
-            "CommercialProductDescription": "Manufacturing",
-            "ListRecurringCharge": 13,
-            "PricingRule": "test3",
-            "ListOneOffCharge": 23,
-            "PricingRuleGroup": "test2"
-        },
-        {
-            "Id": 4,
-            "Details": "Acme4",
-            "CommercialProductDescription": "Manufacturing",
-            "ListRecurringCharge": 14,
-            "PricingRule": "test4",
-            "ListOneOffCharge": 24,
-            "PricingRuleGroup": "test2"
-        },
-        {
-            "Id": 5,
-            "Details": "Acme5",
-            "CommercialProductDescription": "Manufacturing",
-            "ListRecurringCharge": 15,
-            "PricingRule": "test5",
-            "ListOneOffCharge": 25,
-            "PricingRuleGroup": "test2"
-        }
-    ]
-};
-
 class CPGrid extends React.Component {
     state = {
         visibleModal: undefined,
         secondModalVisible: false,
         thirdModalVisible: false,
-        searchTerm: ''
+        searchTerm: '',
+        Accounts: '',
+        CPs: '',
+        CPAOAs: '',
+        CPAs: ''
     };
-
 
     openModal = (modalId) => {
         this.setState({ visibleModal: modalId });
@@ -137,21 +46,135 @@ class CPGrid extends React.Component {
         return 0;
     }
 
-    render() {
-
-        VFRemotingService.getAccount("GenePoint").then(console.log);
+    componentDidMount() {
         VFRemotingService.getCPs().then(console.log);
-        VFRemotingService.getCPAOAs().then(console.log);
-        VFRemotingService.getCPAs().then(console.log);
 
-        const handleOnClick = () => {
-            console.log('handle on click called!');
-            VFRemotingService.saveNew('New Master product from React3', 'Master');
-        }
+        VFRemotingService.getAccount("GenePoint").then(
+            result => {
+                this.setState({Account: result});
+            }
+        );
+        VFRemotingService.getCPs().then(
+            result => {
+                this.setState({CPs: result});
+            }
+        );
+        VFRemotingService.getCPAOAs().then(
+            result => {
+                this.setState({CPAOAs: result});
+            }
+        );
+        VFRemotingService.getCPAs().then(
+            result => {
+                this.setState({CPAs: result});
+            }
+        );
+    }
+
+    handleOnClick = () => {
+        console.log('handle on click called!');
+        VFRemotingService.saveNew('New Master product from React3', 'Master');
+    }
+
+    render() {
+        const sampleLookup = {
+            columns: [
+                { key: 'Account', label: 'Account' },
+                { key: 'Industry', label: 'Industry' }
+            ],
+            data: [
+                { Id: 1, Account: 'Acme', Industry: 'Manufacturing' },
+                { Id: 2, Account: 'Global Media', Industry: 'Industry' },
+                { Id: 3, Account: 'Salesforce', Industry: 'Software' },
+                { Id: 4, Account: 'Elisa', Industry: 'Telecommunications' },
+                { Id: 5, Account: 'Facebook', Industry: 'Social media' },
+                { Id: 6, Account: 'Google', Industry: 'Technology' },
+                { Id: 7, Account: 'Spotify', Industry: 'Streaming and media' },
+                { Id: 8, Account: 'British Gas', Industry: 'Energy' },
+                { Id: 9, Account: 'Columbia Pictures', Industry: 'Film' },
+                { Id: 10, Account: 'Rimac', Industry: 'Car manufacturing' },
+                { Id: 11, Account: 'News Corp', Industry: 'Mass media' },
+                { Id: 12, Account: 'Telstra', Industry: 'Telecommunications' },
+                { Id: 13, Account: 'Netflix', Industry: 'Production' },
+                { Id: 14, Account: 'Instagram', Industry: 'Social media' },
+                { Id: 15, Account: 'Vodafone', Industry: 'Telecommunications' },
+                { Id: 16, Account: 'Apple', Industry: 'Software' },
+                { Id: 17, Account: 'Amazon', Industry: 'E-commerce' },
+                { Id: 18, Account: 'Ikea', Industry: 'Furniture retail' },
+                { Id: 19, Account: 'Microsoft', Industry: 'Software' },
+                { Id: 20, Account: 'Visa', Industry: 'Finance' },
+                { Id: 21, Account: 'IBM', Industry: 'Software' },
+                { Id: 22, Account: 'eBay', Industry: 'E-commerce' },
+                { Id: 23, Account: 'Oracle', Industry: 'Software' },
+                { Id: 24, Account: 'Tesla', Industry: 'Car manufacturing' },
+                { Id: 25, Account: 'YouTube', Industry: 'Streaming and media' },
+                { Id: 26, Account: 'O2', Industry: 'Telecommunications' },
+                { Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film' }
+            ]
+        };
+
+        const tableMockData = {
+            "columnHeaders": [
+                { "key": "Details", "label": "Details", "width": "4rem" },
+                { "key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2 },
+                { "key": "ListRecurringCharge", "label": "List Recurring charge" },
+                { "key": "PricingRule", "label": "Pricing Rule" },
+                { "key": "ListOneOffCharge", "label": "List One Off Charge" },
+                { "key": "PricingRuleGroup", "label": "Pricing Rule Group" }
+            ],
+            "rows": [
+                {
+                    "Id": 1,
+                    "Details": "Acme",
+                    "CommercialProductDescription": "Manufacturing",
+                    "ListRecurringCharge": 11,
+                    "PricingRule": "test1",
+                    "ListOneOffCharge": 21,
+                    "PricingRuleGroup": "test2"
+                },
+                {
+                    "Id": 2,
+                    "Details": "Acme2",
+                    "CommercialProductDescription": "Manufacturing",
+                    "ListRecurringCharge": 12,
+                    "PricingRule": "test2",
+                    "ListOneOffCharge": 22,
+                    "PricingRuleGroup": "test2"
+                },
+                {
+                    "Id": 3,
+                    "Details": "Acme3",
+                    "CommercialProductDescription": "Manufacturing",
+                    "ListRecurringCharge": 13,
+                    "PricingRule": "test3",
+                    "ListOneOffCharge": 23,
+                    "PricingRuleGroup": "test2"
+                },
+                {
+                    "Id": 4,
+                    "Details": "Acme4",
+                    "CommercialProductDescription": "Manufacturing",
+                    "ListRecurringCharge": 14,
+                    "PricingRule": "test4",
+                    "ListOneOffCharge": 24,
+                    "PricingRuleGroup": "test2"
+                },
+                {
+                    "Id": 5,
+                    "Details": "Acme5",
+                    "CommercialProductDescription": "Manufacturing",
+                    "ListRecurringCharge": 15,
+                    "PricingRule": "test5",
+                    "ListOneOffCharge": 25,
+                    "PricingRuleGroup": "test2"
+                }
+            ]
+        };
 
         return (
             <div className="table-wrapper">
-                <CSButton label="save new cp" onClick={handleOnClick}/>
+
+                <CSButton label="save new cp" onClick={this.handleOnClick} />
                 <CSModal
                     visible={this.state.visibleModal === 'commercial-product-details'}
                     size="medium"
@@ -161,9 +184,7 @@ class CPGrid extends React.Component {
                     onClose={this.closeModal}
                     className="cp-details-modal"
                 >
-                    <CSModalHeader title="Set List Price of Existing Commercial Product">
-
-                    </CSModalHeader>
+                    <CSModalHeader title="Set List Price of Existing Commercial Product" />
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
                             <CSInputText label="Commercial Product" />
@@ -229,6 +250,7 @@ class CPGrid extends React.Component {
                         />
                     </CSModalFooter>
                 </CSModal>
+
                 <CSModal
                     visible={this.state.secondModalVisible}
                     size="small"
@@ -277,6 +299,7 @@ class CPGrid extends React.Component {
                         />
                     </CSModalFooter>
                 </CSModal>
+
                 <CSModal
                     visible={this.state.thirdModalVisible}
                     size="small"
@@ -339,25 +362,20 @@ class CPGrid extends React.Component {
                     />
                 </div>
                 <CSTable>
+                    {/*
+                    {this.state.CPs ? this.state.CPs[0].Object.getOwnPropertyNames : null}
+                    */}
                     <CSTableHeader>
                         <CSTableCell maxWidth="4rem" />
-                        {tableMockData.columnHeaders.map((item) => (
-                            <CSTableCell text={item.label} maxWidth={item.width} key={item.key} grow={item.grow} />
-                        ))}
+                        <CSTableCell text="Name" />
                     </CSTableHeader>
                     <CSTableBody>
-
-                        {Object.values(tableMockData.rows)
+                        {Object.values(this.state.CPs)
                             .sort(this.rowSort)
                             .filter(item => {
                                 if(this.state.searchTerm) {
                                     if (
-                                        (item.Details || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                        || (item.CommercialProductDescription || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                        || (String(item.ListRecurringCharge) || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                        || (item.PricingRule || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                        || (String(item.ListOneOffCharge) || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                        || (item.PricingRuleGroup || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                        (item.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                                     ) {
                                         return true;
                                     } else {
@@ -365,27 +383,42 @@ class CPGrid extends React.Component {
                                     }
                                 } else return true;
                             })
-                            .map((row, index) => {
+                            .map((row) => {
                                 return (
-                                    <CSTableRow key={row.Id}>
-                                        <CSTableCell maxWidth="4rem">
-                                            <CSButton
-                                                label="open commercial product"
-                                                labelHidden
-                                                btnType="default"
-                                                iconName="apps"
-                                                size="xsmall"
-                                                onClick={() => this.openModal('commercial-product-details')}
-                                            />
-                                        </CSTableCell>
-                                        {tableMockData.columnHeaders.map(item => {
-                                            return (
-                                                <CSTableCell maxWidth={item.width} grow={item.grow}>
-                                                    {row[item.key]}
+                                    <>
+                                        <CSTableRow key={row.Id}>
+                                            <CSTableCell maxWidth="4rem">
+                                                <CSButton
+                                                    label={row.Id}
+                                                    labelHidden
+                                                    btnType="default"
+                                                    iconName="apps"
+                                                    size="xsmall"
+                                                    onClick={() => this.openModal('commercial-product-details')}
+                                                />
+                                            </CSTableCell>
+                                            <CSTableCell>
+                                                <span>{row.Name}</span>
+                                            </CSTableCell>
+                                        </CSTableRow>
+                                        {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociation) => (
+                                            <CSTableRow className="addon-row" key={addonAssociation.Id}>
+                                                <CSTableCell maxWidth="4rem">
+                                                    <CSButton
+                                                        label={addonAssociation.Id}
+                                                        labelHidden
+                                                        btnType="default"
+                                                        iconName="apps"
+                                                        size="xsmall"
+                                                        onClick={() => this.openModal('commercial-product-details')}
+                                                    />
                                                 </CSTableCell>
-                                            );
-                                        })}
-                                    </CSTableRow>
+                                                <CSTableCell>
+                                                    <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                </CSTableCell>
+                                            </CSTableRow>
+                                        )) : null}
+                                    </>
                                 )
                             })
                         }

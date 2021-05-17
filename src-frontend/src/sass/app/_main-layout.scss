@@ -31,4 +31,9 @@ html {
         justify-content: space-between;
         padding: 0.5rem;
     }
+    .cs-table .addon-row {
+        &.cs-table-row .cs-table-cell {
+            padding-left: 2rem;
+        }
+    }
 }
