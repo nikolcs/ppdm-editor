@@ -18,6 +18,12 @@ import {
 import {VFRemotingService} from '../remote'
 
 class CPGrid extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleCPInputOnChange = this.handleCPInputOnChange.bind(this);
+    }
+
     state = {
         visibleModal: undefined,
         secondModalVisible: false,
@@ -27,9 +33,13 @@ class CPGrid extends React.Component {
         CPs: '',
         CPAOAs: '',
         CPAs: '',
-        activeCP: '',
+        activeCP: {Id: '', Name: ''},
         activeAddon: ''
     };
+
+    handleCPInputOnChange = (event) => {
+        this.setState({ activeCP: { ...this.state.activeCP, Name: event.target.value} });
+    }
 
     openModal = (modalId) => {
         this.setState({visibleModal: modalId});
@@ -211,10 +221,13 @@ class CPGrid extends React.Component {
                     onClose={this.closeModal}
                     className="cp-details-modal"
                 >
-                    <CSModalHeader title="Set List Price of Existing Commercial Product"/>
+                    <CSModalHeader
+                        title="Set List Price of Existing Commercial Product"
+                        subtitle={this.state.activeCP.Name}
+                    />
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
-                            <CSInputText label="Commercial Product"/>
+                            <CSInputText label="Commercial Product" value={this.state.activeCP.Name} onChange={this.handleCPInputOnChange} />
                             <div className="placeholder"></div>
                             <CSInputText label="List Recurring Charge"/>
                             <CSInputText label="List One Off Charge"/>
@@ -395,7 +408,7 @@ class CPGrid extends React.Component {
                         <CSTableCell text="Name"/>
                     </CSTableHeader>
                     <CSTableBody>
-                        {Object.values(this.state.CPs)
+                        {this.state.CPs ? Object.values(this.state.CPs)
                             .sort(this.rowSort)
                             .filter(item => {
                                 if (this.state.searchTerm) {
@@ -445,7 +458,7 @@ class CPGrid extends React.Component {
                                         )) : null}
                                     </React.Fragment>
                                 )
-                            })
+                            }) : null
                         }
                     </CSTableBody>
                 </CSTable>

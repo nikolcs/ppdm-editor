@@ -21,18 +21,47 @@ invokeAction = function (...args) {
         case "getCPs":
             data = [
                 {
-                    "Id": "a1P4L000008rlIKUAY",
-                    "Name": "New Master product from React3"
-                },
-                {
                     "Id": "a1P4L000008rke0UAA",
                     "Name": "test",
                     "cspmb__Price_Item_Add_On_Price_Item_Association__r": [
                         {
                             "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
+                            "Id": "a1K4L000000g5nrUAA",
+                            "Name": "PAO-2",
+                            "CreatedById": "0054L000000y47iQAA",
+                            "cspmb__Sequence__c": 0,
+                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mCQAS",
+                            "cspmb__Add_On_Price_Item__r": {
+                                "Name": "Add On 3",
+                                "cspmb__Add_On_Price_Item_Description__c": "Add On 3 desc",
+                                "Id": "a0x4L000001M0mCQAS"
+                            }
+                        },
+                        {
+                            "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
                             "Id": "a1K4L000000g4WhUAI",
                             "Name": "PAO-0",
-                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0g3QAC"
+                            "CreatedById": "0054L000000y47iQAA",
+                            "cspmb__Sequence__c": 0,
+                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0g3QAC",
+                            "cspmb__Add_On_Price_Item__r": {
+                                "Name": "Add on 1",
+                                "cspmb__Add_On_Price_Item_Description__c": "addon desc",
+                                "Id": "a0x4L000001M0g3QAC"
+                            }
+                        },
+                        {
+                            "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
+                            "Id": "a1K4L000000g5nmUAA",
+                            "Name": "PAO-1",
+                            "CreatedById": "0054L000000y47iQAA",
+                            "cspmb__Sequence__c": 0,
+                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mBQAS",
+                            "cspmb__Add_On_Price_Item__r": {
+                                "Name": "Add On 2",
+                                "cspmb__Add_On_Price_Item_Description__c": "add on 2 desc",
+                                "Id": "a0x4L000001M0mBQAS"
+                            }
                         }
                     ]
                 },
@@ -41,10 +70,68 @@ invokeAction = function (...args) {
                     "Name": "test package"
                 },
                 {
-                    "Id": "a1P4L000008rlNGUAY",
-                    "Name": "New Master product from React3"
+                    "Id": "a1P4L000008rlhqUAA",
+                    "Name": "cp 1"
+                },
+                {
+                    "Id": "a1P4L000008rli0UAA",
+                    "Name": "cp3"
+                },
+                {
+                    "Id": "a1P4L000008rlhvUAA",
+                    "Name": "cp 2"
+                },
+                {
+                    "Id": "a1P4L000008rlhwUAA",
+                    "Name": "cp4"
                 }
             ]
+            return delayResponse(data, args);
+
+        case "getCPAOAs":
+            data = [
+                {
+                    "Id": "a1K4L000000g4WhUAI",
+                    "Name": "PAO-0"
+                },
+                {
+                    "Id": "a1K4L000000g5nmUAA",
+                    "Name": "PAO-1"
+                },
+                {
+                    "Id": "a1K4L000000g5nrUAA",
+                    "Name": "PAO-2"
+                }
+            ]
+            return delayResponse(data, args);
+
+        case "getCPAs":
+            data = [
+                {
+                    "Id": "a134L000000kBb3QAE",
+                    "Name": "CPA-00000"
+                }
+            ]
+            return delayResponse(data, args);
+
+        case "getCommercialProduct":
+            data = {
+                "Id": "a1P4L000008rke0UAA",
+                "Name": "test"
+            }
+            return delayResponse(data, args);
+
+        case "getCPAOAssociation":
+            data = {
+                "Id": "a1K4L000000g5nrUAA",
+                "Name": "PAO-2",
+                "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mCQAS",
+                "cspmb__Add_On_Price_Item__r": {
+                    "Name": "Add On 3",
+                    "cspmb__Add_On_Price_Item_Description__c": "Add On 3 desc",
+                    "Id": "a0x4L000001M0mCQAS"
+                }
+            }
             return delayResponse(data, args);
 
         default:
@@ -64,6 +151,8 @@ window.CS.PPDM = {
         getCPs: 'getCPs',
         getCPAOAs: 'getCPAOAs',
         getCPAs: 'getCPAs',
+        getCommercialProduct: 'getCommercialProduct',
+        getCPAOAssociation: 'getCPAOAssociation',
         saveNew: 'saveNew',
     },
     session: {
@@ -79,4 +168,3 @@ window.CS.PPDM = {
         userType: 'Standard',
     }
 };
-
