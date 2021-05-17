@@ -12,7 +12,9 @@ import {
     CSModalBody,
     CSModalFooter,
     CSInputText,
-    CSLookup
+    CSLookup,
+    CSTabGroup,
+    CSTab
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -34,7 +36,8 @@ class CPGrid extends React.Component {
         CPAOAs: '',
         CPAs: '',
         activeCP: {Id: '', Name: ''},
-        activeAddon: ''
+        activeAddon: '',
+        activeTab: 0
     };
 
     handleCPInputOnChange = (event) => {
@@ -59,13 +62,13 @@ class CPGrid extends React.Component {
     }
 
     componentDidMount() {
-        VFRemotingService.getAccount("GenePoint").then(
-            result => {
-                this.setState({Account: result});
-                console.log("getAccount");
-                console.log(result);
-            }
-        )
+        // VFRemotingService.getAccount("GenePoint").then(
+        //     result => {
+        //         this.setState({Account: result});
+        //         console.log("getAccount");
+        //         console.log(result);
+        //     }
+        // )
         VFRemotingService.getCPs().then(
             result => {
                 this.setState({CPs: result});
@@ -73,21 +76,20 @@ class CPGrid extends React.Component {
                 console.log(result);
             }
         );
-        VFRemotingService.getCPAOAs().then(
-            result => {
-                this.setState({CPAOAs: result});
-                console.log("getCPAOAs");
-                console.log(result);
-            }
-        );
-        VFRemotingService.getCPAs().then(
-            result => {
-                this.setState({CPAs: result});
-                console.log("getCPAs");
-                console.log(result);
-            }
-        );
-
+        // VFRemotingService.getCPAOAs().then(
+        //     result => {
+        //         this.setState({CPAOAs: result});
+        //         console.log("getCPAOAs");
+        //         console.log(result);
+        //     }
+        // );
+        // VFRemotingService.getCPAs().then(
+        //     result => {
+        //         this.setState({CPAs: result});
+        //         console.log("getCPAs");
+        //         console.log(result);
+        //     }
+        // );
         VFRemotingService.getPackages().then(
             result => {
                 // this.setState({CPAs: result});
@@ -218,259 +220,285 @@ class CPGrid extends React.Component {
         }
 
         return (
-            <div className="table-wrapper">
-
-                <CSButton label="save new cp" onClick={this.handleOnClick}/>
-                <CSModal
-                    visible={this.state.visibleModal === 'commercial-product-details'}
-                    size="medium"
-                    animated
-                    closeButton
-                    onClose={this.closeModal}
-                    className="cp-details-modal"
-                >
-                    <CSModalHeader
-                        title="Set List Price of Existing Commercial Product"
-                        subtitle={this.state.activeCP.Name}
+            <>
+                <CSTabGroup>
+                    <CSTab
+                        name="Commercial Products"
+                        onClick={() => this.setState({activeTab: 0})}
+                        active={this.state.activeTab === 0}
                     />
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <div className="column-wrapper">
-                            <CSInputText label="Commercial Product" value={this.state.activeCP.Name} onChange={this.handleCPInputOnChange} />
-                            <div className="placeholder"></div>
-                            <CSInputText label="List Recurring Charge"/>
-                            <CSInputText label="List One Off Charge"/>
-                            <div className="field-wrapper">
-                                <label>Pricing Rule</label>
-                                <div className="lookup-btn-wrapper">
-                                    <CSLookup
-                                        fieldToBeDisplayed="Account"
-                                        label="Account"
-                                        labelHidden
-                                        lookupColumns={sampleLookup.columns}
-                                        lookupOptions={sampleLookup.data}
-                                        borderRadius="0.25rem 0 0 0.25rem"
-                                        mode="client"
-                                    />
-                                    <CSButton
-                                        className="open-modal-btn"
-                                        label="New"
-                                        borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({secondModalVisible: true})}
-                                    />
+                    <CSTab
+                        name="Packages"
+                        onClick={() => this.setState({activeTab: 1})}
+                        active={this.state.activeTab === 1}
+                    />
+                </CSTabGroup>
+
+                <div className="table-wrapper">
+                    <CSButton label="save new cp" onClick={this.handleOnClick}/>
+                    <CSModal
+                        visible={this.state.visibleModal === 'commercial-product-details'}
+                        size="medium"
+                        animated
+                        closeButton
+                        onClose={this.closeModal}
+                        className="cp-details-modal"
+                    >
+                        <CSModalHeader
+                            title="Set List Price of Existing Commercial Product"
+                            subtitle={this.state.activeCP.Name}
+                        />
+                        <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                            <div className="column-wrapper">
+                                <CSInputText label="Commercial Product" value={this.state.activeCP.Name} onChange={this.handleCPInputOnChange} />
+                                <div className="placeholder"></div>
+                                <CSInputText label="List Recurring Charge"/>
+                                <CSInputText label="List One Off Charge"/>
+                                <div className="field-wrapper">
+                                    <label>Pricing Rule</label>
+                                    <div className="lookup-btn-wrapper">
+                                        <CSLookup
+                                            fieldToBeDisplayed="Account"
+                                            label="Account"
+                                            labelHidden
+                                            lookupColumns={sampleLookup.columns}
+                                            lookupOptions={sampleLookup.data}
+                                            borderRadius="0.25rem 0 0 0.25rem"
+                                            mode="client"
+                                        />
+                                        <CSButton
+                                            className="open-modal-btn"
+                                            label="New"
+                                            borderRadius="0 0.25rem 0.25rem 0"
+                                            onClick={() => this.setState({secondModalVisible: true})}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="field-wrapper">
+                                    <label>Pricing Rule Group</label>
+                                    <div className="lookup-btn-wrapper">
+                                        <CSLookup
+                                            fieldToBeDisplayed="Account"
+                                            label="Account"
+                                            labelHidden
+                                            lookupColumns={sampleLookup.columns}
+                                            lookupOptions={sampleLookup.data}
+                                            borderRadius="0.25rem 0 0 0.25rem"
+                                            mode="client"
+                                        />
+                                        <CSButton
+                                            className="open-modal-btn"
+                                            label="New"
+                                            borderRadius="0 0.25rem 0.25rem 0"
+                                            onClick={() => this.setState({thirdModalVisible: true})}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="field-wrapper">
-                                <label>Pricing Rule Group</label>
-                                <div className="lookup-btn-wrapper">
-                                    <CSLookup
-                                        fieldToBeDisplayed="Account"
-                                        label="Account"
-                                        labelHidden
-                                        lookupColumns={sampleLookup.columns}
-                                        lookupOptions={sampleLookup.data}
-                                        borderRadius="0.25rem 0 0 0.25rem"
-                                        mode="client"
-                                    />
-                                    <CSButton
-                                        className="open-modal-btn"
-                                        label="New"
-                                        borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({thirdModalVisible: true})}
-                                    />
+                        </CSModalBody>
+                        <CSModalFooter align="right">
+                            <CSButton
+                                label="Cancel"
+                                onClick={this.closeModal}
+                            />
+                            <CSButton
+                                label="Save and Deploy"
+                                btnStyle="brand"
+                                onClick={this.closeModal}
+                            />
+                            <CSButton
+                                label="Save"
+                                btnStyle="brand"
+                                onClick={this.closeModal}
+                            />
+                        </CSModalFooter>
+                    </CSModal>
+
+                    <CSModal
+                        visible={this.state.secondModalVisible}
+                        size="small"
+                        animated
+                        closeButton
+                        onClose={() => this.setState({secondModalVisible: false})}
+                        className="cp-details-modal-second"
+                    >
+                        <CSModalHeader title="New Price Rule"/>
+                        <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                            <CSButton
+                                className="prepopulate-btn"
+                                label="prepopulate data"
+                                labelHidden
+                                iconName="edit"
+                                size="small"
+                                btnType="transparent"
+                                btnStyle="brand"
+                            />
+                            <div className="column-wrapper">
+                                <div className="col">
+                                    <CSInputText label="Pricing Rule Name"/>
+                                    <CSInputText label="Pricing Rule Code"/>
+                                </div>
+                                <div className="col">
+                                    <CSInputText label="Context"/>
+                                    <CSInputText label="Description"/>
                                 </div>
                             </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={this.closeModal}
-                        />
-                        <CSButton
-                            label="Save and Deploy"
-                            btnStyle="brand"
-                            onClick={this.closeModal}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={this.closeModal}
-                        />
-                    </CSModalFooter>
-                </CSModal>
+                        </CSModalBody>
+                        <CSModalFooter align="right">
+                            <CSButton
+                                label="Cancel"
+                                onClick={() => this.setState({secondModalVisible: false})}
+                            />
+                            <CSButton
+                                label="Save and New"
+                                btnStyle="brand"
+                                onClick={() => this.setState({secondModalVisible: false})}
+                            />
+                            <CSButton
+                                label="Save"
+                                btnStyle="brand"
+                                onClick={() => this.setState({secondModalVisible: false})}
+                            />
+                        </CSModalFooter>
+                    </CSModal>
 
-                <CSModal
-                    visible={this.state.secondModalVisible}
-                    size="small"
-                    animated
-                    closeButton
-                    onClose={() => this.setState({secondModalVisible: false})}
-                    className="cp-details-modal-second"
-                >
-                    <CSModalHeader title="New Price Rule"/>
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <CSButton
-                            className="prepopulate-btn"
-                            label="prepopulate data"
-                            labelHidden
-                            iconName="edit"
-                            size="small"
-                            btnType="transparent"
-                            btnStyle="brand"
-                        />
-                        <div className="column-wrapper">
-                            <div className="col">
-                                <CSInputText label="Pricing Rule Name"/>
-                                <CSInputText label="Pricing Rule Code"/>
+                    <CSModal
+                        visible={this.state.thirdModalVisible}
+                        size="small"
+                        animated
+                        closeButton
+                        onClose={() => this.setState({thirdModalVisible: false})}
+                        className="cp-details-modal-second"
+                    >
+                        <CSModalHeader title="New Price Rule"/>
+                        <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                            <CSButton
+                                className="prepopulate-btn"
+                                label="prepopulate data"
+                                labelHidden
+                                iconName="edit"
+                                size="small"
+                                btnType="transparent"
+                                btnStyle="brand"
+                            />
+                            <div className="column-wrapper">
+                                <div className="col">
+                                    <CSInputText label="Pricing Rule Group Name"/>
+                                    <CSInputText label="Pricing Rule Group Code"/>
+                                </div>
+                                <div className="col">
+                                    <CSInputText label="Priority"/>
+                                    <CSInputText label="Description"/>
+                                </div>
+                                <div className="col">
+                                    <CSInputText label="Rule Group Compounding Type"/>
+                                </div>
                             </div>
-                            <div className="col">
-                                <CSInputText label="Context"/>
-                                <CSInputText label="Description"/>
-                            </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save and New"
-                            btnStyle="brand"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                    </CSModalFooter>
-                </CSModal>
+                        </CSModalBody>
+                        <CSModalFooter align="right">
+                            <CSButton
+                                label="Cancel"
+                                onClick={() => this.setState({thirdModalVisible: false})}
+                            />
+                            <CSButton
+                                label="Save and New"
+                                btnStyle="brand"
+                                onClick={() => this.setState({thirdModalVisible: false})}
+                            />
+                            <CSButton
+                                label="Save"
+                                btnStyle="brand"
+                                onClick={() => this.setState({thirdModalVisible: false})}
+                            />
+                        </CSModalFooter>
+                    </CSModal>
 
-                <CSModal
-                    visible={this.state.thirdModalVisible}
-                    size="small"
-                    animated
-                    closeButton
-                    onClose={() => this.setState({thirdModalVisible: false})}
-                    className="cp-details-modal-second"
-                >
-                    <CSModalHeader title="New Price Rule"/>
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <CSButton
-                            className="prepopulate-btn"
-                            label="prepopulate data"
-                            labelHidden
-                            iconName="edit"
-                            size="small"
-                            btnType="transparent"
-                            btnStyle="brand"
+                    <div className="action-row">
+                        <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')}/>
+                        <CSInputSearch
+                            placeholder="Search"
+                            width="20rem"
+                            onChange={this.onSearchChange}
+                            value={this.props.searchTerm}
                         />
-                        <div className="column-wrapper">
-                            <div className="col">
-                                <CSInputText label="Pricing Rule Group Name"/>
-                                <CSInputText label="Pricing Rule Group Code"/>
-                            </div>
-                            <div className="col">
-                                <CSInputText label="Priority"/>
-                                <CSInputText label="Description"/>
-                            </div>
-                            <div className="col">
-                                <CSInputText label="Rule Group Compounding Type"/>
-                            </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save and New"
-                            btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                    </CSModalFooter>
-                </CSModal>
-
-                <div className="action-row">
-                    <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')}/>
-                    <CSInputSearch
-                        placeholder="Search"
-                        width="20rem"
-                        onChange={this.onSearchChange}
-                        value={this.props.searchTerm}
-                    />
+                    </div>
+                    {this.state.activeTab === 0 ? (
+                        <CSTable>
+                            {/*
+                            {this.state.CPs ? this.state.CPs[0].Object.getOwnPropertyNames : null}
+                            */}
+                            <CSTableHeader>
+                                <CSTableCell maxWidth="4rem"/>
+                                <CSTableCell text="Name"/>
+                            </CSTableHeader>
+                            {/* (row.cspmb__Price_Item_Add_On_Price_Item_Association__r || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) */}
+                            <CSTableBody>
+                                {this.state.CPs ? Object.values(this.state.CPs)
+                                    .sort(this.rowSort)
+                                    .filter(row => {
+                                        if (this.state.searchTerm) {
+                                            if (
+                                                (row.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                            ) {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        } else return true;
+                                    })
+                                    .map((row) => {
+                                        return (
+                                            <React.Fragment key={row.Id}>
+                                                <CSTableRow>
+                                                    <CSTableCell maxWidth="4rem">
+                                                        <CSButton
+                                                            label={row.Id}
+                                                            labelHidden
+                                                            btnType="default"
+                                                            iconName="apps"
+                                                            size="xsmall"
+                                                            onClick={() => handleOnCPClick(row.Id)}
+                                                        />
+                                                    </CSTableCell>
+                                                    <CSTableCell>
+                                                        <span>{row.Name}</span>
+                                                    </CSTableCell>
+                                                </CSTableRow>
+                                                {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociation) => (
+                                                    <CSTableRow className="addon-row" key={addonAssociation.Id}>
+                                                        <CSTableCell maxWidth="4rem">
+                                                            <CSButton
+                                                                label={addonAssociation.Id}
+                                                                labelHidden
+                                                                btnType="default"
+                                                                iconName="apps"
+                                                                size="xsmall"
+                                                                onClick={() => handleOnAddonClick(addonAssociation.Id)}
+                                                            />
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                        </CSTableCell>
+                                                    </CSTableRow>
+                                                )) : null}
+                                            </React.Fragment>
+                                        )
+                                    }) : null
+                                }
+                            </CSTableBody>
+                        </CSTable>
+                    ) :
+                        <CSTable>
+                            <CSTableHeader>
+                                <CSTableCell maxWidth="4rem"/>
+                                <CSTableCell text="Name"/>
+                            </CSTableHeader>
+                            <CSTableBody>
+                            </CSTableBody>
+                        </CSTable>
+                    }
                 </div>
-                <CSTable>
-                    {/*
-                    {this.state.CPs ? this.state.CPs[0].Object.getOwnPropertyNames : null}
-                    */}
-                    <CSTableHeader>
-                        <CSTableCell maxWidth="4rem"/>
-                        <CSTableCell text="Name"/>
-                    </CSTableHeader>
-                    <CSTableBody>
-                        {this.state.CPs ? Object.values(this.state.CPs)
-                            .sort(this.rowSort)
-                            .filter(item => {
-                                if (this.state.searchTerm) {
-                                    if (
-                                        (item.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                    ) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                } else return true;
-                            })
-                            .map((row) => {
-                                return (
-                                    <React.Fragment key={row.Id}>
-                                        <CSTableRow>
-                                            <CSTableCell maxWidth="4rem">
-                                                <CSButton
-                                                    label={row.Id}
-                                                    labelHidden
-                                                    btnType="default"
-                                                    iconName="apps"
-                                                    size="xsmall"
-                                                    onClick={() => handleOnCPClick(row.Id)}
-                                                />
-                                            </CSTableCell>
-                                            <CSTableCell>
-                                                <span>{row.Name}</span>
-                                            </CSTableCell>
-                                        </CSTableRow>
-                                        {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociation) => (
-                                            <CSTableRow className="addon-row" key={addonAssociation.Id}>
-                                                <CSTableCell maxWidth="4rem">
-                                                    <CSButton
-                                                        label={addonAssociation.Id}
-                                                        labelHidden
-                                                        btnType="default"
-                                                        iconName="apps"
-                                                        size="xsmall"
-                                                        onClick={() => handleOnAddonClick(addonAssociation.Id)}
-                                                    />
-                                                </CSTableCell>
-                                                <CSTableCell>
-                                                    <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
-                                                </CSTableCell>
-                                            </CSTableRow>
-                                        )) : null}
-                                    </React.Fragment>
-                                )
-                            }) : null
-                        }
-                    </CSTableBody>
-                </CSTable>
-            </div>
+            </>
         );
     }
 }
