@@ -23,12 +23,27 @@ global with sharing class CSRemoteActionDelegation {
     }
 
     @RemoteAction
+    global static List<cspmb__Price_Item__c> getPackages() {
+        //function should be static and global else it will throw error
+        List<cspmb__Price_Item__c> packages =
+        [SELECT Id, Name,
+            (SELECT Id, Name, cspmb__member_commercial_product__r.Name FROM cspmb__member_commercial_product_associations__r)
+        FROM cspmb__Price_Item__c WHERE cspmb__Role__c = 'Package'];
+
+        if(packages!=null && !packages.isEmpty()){
+            return packages;
+        } else {
+            return  new List<cspmb__Price_Item__c>();
+        }
+    }
+
+    @RemoteAction
     global static List<cspmb__Price_Item__c> getCPs() {
         //function should be static and global else it will throw error
         List<cspmb__Price_Item__c> cps =
             [SELECT Id,Name,
                 (SELECT Id, Name, CreatedById, cspmb__Sequence__c, cspmb__Add_On_Price_Item__r.Name, cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
-            FROM cspmb__Price_Item__c];
+            FROM cspmb__Price_Item__c WHERE cspmb__Role__c = 'Commercial Product'];
         if(cps!=null && !cps.isEmpty()){
             return cps;
         } else {

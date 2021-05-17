@@ -87,6 +87,14 @@ class CPGrid extends React.Component {
                 console.log(result);
             }
         );
+
+        VFRemotingService.getPackages().then(
+            result => {
+                // this.setState({CPAs: result});
+                console.log("getPackages");
+                console.log(result);
+            }
+        );
     }
 
     handleOnClick = () => {

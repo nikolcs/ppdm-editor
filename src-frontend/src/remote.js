@@ -57,6 +57,16 @@ export class VFRemotingService {
         );
     };
 
+    static getPackages = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getPackages,
+            },
+            []
+        );
+    };
+
     static getCPs = () => {
         return VFRemotingService.invokeRemoteAction(
             {
