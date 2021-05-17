@@ -1,4 +1,4 @@
-<apex:page controller="ppdmEditorController" showHeader="true" standardStylesheets="false">
+<apex:page controller="CSRemoteActionDelegation" showHeader="true" standardStylesheets="false">
 
     <c:ppdmEditorAPI />
 
