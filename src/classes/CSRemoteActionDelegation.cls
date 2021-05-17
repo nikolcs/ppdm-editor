@@ -10,13 +10,24 @@ global with sharing class CSRemoteActionDelegation {
     @RemoteAction
     global static List<cspmb__Price_Item__c> getCPs() {
         //function should be static and global else it will throw error
-        List<cspmb__Price_Item__c> cp1 = [SELECT Id,Name, (SELECT Id, Name, cspmb__Add_On_Price_Item__c FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)  FROM cspmb__Price_Item__c];
+        List<cspmb__Price_Item__c> cp1 =
+            [SELECT Id,Name,
+                (SELECT Id, Name, cspmb__Add_On_Price_Item__r.Name FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
+            FROM cspmb__Price_Item__c];
         if(cp1!=null && !cp1.isEmpty()){
             return cp1;
         }else{
             return  new List<cspmb__Price_Item__c>();
         }
     }
+
+
+//    SELECT Id, Name, RecordTypeId, Type, Owner.FirstName, Owner.Id, Owner.LastName, Owner.Name, Owner.Username,
+//            (SELECT Id, BillingStreet, CurrencyIsoCode, EndDate, OwnerExpirationNotice, StartDate, Status FROM Contracts),
+//            (SELECT Id, Body, IsPrivate, Title FROM Notes),
+//            (SELECT Id, Name, FirstName, LastName FROM Contacts)
+//            FROM Account
+
 
     @RemoteAction
     global static List<cspmb__Price_Item_Add_On_Price_Item_Association__c> getCPAOAs() {
