@@ -16,6 +16,7 @@
                 getCPAOAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAs}',
                 getCPAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAs}',
                 saveNew: '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',
+                getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
             },
             session: {
                 id: '{!$Api.Session_Id}'

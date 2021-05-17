@@ -7,6 +7,14 @@ global with sharing class CSRemoteActionDelegation {
         return account;
     }
 
+
+    @RemoteAction
+    global static cspmb__Price_Item__c getCommercialProduct(String cpId) {
+        cspmb__Price_Item__c cp = [SELECT Id, Name
+        FROM cspmb__Price_Item__c WHERE Id = :cpId];
+        return cp;
+    }
+
     @RemoteAction
     global static List<cspmb__Price_Item__c> getCPs() {
         //function should be static and global else it will throw error
