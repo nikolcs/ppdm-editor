@@ -40,8 +40,8 @@ export class VFRemotingService {
                 actionArguments.push(config.options);
             }
 
-            CS.JILE.vfRemotingManager.invokeAction.apply(
-                CS.JILE.vfRemotingManager,
+            CS.PPDM.vfRemotingManager.invokeAction.apply(
+                CS.PPDM.vfRemotingManager,
                 actionArguments
             );
         });
@@ -51,9 +51,49 @@ export class VFRemotingService {
         return VFRemotingService.invokeRemoteAction(
             {
                 options: { escape: false, buffer: false },
-                remoteActionName: CS.JILE.actions.getAccount
+                remoteActionName: CS.PPDM.actions.getAccount
             },
             [accountName]
+        );
+    };
+
+    static getCPs = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getCPs
+            },
+            []
+        );
+    };
+
+    static getCPAOAs = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getCPAOAs
+            },
+            []
+        );
+    };
+
+    static getCPAs = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getCPAs
+            },
+            []
+        );
+    };
+
+    static saveNew = (name, role) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.saveNew,
+            },
+            [name, role]
         );
     };
 }

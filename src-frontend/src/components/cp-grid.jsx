@@ -140,9 +140,18 @@ class CPGrid extends React.Component {
     render() {
 
         VFRemotingService.getAccount("GenePoint").then(console.log);
+        VFRemotingService.getCPs().then(console.log);
+        VFRemotingService.getCPAOAs().then(console.log);
+        VFRemotingService.getCPAs().then(console.log);
+
+        const handleOnClick = () => {
+            console.log('handle on click called!');
+            VFRemotingService.saveNew('New Master product from React3', 'Master');
+        }
 
         return (
             <div className="table-wrapper">
+                <CSButton label="save new cp" onClick={handleOnClick}/>
                 <CSModal
                     visible={this.state.visibleModal === 'commercial-product-details'}
                     size="medium"

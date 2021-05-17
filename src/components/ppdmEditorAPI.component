@@ -1,17 +1,4 @@
-<!--
- - Created by nikol.badanjak on 13-May-21.
- -->
-
 <apex:component access="GLOBAL" controller="CSRemoteActionDelegation">
-
-    <!--    <script type="text/javascript" src="{! $Resource.JSforce}"></script>-->
-    <!--    <script>-->
-    <!--        var conn = new jsforce.Connection({ accessToken: '{!$API.Session_Id}' });-->
-    <!--        conn.query('SELECT Id, Name FROM Account', function(err, res) {-->
-    <!--            if (err) { return console.error(err); }-->
-    <!--            console.log(res);-->
-    <!--        });-->
-    <!--    </script>-->
 
     <script type='text/javascript'>
 
@@ -21,10 +8,14 @@
 
         window.CS = window.CS || {};
 
-        window.CS.JILE = {
+        window.CS.PPDM = {
             vfRemotingManager: Visualforce.remoting.Manager,
             actions: {
                 getAccount: '{!$RemoteAction.CSRemoteActionDelegation.getAccount}',
+                getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
+                getCPAOAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAs}',
+                getCPAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAs}',
+                saveNew: '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',
             },
             session: {
                 id: '{!$Api.Session_Id}'
@@ -40,6 +31,33 @@
             }
         };
     </script>
+
+<!--    <script>-->
+<!--        function saveJSON(jsonData,recordId){-->
+<!--            var jsonString = JSON.stringify(jsonData);-->
+
+<!--            Visualforce.remoting.Manager.invokeAction(-->
+<!--                '{!$RemoteAction.CSRemoteActionDelegation.saveData}',-->
+<!--                jsonString,-->
+<!--                recordId,-->
+<!--                function(result, event) {-->
+<!--                    alert(result);-->
+<!--                });-->
+<!--        };-->
+<!--    </script>-->
+
+<!--    <script>-->
+<!--        function createJSON(jsonData){-->
+<!--            var jsonString = JSON.stringify(jsonData);-->
+
+<!--            Visualforce.remoting.Manager.invokeAction(-->
+<!--                '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',-->
+<!--                jsonString,-->
+<!--                function(result, event) {-->
+<!--                    alert(result);-->
+<!--                });-->
+<!--        }-->
+<!--    </script>-->
 
     <div id="root"></div>
 
