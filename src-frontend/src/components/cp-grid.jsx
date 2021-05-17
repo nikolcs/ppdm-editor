@@ -26,7 +26,8 @@ class CPGrid extends React.Component {
         Accounts: '',
         CPs: '',
         CPAOAs: '',
-        CPAs: ''
+        CPAs: '',
+        activeCP: ''
     };
 
     openModal = (modalId) => {
@@ -67,6 +68,12 @@ class CPGrid extends React.Component {
         VFRemotingService.getCPAs().then(
             result => {
                 this.setState({CPAs: result});
+            }
+        );
+
+        VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(
+            result => {
+                this.setState({activeCP: result});
             }
         );
     }
@@ -170,6 +177,7 @@ class CPGrid extends React.Component {
                 }
             ]
         };
+        VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(console.log);
 
         return (
             <div className="table-wrapper">

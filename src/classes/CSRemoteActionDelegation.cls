@@ -7,7 +7,6 @@ global with sharing class CSRemoteActionDelegation {
         return account;
     }
 
-
     @RemoteAction
     global static cspmb__Price_Item__c getCommercialProduct(String cpId) {
         cspmb__Price_Item__c cp = [SELECT Id, Name
