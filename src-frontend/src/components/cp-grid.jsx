@@ -31,10 +31,10 @@ class CPGrid extends React.Component {
     };
 
     openModal = (modalId) => {
-        this.setState({ visibleModal: modalId });
+        this.setState({visibleModal: modalId});
     }
     closeModal = () => {
-        this.setState({ visibleModal: undefined });
+        this.setState({visibleModal: undefined});
     }
 
     onSearchChange = (event) => {
@@ -70,12 +70,6 @@ class CPGrid extends React.Component {
                 this.setState({CPAs: result});
             }
         );
-
-        VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(
-            result => {
-                this.setState({activeCP: result});
-            }
-        );
     }
 
     handleOnClick = () => {
@@ -86,48 +80,48 @@ class CPGrid extends React.Component {
     render() {
         const sampleLookup = {
             columns: [
-                { key: 'Account', label: 'Account' },
-                { key: 'Industry', label: 'Industry' }
+                {key: 'Account', label: 'Account'},
+                {key: 'Industry', label: 'Industry'}
             ],
             data: [
-                { Id: 1, Account: 'Acme', Industry: 'Manufacturing' },
-                { Id: 2, Account: 'Global Media', Industry: 'Industry' },
-                { Id: 3, Account: 'Salesforce', Industry: 'Software' },
-                { Id: 4, Account: 'Elisa', Industry: 'Telecommunications' },
-                { Id: 5, Account: 'Facebook', Industry: 'Social media' },
-                { Id: 6, Account: 'Google', Industry: 'Technology' },
-                { Id: 7, Account: 'Spotify', Industry: 'Streaming and media' },
-                { Id: 8, Account: 'British Gas', Industry: 'Energy' },
-                { Id: 9, Account: 'Columbia Pictures', Industry: 'Film' },
-                { Id: 10, Account: 'Rimac', Industry: 'Car manufacturing' },
-                { Id: 11, Account: 'News Corp', Industry: 'Mass media' },
-                { Id: 12, Account: 'Telstra', Industry: 'Telecommunications' },
-                { Id: 13, Account: 'Netflix', Industry: 'Production' },
-                { Id: 14, Account: 'Instagram', Industry: 'Social media' },
-                { Id: 15, Account: 'Vodafone', Industry: 'Telecommunications' },
-                { Id: 16, Account: 'Apple', Industry: 'Software' },
-                { Id: 17, Account: 'Amazon', Industry: 'E-commerce' },
-                { Id: 18, Account: 'Ikea', Industry: 'Furniture retail' },
-                { Id: 19, Account: 'Microsoft', Industry: 'Software' },
-                { Id: 20, Account: 'Visa', Industry: 'Finance' },
-                { Id: 21, Account: 'IBM', Industry: 'Software' },
-                { Id: 22, Account: 'eBay', Industry: 'E-commerce' },
-                { Id: 23, Account: 'Oracle', Industry: 'Software' },
-                { Id: 24, Account: 'Tesla', Industry: 'Car manufacturing' },
-                { Id: 25, Account: 'YouTube', Industry: 'Streaming and media' },
-                { Id: 26, Account: 'O2', Industry: 'Telecommunications' },
-                { Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film' }
+                {Id: 1, Account: 'Acme', Industry: 'Manufacturing'},
+                {Id: 2, Account: 'Global Media', Industry: 'Industry'},
+                {Id: 3, Account: 'Salesforce', Industry: 'Software'},
+                {Id: 4, Account: 'Elisa', Industry: 'Telecommunications'},
+                {Id: 5, Account: 'Facebook', Industry: 'Social media'},
+                {Id: 6, Account: 'Google', Industry: 'Technology'},
+                {Id: 7, Account: 'Spotify', Industry: 'Streaming and media'},
+                {Id: 8, Account: 'British Gas', Industry: 'Energy'},
+                {Id: 9, Account: 'Columbia Pictures', Industry: 'Film'},
+                {Id: 10, Account: 'Rimac', Industry: 'Car manufacturing'},
+                {Id: 11, Account: 'News Corp', Industry: 'Mass media'},
+                {Id: 12, Account: 'Telstra', Industry: 'Telecommunications'},
+                {Id: 13, Account: 'Netflix', Industry: 'Production'},
+                {Id: 14, Account: 'Instagram', Industry: 'Social media'},
+                {Id: 15, Account: 'Vodafone', Industry: 'Telecommunications'},
+                {Id: 16, Account: 'Apple', Industry: 'Software'},
+                {Id: 17, Account: 'Amazon', Industry: 'E-commerce'},
+                {Id: 18, Account: 'Ikea', Industry: 'Furniture retail'},
+                {Id: 19, Account: 'Microsoft', Industry: 'Software'},
+                {Id: 20, Account: 'Visa', Industry: 'Finance'},
+                {Id: 21, Account: 'IBM', Industry: 'Software'},
+                {Id: 22, Account: 'eBay', Industry: 'E-commerce'},
+                {Id: 23, Account: 'Oracle', Industry: 'Software'},
+                {Id: 24, Account: 'Tesla', Industry: 'Car manufacturing'},
+                {Id: 25, Account: 'YouTube', Industry: 'Streaming and media'},
+                {Id: 26, Account: 'O2', Industry: 'Telecommunications'},
+                {Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film'}
             ]
         };
 
         const tableMockData = {
             "columnHeaders": [
-                { "key": "Details", "label": "Details", "width": "4rem" },
-                { "key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2 },
-                { "key": "ListRecurringCharge", "label": "List Recurring charge" },
-                { "key": "PricingRule", "label": "Pricing Rule" },
-                { "key": "ListOneOffCharge", "label": "List One Off Charge" },
-                { "key": "PricingRuleGroup", "label": "Pricing Rule Group" }
+                {"key": "Details", "label": "Details", "width": "4rem"},
+                {"key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2},
+                {"key": "ListRecurringCharge", "label": "List Recurring charge"},
+                {"key": "PricingRule", "label": "Pricing Rule"},
+                {"key": "ListOneOffCharge", "label": "List One Off Charge"},
+                {"key": "PricingRuleGroup", "label": "Pricing Rule Group"}
             ],
             "rows": [
                 {
@@ -177,28 +171,35 @@ class CPGrid extends React.Component {
                 }
             ]
         };
-        VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(console.log);
+        // VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(console.log);
+
+        const handleOnCPClick = (id) => {
+            VFRemotingService.getCommercialProduct(id).then(
+                result => {
+                    this.setState({activeCP: result, visibleModal: 'commercial-product-details'});
+                }
+            );
+        }
 
         return (
             <div className="table-wrapper">
 
-                <CSButton label="save new cp" onClick={this.handleOnClick} />
+                <CSButton label="save new cp" onClick={this.handleOnClick}/>
                 <CSModal
                     visible={this.state.visibleModal === 'commercial-product-details'}
                     size="medium"
                     animated
-                    outerClickClose
                     closeButton
                     onClose={this.closeModal}
                     className="cp-details-modal"
                 >
-                    <CSModalHeader title="Set List Price of Existing Commercial Product" />
+                    <CSModalHeader title="Set List Price of Existing Commercial Product"/>
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
-                            <CSInputText label="Commercial Product" />
+                            <CSInputText label="Commercial Product"/>
                             <div className="placeholder"></div>
-                            <CSInputText label="List Recurring Charge" />
-                            <CSInputText label="List One Off Charge" />
+                            <CSInputText label="List Recurring Charge"/>
+                            <CSInputText label="List One Off Charge"/>
                             <div className="field-wrapper">
                                 <label>Pricing Rule</label>
                                 <div className="lookup-btn-wrapper">
@@ -215,7 +216,7 @@ class CPGrid extends React.Component {
                                         className="open-modal-btn"
                                         label="New"
                                         borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({ secondModalVisible: true })}
+                                        onClick={() => this.setState({secondModalVisible: true})}
                                     />
                                 </div>
                             </div>
@@ -235,7 +236,7 @@ class CPGrid extends React.Component {
                                         className="open-modal-btn"
                                         label="New"
                                         borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({ thirdModalVisible: true })}
+                                        onClick={() => this.setState({thirdModalVisible: true})}
                                     />
                                 </div>
                             </div>
@@ -263,12 +264,11 @@ class CPGrid extends React.Component {
                     visible={this.state.secondModalVisible}
                     size="small"
                     animated
-                    outerClickClose
                     closeButton
-                    onClose={() => this.setState({ secondModalVisible: false })}
+                    onClose={() => this.setState({secondModalVisible: false})}
                     className="cp-details-modal-second"
                 >
-                    <CSModalHeader title="New Price Rule" />
+                    <CSModalHeader title="New Price Rule"/>
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <CSButton
                             className="prepopulate-btn"
@@ -281,29 +281,29 @@ class CPGrid extends React.Component {
                         />
                         <div className="column-wrapper">
                             <div className="col">
-                                <CSInputText label="Pricing Rule Name" />
-                                <CSInputText label="Pricing Rule Code" />
+                                <CSInputText label="Pricing Rule Name"/>
+                                <CSInputText label="Pricing Rule Code"/>
                             </div>
                             <div className="col">
-                                <CSInputText label="Context" />
-                                <CSInputText label="Description" />
+                                <CSInputText label="Context"/>
+                                <CSInputText label="Description"/>
                             </div>
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({ secondModalVisible: false })}
+                            onClick={() => this.setState({secondModalVisible: false})}
                         />
                         <CSButton
                             label="Save and New"
                             btnStyle="brand"
-                            onClick={() => this.setState({ secondModalVisible: false })}
+                            onClick={() => this.setState({secondModalVisible: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={() => this.setState({ secondModalVisible: false })}
+                            onClick={() => this.setState({secondModalVisible: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
@@ -312,12 +312,11 @@ class CPGrid extends React.Component {
                     visible={this.state.thirdModalVisible}
                     size="small"
                     animated
-                    outerClickClose
                     closeButton
-                    onClose={() => this.setState({ thirdModalVisible: false })}
+                    onClose={() => this.setState({thirdModalVisible: false})}
                     className="cp-details-modal-second"
                 >
-                    <CSModalHeader title="New Price Rule" />
+                    <CSModalHeader title="New Price Rule"/>
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <CSButton
                             className="prepopulate-btn"
@@ -330,38 +329,38 @@ class CPGrid extends React.Component {
                         />
                         <div className="column-wrapper">
                             <div className="col">
-                                <CSInputText label="Pricing Rule Group Name" />
-                                <CSInputText label="Pricing Rule Group Code" />
+                                <CSInputText label="Pricing Rule Group Name"/>
+                                <CSInputText label="Pricing Rule Group Code"/>
                             </div>
                             <div className="col">
-                                <CSInputText label="Priority" />
-                                <CSInputText label="Description" />
+                                <CSInputText label="Priority"/>
+                                <CSInputText label="Description"/>
                             </div>
                             <div className="col">
-                                <CSInputText label="Rule Group Compounding Type" />
+                                <CSInputText label="Rule Group Compounding Type"/>
                             </div>
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({ thirdModalVisible: false })}
+                            onClick={() => this.setState({thirdModalVisible: false})}
                         />
                         <CSButton
                             label="Save and New"
                             btnStyle="brand"
-                            onClick={() => this.setState({ thirdModalVisible: false })}
+                            onClick={() => this.setState({thirdModalVisible: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={() => this.setState({ thirdModalVisible: false })}
+                            onClick={() => this.setState({thirdModalVisible: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
 
                 <div className="action-row">
-                    <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')} />
+                    <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')}/>
                     <CSInputSearch
                         placeholder="Search"
                         width="20rem"
@@ -374,14 +373,14 @@ class CPGrid extends React.Component {
                     {this.state.CPs ? this.state.CPs[0].Object.getOwnPropertyNames : null}
                     */}
                     <CSTableHeader>
-                        <CSTableCell maxWidth="4rem" />
-                        <CSTableCell text="Name" />
+                        <CSTableCell maxWidth="4rem"/>
+                        <CSTableCell text="Name"/>
                     </CSTableHeader>
                     <CSTableBody>
                         {Object.values(this.state.CPs)
                             .sort(this.rowSort)
                             .filter(item => {
-                                if(this.state.searchTerm) {
+                                if (this.state.searchTerm) {
                                     if (
                                         (item.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                                     ) {
@@ -402,7 +401,7 @@ class CPGrid extends React.Component {
                                                     btnType="default"
                                                     iconName="apps"
                                                     size="xsmall"
-                                                    onClick={() => this.openModal('commercial-product-details')}
+                                                    onClick={() => handleOnCPClick(row.Id)}
                                                 />
                                             </CSTableCell>
                                             <CSTableCell>
