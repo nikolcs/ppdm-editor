@@ -27,7 +27,8 @@ class CPGrid extends React.Component {
         CPs: '',
         CPAOAs: '',
         CPAs: '',
-        activeCP: ''
+        activeCP: '',
+        activeAddon: ''
     };
 
     openModal = (modalId) => {
@@ -48,26 +49,32 @@ class CPGrid extends React.Component {
     }
 
     componentDidMount() {
-        VFRemotingService.getCPs().then(console.log);
-
         VFRemotingService.getAccount("GenePoint").then(
             result => {
                 this.setState({Account: result});
+                console.log("getAccount");
+                console.log(result);
             }
-        );
+        )
         VFRemotingService.getCPs().then(
             result => {
                 this.setState({CPs: result});
+                console.log("getCPs");
+                console.log(result);
             }
         );
         VFRemotingService.getCPAOAs().then(
             result => {
                 this.setState({CPAOAs: result});
+                console.log("getCPAOAs");
+                console.log(result);
             }
         );
         VFRemotingService.getCPAs().then(
             result => {
                 this.setState({CPAs: result});
+                console.log("getCPAs");
+                console.log(result);
             }
         );
     }
@@ -171,12 +178,23 @@ class CPGrid extends React.Component {
                 }
             ]
         };
-        // VFRemotingService.getCommercialProduct("a1P4L000008rke0UAA").then(console.log);
 
         const handleOnCPClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
                     this.setState({activeCP: result, visibleModal: 'commercial-product-details'});
+                    console.log("getCommercialProduct in handleOnCPClick")
+                    console.log(result);
+                }
+            );
+        }
+
+        const handleOnAddonClick = (id) => {
+            VFRemotingService.getCPAOAssociation(id).then(
+                result => {
+                    this.setState({activeAddon: result, visibleModal: 'commercial-product-details'});
+                    console.log("getCPAOAssociation in handleOnAddonClick")
+                    console.log(result);
                 }
             );
         }
@@ -392,8 +410,8 @@ class CPGrid extends React.Component {
                             })
                             .map((row) => {
                                 return (
-                                    <>
-                                        <CSTableRow key={row.Id}>
+                                    <React.Fragment key={row.Id}>
+                                        <CSTableRow>
                                             <CSTableCell maxWidth="4rem">
                                                 <CSButton
                                                     label={row.Id}
@@ -417,7 +435,7 @@ class CPGrid extends React.Component {
                                                         btnType="default"
                                                         iconName="apps"
                                                         size="xsmall"
-                                                        onClick={() => this.openModal('commercial-product-details')}
+                                                        onClick={() => handleOnAddonClick(addonAssociation.Id)}
                                                     />
                                                 </CSTableCell>
                                                 <CSTableCell>
@@ -425,7 +443,7 @@ class CPGrid extends React.Component {
                                                 </CSTableCell>
                                             </CSTableRow>
                                         )) : null}
-                                    </>
+                                    </React.Fragment>
                                 )
                             })
                         }

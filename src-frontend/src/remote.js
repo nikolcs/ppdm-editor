@@ -106,4 +106,14 @@ export class VFRemotingService {
             [id]
         );
     };
+
+    static getCPAOAssociation = (id) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getCPAOAssociation,
+            },
+            [id]
+        );
+    };
 }
