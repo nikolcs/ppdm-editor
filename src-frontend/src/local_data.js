@@ -134,6 +134,75 @@ invokeAction = function (...args) {
             }
             return delayResponse(data, args);
 
+        case "getPackages":
+            data = [
+                {
+                    "Id": "a1P4L000008rlhrUAA",
+                    "Name": "package 3",
+                    "cspmb__member_commercial_product_associations__r": [
+                        {
+                            "cspmb__parent_commercial_product__c": "a1P4L000008rlhrUAA",
+                            "Id": "a134L000000kC2QQAU",
+                            "Name": "CPA-00003",
+                            "cspmb__member_commercial_product__c": "a1P4L000008rli0UAA",
+                            "cspmb__member_commercial_product__r": {
+                                "Name": "cp3",
+                                "Id": "a1P4L000008rli0UAA"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Id": "a1P4L000008rke5UAA",
+                    "Name": "test package",
+                    "cspmb__member_commercial_product_associations__r": [
+                        {
+                            "cspmb__parent_commercial_product__c": "a1P4L000008rke5UAA",
+                            "Id": "a134L000000kBb3QAE",
+                            "Name": "CPA-00000",
+                            "cspmb__member_commercial_product__c": "a1P4L000008rke0UAA",
+                            "cspmb__member_commercial_product__r": {
+                                "Name": "test",
+                                "Id": "a1P4L000008rke0UAA"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Id": "a1P4L000008rli5UAA",
+                    "Name": "package 1",
+                    "cspmb__member_commercial_product_associations__r": [
+                        {
+                            "cspmb__parent_commercial_product__c": "a1P4L000008rli5UAA",
+                            "Id": "a134L000000kC2GQAU",
+                            "Name": "CPA-00001",
+                            "cspmb__member_commercial_product__c": "a1P4L000008rlhqUAA",
+                            "cspmb__member_commercial_product__r": {
+                                "Name": "cp 1",
+                                "Id": "a1P4L000008rlhqUAA"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Id": "a1P4L000008rliAUAQ",
+                    "Name": "package 2",
+                    "cspmb__member_commercial_product_associations__r": [
+                        {
+                            "cspmb__parent_commercial_product__c": "a1P4L000008rliAUAQ",
+                            "Id": "a134L000000kC2LQAU",
+                            "Name": "CPA-00002",
+                            "cspmb__member_commercial_product__c": "a1P4L000008rlhvUAA",
+                            "cspmb__member_commercial_product__r": {
+                                "Name": "cp 2",
+                                "Id": "a1P4L000008rlhvUAA"
+                            }
+                        }
+                    ]
+                }
+            ]
+            return delayResponse(data, args);
+
         default:
             return Promise.reject(`Couldn't find action ${args[0]}`);
     }
@@ -154,6 +223,7 @@ window.CS.PPDM = {
         getCommercialProduct: 'getCommercialProduct',
         getCPAOAssociation: 'getCPAOAssociation',
         saveNew: 'saveNew',
+        getPackages: 'getPackages'
     },
     session: {
         id: 'Session_Id'

@@ -25,13 +25,20 @@ html {
 
 .table-wrapper {
     flex: 1 1 0;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     .action-row {
         display: flex;
         justify-content: space-between;
         padding: 0.5rem;
     }
     .cs-table {
+        flex: 1 1 0;
+        overflow-y: auto;
+        .cs-table-header {
+            position: sticky;
+            top: 0;
+        }
         .addon-row,
         .package-cp-row {
             &.cs-table-row .cs-table-cell {
@@ -40,6 +47,7 @@ html {
         }
         .pkg-icon {
             margin-right: 0.5rem;
+            margin-top: 1px;
         }
     }
 }

@@ -525,7 +525,7 @@ class CPGrid extends React.Component {
                                                         />
                                                     </CSTableCell>
                                                     <CSTableCell>
-                                                        <CSIcon className="pkg-icon" name="package" />
+                                                        <CSIcon className="pkg-icon" name="package_outline" origin="cs" />
                                                         <span>{row.Name}</span>
                                                     </CSTableCell>
                                                 </CSTableRow>
