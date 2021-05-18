@@ -62,7 +62,12 @@ class CPGrid extends React.Component {
         this.setState({visibleModal: modalId});
     }
     closeModal = () => {
-        this.setState({visibleModal: undefined, oneOffPriceReadonly: true, recurringPriceReadonly: true});
+        this.setState({visibleModal: undefined });
+        setTimeout(() => {
+            this.setState( {
+                oneOffPriceReadonly: true, recurringPriceReadonly: true
+            })
+        }, 150);
     }
 
     onSearchChange = (event) => {
