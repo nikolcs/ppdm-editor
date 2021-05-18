@@ -31,43 +31,48 @@ class CPGrid extends React.Component {
         visibleModal: undefined,
         secondModalVisible: false,
         thirdModalVisible: false,
+
         searchTerm: '',
         activeTab: 0,
+
         Packages: '',
         CPs: '',
-        activeCP: {Id: '', Name: ''},
-        activeAddon: '',
-        activePackage: '',
+
         activeProduct: '',
-        oneOffPriceReadonly: true,
-        recurringPriceReadonly: true
+
+        oneOffPriceEditable: false,
+        recurringPriceEditable: false,
+
+        detailsName: '',
+        detailsId: '',
+
     };
 
     handleInputOnChange = (event) => {
-        switch (this.state.activeProduct) {
-            case ('CP'):
-                this.setState({ activeCP: { ...this.state.activeCP, Name: event.target.value} });
-                return;
-            case ('Addon'):
-                /* this gives error */
-                this.setState({ activeAddon: { ...this.state.activeAddon.cspmb__Add_On_Price_Item__r, Name: event.target.value} });
-                return;
-            case ('Package'):
-                this.setState({ activePackage: { ...this.state.activePackage, Name: event.target.value} });
-                return;
-        }
+        this.setState({ detailsName: event.target.value});
     }
 
     openModal = (modalId) => {
         this.setState({visibleModal: modalId});
     }
     closeModal = () => {
-        this.setState({visibleModal: undefined });
+        this.setState({
+            visibleModal: undefined,
+            detailsName: '',
+            detailsId: '',
+            activeProduct: ''
+        });
         setTimeout(() => {
             this.setState( {
-                oneOffPriceReadonly: true, recurringPriceReadonly: true
+                oneOffPriceEditable: false,
+                recurringPriceEditable: false,
             })
         }, 150);
+    }
+
+    handleSave = () => {
+        console.log("handleSave")
+        this.closeModal();
     }
 
     onSearchChange = (event) => {
@@ -149,9 +154,9 @@ class CPGrid extends React.Component {
         const handleOnPackageClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
-                    this.setState({activePackage: result, visibleModal: 'commercial-product-details', activeProduct: 'Package'});
                     console.log("getCommercialProduct in handleOnPackageClick")
                     console.log(result);
+                    this.setState({detailsName: result.Name, visibleModal: 'commercial-product-details', activeProduct: 'Package'});
                 }
             );
         }
@@ -159,7 +164,7 @@ class CPGrid extends React.Component {
         const handleOnCPClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
-                    this.setState({activeCP: result, visibleModal: 'commercial-product-details', activeProduct: 'CP'});
+                    this.setState({detailsName: result.Name, detailsId: result.Id, visibleModal: 'commercial-product-details', activeProduct: 'CP'});
                     console.log("getCommercialProduct in handleOnCPClick")
                     console.log(result);
                 }
@@ -169,7 +174,7 @@ class CPGrid extends React.Component {
         const handleOnAddonClick = (id) => {
             VFRemotingService.getCPAOAssociation(id).then(
                 result => {
-                    this.setState({activeAddon: result, visibleModal: 'commercial-product-details', activeProduct: 'Addon'});
+                    this.setState({detailsName: result.cspmb__Add_On_Price_Item__r.Name, visibleModal: 'commercial-product-details', activeProduct: 'Addon'});
                     console.log("getCPAOAssociation in handleOnAddonClick")
                     console.log(result);
                 }
@@ -177,14 +182,7 @@ class CPGrid extends React.Component {
         }
 
         const getProductNameValue = () => {
-            switch (this.state.activeProduct) {
-                case ('CP'):
-                    return this.state.activeCP.Name
-                case ('Addon'):
-                    return this.state.activeAddon.cspmb__Add_On_Price_Item__r.Name;
-                case ('Package'):
-                    return this.state.activePackage.Name;
-            }
+            return this.state.detailsName;
         };
 
         return (
@@ -220,28 +218,28 @@ class CPGrid extends React.Component {
                                 <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />
                                 <div className="placeholder"></div>
                                 <div className="input-wrapper">
-                                    <CSInputText label="Recurring Price" readOnly={this.state.recurringPriceReadonly} />
-                                    {this.state.recurringPriceReadonly &&
+                                    <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} />
+                                    {!this.state.recurringPriceEditable &&
                                         <CSButton
                                             size="small"
                                             label="edit"
                                             labelHidden
                                             iconName="edit"
                                             iconColor="rgba(0, 0, 0, 0.25)"
-                                            onClick={() => this.setState({recurringPriceReadonly: false})}
+                                            onClick={() => this.setState({recurringPriceEditable: true})}
                                         />
                                     }
                                 </div>
                                 <div className="input-wrapper">
-                                    <CSInputText label="One-Off Price" readOnly={this.state.oneOffPriceReadonly} />
-                                    {this.state.oneOffPriceReadonly &&
+                                    <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} />
+                                    {!this.state.oneOffPriceEditable &&
                                         <CSButton
                                             size="small"
                                             label="edit"
                                             labelHidden
                                             iconName="edit"
                                             iconColor="rgba(0, 0, 0, 0.25)"
-                                            onClick={() => this.setState({oneOffPriceReadonly: false})}
+                                            onClick={() => this.setState({oneOffPriceEditable: true})}
                                         />
                                     }
                                 </div>
@@ -293,14 +291,9 @@ class CPGrid extends React.Component {
                                 onClick={this.closeModal}
                             />
                             <CSButton
-                                label="Save and Deploy"
-                                btnStyle="brand"
-                                onClick={this.closeModal}
-                            />
-                            <CSButton
                                 label="Save"
                                 btnStyle="brand"
-                                onClick={this.closeModal}
+                                onClick={this.handleSave}
                             />
                         </CSModalFooter>
                     </CSModal>
@@ -405,7 +398,6 @@ class CPGrid extends React.Component {
                     </CSModal>
 
                     <div className="action-row">
-                        <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')}/>
                         <CSButton label="save new cp" onClick={this.handleOnClick}/>
                         <CSInputSearch
                             placeholder="Search"
@@ -417,9 +409,6 @@ class CPGrid extends React.Component {
 
                     {this.state.activeTab === 0 ? (
                         <CSTable>
-                            {/*
-                            {this.state.CPs ? this.state.CPs[0].Object.getOwnPropertyNames : null}
-                            */}
                             <CSTableHeader>
                                 <CSTableCell maxWidth="4rem"/>
                                 <CSTableCell text="Name"/>
@@ -432,7 +421,10 @@ class CPGrid extends React.Component {
                                     .filter(row => {
                                         if (this.state.searchTerm) {
                                             if (
-                                                (row.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                (row.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                (row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociationRow) => {
+                                                    addonAssociationRow.cspmb__Add_On_Price_Item__r.Name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                }) : false)
                                             ) {
                                                 return true;
                                             } else {
