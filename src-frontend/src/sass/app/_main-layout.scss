@@ -55,3 +55,12 @@ html {
 .cs-tab-group .cs-tab-wrapper .cs-tab .cs-tab-name {
     line-height: initial;
 }
+
+.input-wrapper {
+    position: relative;
+    .cs-btn {
+        position: absolute;
+        right: 1rem;
+        top: 1.5rem;
+    }
+}

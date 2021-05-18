@@ -24,7 +24,7 @@ class CPGrid extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleCPInputOnChange = this.handleCPInputOnChange.bind(this);
+        this.handleInputOnChange = this.handleInputOnChange.bind(this);
     }
 
     state = {
@@ -38,18 +38,31 @@ class CPGrid extends React.Component {
         activeCP: {Id: '', Name: ''},
         activeAddon: '',
         activePackage: '',
-        activeProduct: ''
+        activeProduct: '',
+        oneOffPriceReadonly: true,
+        recurringPriceReadonly: true
     };
 
-    handleCPInputOnChange = (event) => {
-        this.setState({ activeCP: { ...this.state.activeCP, Name: event.target.value} });
+    handleInputOnChange = (event) => {
+        switch (this.state.activeProduct) {
+            case ('CP'):
+                this.setState({ activeCP: { ...this.state.activeCP, Name: event.target.value} });
+                return;
+            case ('Addon'):
+                /* this gives error */
+                this.setState({ activeAddon: { ...this.state.activeAddon.cspmb__Add_On_Price_Item__r, Name: event.target.value} });
+                return;
+            case ('Package'):
+                this.setState({ activePackage: { ...this.state.activePackage, Name: event.target.value} });
+                return;
+        }
     }
 
     openModal = (modalId) => {
         this.setState({visibleModal: modalId});
     }
     closeModal = () => {
-        this.setState({visibleModal: undefined});
+        this.setState({visibleModal: undefined, oneOffPriceReadonly: true, recurringPriceReadonly: true});
     }
 
     onSearchChange = (event) => {
@@ -127,7 +140,7 @@ class CPGrid extends React.Component {
                 {Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film'}
             ]
         };
-        
+
         const handleOnPackageClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
@@ -185,7 +198,6 @@ class CPGrid extends React.Component {
                 </CSTabGroup>
 
                 <div className="table-wrapper">
-                    <CSButton label="save new cp" onClick={this.handleOnClick}/>
                     <CSModal
                         visible={this.state.visibleModal === 'commercial-product-details'}
                         size="medium"
@@ -200,10 +212,34 @@ class CPGrid extends React.Component {
                         />
                         <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                             <div className="column-wrapper">
-                                <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleCPInputOnChange} />
+                                <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />
                                 <div className="placeholder"></div>
-                                <CSInputText label="List Recurring Charge"/>
-                                <CSInputText label="List One Off Charge"/>
+                                <div className="input-wrapper">
+                                    <CSInputText label="Recurring Price" readOnly={this.state.recurringPriceReadonly} />
+                                    {this.state.recurringPriceReadonly &&
+                                        <CSButton
+                                            size="small"
+                                            label="edit"
+                                            labelHidden
+                                            iconName="edit"
+                                            iconColor="rgba(0, 0, 0, 0.25)"
+                                            onClick={() => this.setState({recurringPriceReadonly: false})}
+                                        />
+                                    }
+                                </div>
+                                <div className="input-wrapper">
+                                    <CSInputText label="One-Off Price" readOnly={this.state.oneOffPriceReadonly} />
+                                    {this.state.oneOffPriceReadonly &&
+                                        <CSButton
+                                            size="small"
+                                            label="edit"
+                                            labelHidden
+                                            iconName="edit"
+                                            iconColor="rgba(0, 0, 0, 0.25)"
+                                            onClick={() => this.setState({oneOffPriceReadonly: false})}
+                                        />
+                                    }
+                                </div>
                                 <div className="field-wrapper">
                                     <label>Pricing Rule</label>
                                     <div className="lookup-btn-wrapper">
@@ -365,6 +401,7 @@ class CPGrid extends React.Component {
 
                     <div className="action-row">
                         <CSButton label="Create New Product" onClick={() => this.openModal('commercial-product-details')}/>
+                        <CSButton label="save new cp" onClick={this.handleOnClick}/>
                         <CSInputSearch
                             placeholder="Search"
                             width="20rem"
