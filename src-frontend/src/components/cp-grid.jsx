@@ -32,14 +32,13 @@ class CPGrid extends React.Component {
         secondModalVisible: false,
         thirdModalVisible: false,
         searchTerm: '',
-        Accounts: '',
+        activeTab: 0,
+        Packages: '',
         CPs: '',
-        CPAOAs: '',
-        CPAs: '',
         activeCP: {Id: '', Name: ''},
         activeAddon: '',
-        Packages: '',
-        activeTab: 0
+        activePackage: '',
+        activeProduct: ''
     };
 
     handleCPInputOnChange = (event) => {
@@ -78,20 +77,6 @@ class CPGrid extends React.Component {
                 console.log(result);
             }
         );
-        // VFRemotingService.getCPAOAs().then(
-        //     result => {
-        //         this.setState({CPAOAs: result});
-        //         console.log("getCPAOAs");
-        //         console.log(result);
-        //     }
-        // );
-        // VFRemotingService.getCPAs().then(
-        //     result => {
-        //         this.setState({CPAs: result});
-        //         console.log("getCPAs");
-        //         console.log(result);
-        //     }
-        // );
         VFRemotingService.getPackages().then(
             result => {
                 this.setState({Packages: result});
@@ -142,69 +127,21 @@ class CPGrid extends React.Component {
                 {Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film'}
             ]
         };
-
-        const tableMockData = {
-            "columnHeaders": [
-                {"key": "Details", "label": "Details", "width": "4rem"},
-                {"key": "CommercialProductDescription", "label": "Commercial Product Description", "grow": 2},
-                {"key": "ListRecurringCharge", "label": "List Recurring charge"},
-                {"key": "PricingRule", "label": "Pricing Rule"},
-                {"key": "ListOneOffCharge", "label": "List One Off Charge"},
-                {"key": "PricingRuleGroup", "label": "Pricing Rule Group"}
-            ],
-            "rows": [
-                {
-                    "Id": 1,
-                    "Details": "Acme",
-                    "CommercialProductDescription": "Manufacturing",
-                    "ListRecurringCharge": 11,
-                    "PricingRule": "test1",
-                    "ListOneOffCharge": 21,
-                    "PricingRuleGroup": "test2"
-                },
-                {
-                    "Id": 2,
-                    "Details": "Acme2",
-                    "CommercialProductDescription": "Manufacturing",
-                    "ListRecurringCharge": 12,
-                    "PricingRule": "test2",
-                    "ListOneOffCharge": 22,
-                    "PricingRuleGroup": "test2"
-                },
-                {
-                    "Id": 3,
-                    "Details": "Acme3",
-                    "CommercialProductDescription": "Manufacturing",
-                    "ListRecurringCharge": 13,
-                    "PricingRule": "test3",
-                    "ListOneOffCharge": 23,
-                    "PricingRuleGroup": "test2"
-                },
-                {
-                    "Id": 4,
-                    "Details": "Acme4",
-                    "CommercialProductDescription": "Manufacturing",
-                    "ListRecurringCharge": 14,
-                    "PricingRule": "test4",
-                    "ListOneOffCharge": 24,
-                    "PricingRuleGroup": "test2"
-                },
-                {
-                    "Id": 5,
-                    "Details": "Acme5",
-                    "CommercialProductDescription": "Manufacturing",
-                    "ListRecurringCharge": 15,
-                    "PricingRule": "test5",
-                    "ListOneOffCharge": 25,
-                    "PricingRuleGroup": "test2"
+        
+        const handleOnPackageClick = (id) => {
+            VFRemotingService.getCommercialProduct(id).then(
+                result => {
+                    this.setState({activePackage: result, visibleModal: 'commercial-product-details', activeProduct: 'Package'});
+                    console.log("getCommercialProduct in handleOnPackageClick")
+                    console.log(result);
                 }
-            ]
-        };
+            );
+        }
 
         const handleOnCPClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
-                    this.setState({activeCP: result, visibleModal: 'commercial-product-details'});
+                    this.setState({activeCP: result, visibleModal: 'commercial-product-details', activeProduct: 'CP'});
                     console.log("getCommercialProduct in handleOnCPClick")
                     console.log(result);
                 }
@@ -214,12 +151,23 @@ class CPGrid extends React.Component {
         const handleOnAddonClick = (id) => {
             VFRemotingService.getCPAOAssociation(id).then(
                 result => {
-                    this.setState({activeAddon: result, visibleModal: 'commercial-product-details'});
+                    this.setState({activeAddon: result, visibleModal: 'commercial-product-details', activeProduct: 'Addon'});
                     console.log("getCPAOAssociation in handleOnAddonClick")
                     console.log(result);
                 }
             );
         }
+
+        const getProductNameValue = () => {
+            switch (this.state.activeProduct) {
+                case ('CP'):
+                    return this.state.activeCP.Name
+                case ('Addon'):
+                    return this.state.activeAddon.cspmb__Add_On_Price_Item__r.Name;
+                case ('Package'):
+                    return this.state.activePackage.Name;
+            }
+        };
 
         return (
             <>
@@ -248,11 +196,11 @@ class CPGrid extends React.Component {
                     >
                         <CSModalHeader
                             title="Set List Price of Existing Commercial Product"
-                            subtitle={this.state.activeCP.Name}
+                            subtitle={getProductNameValue()}
                         />
                         <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                             <div className="column-wrapper">
-                                <CSInputText label="Commercial Product" value={this.state.activeCP.Name} onChange={this.handleCPInputOnChange} />
+                                <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleCPInputOnChange} />
                                 <div className="placeholder"></div>
                                 <CSInputText label="List Recurring Charge"/>
                                 <CSInputText label="List One Off Charge"/>
@@ -424,6 +372,7 @@ class CPGrid extends React.Component {
                             value={this.props.searchTerm}
                         />
                     </div>
+
                     {this.state.activeTab === 0 ? (
                         <CSTable>
                             {/*
@@ -434,6 +383,7 @@ class CPGrid extends React.Component {
                                 <CSTableCell text="Name"/>
                             </CSTableHeader>
                             {/* (row.cspmb__Price_Item_Add_On_Price_Item_Association__r || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) */}
+                            {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableBody>
                                 {this.state.CPs ? Object.values(this.state.CPs)
                                     .sort(this.rowSort)
@@ -470,7 +420,7 @@ class CPGrid extends React.Component {
                                                     <CSTableRow className="addon-row" key={addonAssociation.Id}>
                                                         <CSTableCell maxWidth="4rem">
                                                             <CSButton
-                                                                label={addonAssociation.Id}
+                                                                label="Edit"
                                                                 labelHidden
                                                                 btnType="default"
                                                                 iconName="apps"
@@ -495,7 +445,6 @@ class CPGrid extends React.Component {
                                 <CSTableCell maxWidth="4rem"/>
                                 <CSTableCell text="Name"/>
                             </CSTableHeader>
-
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
                                     .sort(this.rowSort)
@@ -521,7 +470,7 @@ class CPGrid extends React.Component {
                                                             btnType="default"
                                                             iconName="apps"
                                                             size="xsmall"
-                                                            onClick={() => handleOnCPClick(row.Id)}
+                                                            onClick={() => handleOnPackageClick(row.Id)}
                                                         />
                                                     </CSTableCell>
                                                     <CSTableCell>
@@ -533,12 +482,12 @@ class CPGrid extends React.Component {
                                                     <CSTableRow className="package-cp-row" key={cpAssociation.Id}>
                                                         <CSTableCell maxWidth="4rem">
                                                             <CSButton
-                                                                label={cpAssociation.Id}
+                                                                label="Edit"
                                                                 labelHidden
                                                                 btnType="default"
                                                                 iconName="apps"
                                                                 size="xsmall"
-                                                                onClick={() => handleOnAddonClick(cpAssociation.Id)}
+                                                                onClick={() => handleOnCPClick(cpAssociation.cspmb__member_commercial_product__r.Id)}
                                                             />
                                                         </CSTableCell>
                                                         <CSTableCell>
