@@ -76,6 +76,7 @@ class CPGrid extends React.Component {
     }
 
     onSearchChange = (event) => {
+        console.log("search");
         this.setState({
             searchTerm: event.target.value
         });
@@ -112,6 +113,19 @@ class CPGrid extends React.Component {
     handleOnClick = () => {
         console.log('handle on click called!');
         VFRemotingService.saveNew('New Master product from React3', 'Master');
+    }
+
+    showCP = (cp, byAddons) => {
+        if (this.state.searchTerm) {
+            if (
+                (cp.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x => (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else return true;
     }
 
     render() {
@@ -183,7 +197,7 @@ class CPGrid extends React.Component {
 
         const getProductNameValue = () => {
             return this.state.detailsName;
-        };
+        }
 
         return (
             <>
@@ -418,55 +432,59 @@ class CPGrid extends React.Component {
                             <CSTableBody>
                                 {this.state.CPs ? Object.values(this.state.CPs)
                                     .sort(this.rowSort)
-                                    .filter(row => {
-                                        if (this.state.searchTerm) {
-                                            if (
-                                                (row.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
-                                                (row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociationRow) => {
-                                                    addonAssociationRow.cspmb__Add_On_Price_Item__r.Name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                                }) : false)
-                                            ) {
-                                                return true;
-                                            } else {
-                                                return false;
-                                            }
-                                        } else return true;
-                                    })
                                     .map((row) => {
                                         return (
                                             <React.Fragment key={row.Id}>
-                                                <CSTableRow>
-                                                    <CSTableCell maxWidth="4rem">
-                                                        <CSButton
-                                                            label={row.Id}
-                                                            labelHidden
-                                                            btnType="default"
-                                                            iconName="apps"
-                                                            size="xsmall"
-                                                            onClick={() => handleOnCPClick(row.Id)}
-                                                        />
-                                                    </CSTableCell>
-                                                    <CSTableCell>
-                                                        <span>{row.Name}</span>
-                                                    </CSTableCell>
-                                                </CSTableRow>
-                                                {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r.map((addonAssociation) => (
-                                                    <CSTableRow className="addon-row" key={addonAssociation.Id}>
-                                                        <CSTableCell maxWidth="4rem">
-                                                            <CSButton
-                                                                label="Edit"
-                                                                labelHidden
-                                                                btnType="default"
-                                                                iconName="apps"
-                                                                size="xsmall"
-                                                                onClick={() => handleOnAddonClick(addonAssociation.Id)}
-                                                            />
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
-                                                        </CSTableCell>
-                                                    </CSTableRow>
-                                                )) : null}
+                                                <>
+                                                    {this.showCP(row, true) &&
+                                                        <CSTableRow>
+                                                            <CSTableCell maxWidth="4rem">
+                                                                <CSButton
+                                                                    label={row.Id}
+                                                                    labelHidden
+                                                                    btnType="default"
+                                                                    iconName="apps"
+                                                                    size="xsmall"
+                                                                    onClick={() => handleOnCPClick(row.Id)}
+                                                                />
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>{row.Name}</span>
+                                                            </CSTableCell>
+                                                        </CSTableRow>
+                                                    }
+                                                </>
+                                                {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
+                                                    .filter(addonAssociation => {
+                                                        if (this.state.searchTerm) {
+                                                            if (
+                                                                this.showCP(row, false) ||
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                            ) {
+                                                                return true;
+                                                            } else {
+                                                                return false;
+                                                            }
+                                                        } else return true;
+                                                    })
+                                                    .map((addonAssociation) => (
+                                                        <CSTableRow className="addon-row"
+                                                                    key={addonAssociation.Id}>
+                                                            <CSTableCell maxWidth="4rem">
+                                                                <CSButton
+                                                                    label="Edit"
+                                                                    labelHidden
+                                                                    btnType="default"
+                                                                    iconName="apps"
+                                                                    size="xsmall"
+                                                                    onClick={() => handleOnAddonClick(addonAssociation.Id)}
+                                                                />
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                            </CSTableCell>
+                                                        </CSTableRow>
+                                                    )) : null}
                                             </React.Fragment>
                                         )
                                     }) : null
