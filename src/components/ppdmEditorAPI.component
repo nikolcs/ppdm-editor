@@ -14,8 +14,6 @@
                 getAccount: '{!$RemoteAction.CSRemoteActionDelegation.getAccount}',
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
-                getCPAOAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAs}',
-                getCPAs: '{!$RemoteAction.CSRemoteActionDelegation.getCPAs}',
                 saveNew: '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',

@@ -24,7 +24,6 @@ global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
     global static List<cspmb__Price_Item__c> getPackages() {
-        //function should be static and global else it will throw error
         List<cspmb__Price_Item__c> packages =
         [SELECT Id, Name,
             (SELECT Id, Name, cspmb__member_commercial_product__r.Name FROM cspmb__member_commercial_product_associations__r)
@@ -39,7 +38,6 @@ global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
     global static List<cspmb__Price_Item__c> getCPs() {
-        //function should be static and global else it will throw error
         List<cspmb__Price_Item__c> cps =
             [SELECT Id,Name,
                 (SELECT Id, Name, CreatedById, cspmb__Sequence__c, cspmb__Add_On_Price_Item__r.Name, cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
@@ -56,28 +54,6 @@ global with sharing class CSRemoteActionDelegation {
 //            (SELECT Id, Body, IsPrivate, Title FROM Notes),
 //            (SELECT Id, Name, FirstName, LastName FROM Contacts)
 //            FROM Account
-
-    @RemoteAction
-    global static List<cspmb__Price_Item_Add_On_Price_Item_Association__c> getCPAOAs() {
-        //function should be static and global else it will throw error
-        List<cspmb__Price_Item_Add_On_Price_Item_Association__c> cpaoa1 = [SELECT Id,Name FROM cspmb__Price_Item_Add_On_Price_Item_Association__c];
-        if(cpaoa1!=null && !cpaoa1.isEmpty()){
-            return cpaoa1;
-        }else{
-            return  new List<cspmb__Price_Item_Add_On_Price_Item_Association__c>();
-        }
-    }
-
-    @RemoteAction
-    global static List<cspmb__Commercial_Product_Association__c> getCPAs() {
-        //function should be static and global else it will throw error
-        List<cspmb__Commercial_Product_Association__c> cpa1 = [SELECT Id,Name FROM cspmb__Commercial_Product_Association__c];
-        if(cpa1!=null && !cpa1.isEmpty()){
-            return cpa1;
-        }else{
-            return  new List<cspmb__Commercial_Product_Association__c>();
-        }
-    }
 
 //    @RemoteAction
 //    global static List<cspmb__Price_Item__c> createNewCP() {
