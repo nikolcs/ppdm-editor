@@ -74,3 +74,22 @@ html {
         top: 1.5rem;
     }
 }
+
+/* change to tooltip? hover problem? */
+.cs-dropdown-root {
+    .cs-dropdown-outer-item-wrapper {
+        width: 15rem;
+    }
+    .dropdown-charges {
+        width: 100%;
+        padding: 0.5rem;
+        .dropdown-footer {
+            display: flex;
+            padding: 1rem 0 0 0;
+        }
+    }
+    .cs-dropdown-outer-item-wrapper .cs-dropdown-item-wrapper li .cs-btn::after {
+        border: 1px solid #dddbda;
+        border-radius: 0.25rem;
+    }
+}

@@ -16,7 +16,8 @@ import {
     CSInputText,
     CSLookup,
     CSTabGroup,
-    CSTab
+    CSTab,
+    CSTooltip
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -82,6 +83,7 @@ class CPGrid extends React.Component {
         }, 150);
     }
 
+    /* modal save button handler */
     handleSave = () => {
         console.log("handleSave");
         console.log(this.state.detailsId);
@@ -92,6 +94,18 @@ class CPGrid extends React.Component {
             VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge).then()
         }
         this.closeModal();
+    }
+
+    /* Popup save button handler */
+    handlePopupSave = () => {
+        console.log("handleDropdownSave");
+        /* close modal here */
+        this.setState({
+            detailsName: '',
+            detailsId: '',
+            detailsRecurringCharge: '',
+            detailsOneOffCharge: '',
+        });
     }
 
     onSearchChange = (event) => {
@@ -186,11 +200,17 @@ class CPGrid extends React.Component {
             );
         }
 
-        const handleOnCPClick = (id) => {
+        const handleOnCPEditClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
-                    this.setState({detailsName: result.Name, detailsId: result.Id, visibleModal: 'commercial-product-details', activeProduct: 'CP'});
-                    console.log("getCommercialProduct in handleOnCPClick")
+                    this.setState({
+                        detailsRecurringCharge: result.pricingElementWrappers[0].coppraWrappers[0].recurringAdjustment,
+                        detailsOneOffCharge: result.pricingElementWrappers[1].coppraWrappers[1].oneOffAdjustment,
+                        detailsName: result.name,
+                        detailsId: result.id,
+                        activeProduct: 'CP'
+                    });
+                    console.log("getCommercialProduct in handleOnCPEditClick")
                     console.log(result);
                 }
             );
@@ -208,6 +228,10 @@ class CPGrid extends React.Component {
 
         const getProductNameValue = () => {
             return this.state.detailsName;
+        }
+
+        const getProductRecurringCharge = () => {
+            return this.state.detailsRecurringCharge;
         }
 
         return (
@@ -485,14 +509,68 @@ class CPGrid extends React.Component {
                                                                 <span>Recurring value</span>
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
-                                                                <CSButton
-                                                                    label={row.Id}
-                                                                    labelHidden
-                                                                    btnType="default"
-                                                                    iconName="apps"
-                                                                    size="xsmall"
-                                                                    onClick={() => handleOnCPClick(row.Id)}
-                                                                />
+                                                                <CSTooltip
+                                                                    stickyOnClick
+                                                                    variant="basic"
+                                                                    content={
+                                                                        <div className="dropdown-charges">
+                                                                            <CSInputText
+                                                                                label="One-Off Charge"
+                                                                                value={this.state.detailsOneOffCharge}
+                                                                                onChange={this.handleOOOnChange}
+                                                                            />
+                                                                            <CSInputText
+                                                                                label="Recurring Charge"
+                                                                                value={this.state.detailsRecurringCharge}
+                                                                                onChange={this.handleRCOnChange}
+                                                                            />
+                                                                            <div className="dropdown-footer">
+                                                                                <CSButton
+                                                                                    label="Close"
+                                                                                    onClick={this.handlePopupSave}
+                                                                                />
+                                                                                <CSButton
+                                                                                    label="Save"
+                                                                                    btnStyle="brand"
+                                                                                    onClick={this.handlePopupSave}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                >
+                                                                    <CSButton
+                                                                        label="Label is hidden"
+                                                                        labelHidden
+                                                                        iconOrigin="cs"
+                                                                        iconName="currency_dollar"
+                                                                        onClick={() => handleOnCPEditClick(row.Id)}
+                                                                    />
+                                                                </CSTooltip>
+                                                                <CSDropdown
+                                                                    mode="custom"
+                                                                >
+                                                                    <div className="dropdown-charges">
+                                                                        <CSInputText
+                                                                            label="One-Off Charge"
+                                                                            value={this.state.detailsRecurringCharge}
+                                                                            onChange={this.handleRCOnChange}
+                                                                        />
+                                                                        <CSInputText
+                                                                            label="Recurring Charge"
+                                                                            value={this.state.detailsOneOffCharge}
+                                                                            onChange={this.handleOOOnChange}
+                                                                        />
+                                                                        <div className="dropdown-footer">
+                                                                            <CSButton
+                                                                                label="Close"
+                                                                            />
+                                                                            <CSButton
+                                                                                label="Save"
+                                                                                btnStyle="brand"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </CSDropdown>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -600,13 +678,27 @@ class CPGrid extends React.Component {
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
                                                                 <CSButton
-                                                                    label={row.Id}
+                                                                    label="test"
                                                                     labelHidden
                                                                     btnType="default"
                                                                     iconName="apps"
                                                                     size="xsmall"
                                                                     onClick={() => handleOnPackageClick(row.Id)}
                                                                 />
+                                                                <CSDropdown>
+                                                                    <div className="dropdown-charges">
+                                                                        <CSInputText
+                                                                            label="One-Off Charge"
+                                                                            value={this.state.detailsOneOffCharge}
+                                                                            onChange={this.handleOOOnChange}
+                                                                        />
+                                                                        <CSInputText
+                                                                            label="Recurring Charge"
+                                                                            value={this.state.detailsOneOffCharge}
+                                                                            onChange={this.handleOOOnChange}
+                                                                        />
+                                                                    </div>
+                                                                </CSDropdown>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -657,7 +749,7 @@ class CPGrid extends React.Component {
                                                                     btnType="default"
                                                                     iconName="apps"
                                                                     size="xsmall"
-                                                                    onClick={() => handleOnCPClick(cpAssociation.Id)}
+                                                                    onClick={() => handleOnCPEditClick(cpAssociation.Id)}
                                                                 />
                                                             </CSTableCell>
                                                         </CSTableRow>

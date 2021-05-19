@@ -158,14 +158,44 @@ invokeAction = function (...args) {
 
         case "getCPAOAssociation":
             data = {
-                "Id": "a1K4L000000g5nrUAA",
-                "Name": "PAO-2",
-                "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mCQAS",
-                "cspmb__Add_On_Price_Item__r": {
-                    "Name": "Add On 3",
-                    "cspmb__Add_On_Price_Item_Description__c": "Add On 3 desc",
-                    "Id": "a0x4L000001M0mCQAS"
-                }
+                "id": "a1P4L000008rke0UAA",
+                "name": "test",
+                "pricingElementWrappers": [
+                    {
+                        "coppraWrappers": [
+                            {
+                                "id": "a1N4L000000kFVNUA2",
+                                "name": "CPPRA-000015",
+                                "recurringAdjustment": 15
+                            },
+                            {
+                                "id": "a1N4L000000kFVMUA2",
+                                "name": "CPPRA-000014",
+                                "recurringAdjustment": 15
+                            }
+                        ],
+                        "id": "a1S4L000001A0GhUAK",
+                        "name": "PE-000016",
+                        "type": "Recurring Charge"
+                    },
+                    {
+                        "coppraWrappers": [
+                            {
+                                "id": "a1N4L000000kFWGUA2",
+                                "name": "CPPRA-000029",
+                                "oneOffAdjustment": 1
+                            },
+                            {
+                                "id": "a1N4L000000kFWFUA2",
+                                "name": "CPPRA-000028",
+                                "oneOffAdjustment": 1
+                            }
+                        ],
+                        "id": "a1S4L000001A0HGUA0",
+                        "name": "PE-000023",
+                        "type": "One-off Charge"
+                    }
+                ]
             }
             return delayResponse(data, args);
 
