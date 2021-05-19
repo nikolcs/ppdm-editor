@@ -23,6 +23,10 @@ invokeAction = function (...args) {
                 {
                     "Id": "a1P4L000008rke0UAA",
                     "Name": "test",
+                    "cspmb__Price_Item_Description__c": "Enjoy the best WiFi coverage at home with StarHub Broadband",
+                    "SKU__c": "STH-BB-2000FB",
+                    "Image_URL__c": "https://ppdmui1-dev-ed--c.visualforce.com/resource/1621434285000/cpimage0",
+                    "Rating__c": 5,
                     "cspmb__Price_Item_Add_On_Price_Item_Association__r": [
                         {
                             "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
@@ -66,24 +70,19 @@ invokeAction = function (...args) {
                     ]
                 },
                 {
-                    "Id": "a1P4L000008rke5UAA",
-                    "Name": "test package"
-                },
-                {
-                    "Id": "a1P4L000008rlhqUAA",
-                    "Name": "cp 1"
-                },
-                {
                     "Id": "a1P4L000008rli0UAA",
-                    "Name": "cp3"
+                    "Name": "cp3",
+                    "SKU__c": "STH-BB-5000FB"
                 },
                 {
                     "Id": "a1P4L000008rlhvUAA",
-                    "Name": "cp 2"
+                    "Name": "cp 2",
+                    "SKU__c": "STH-BB-1000FB"
                 },
                 {
                     "Id": "a1P4L000008rlhwUAA",
-                    "Name": "cp4"
+                    "Name": "cp4",
+                    "SKU__c": "STH-BB-3000FB"
                 }
             ]
             return delayResponse(data, args);

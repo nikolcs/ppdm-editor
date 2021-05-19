@@ -442,16 +442,18 @@ class CPGrid extends React.Component {
 
                     {this.state.activeTab === 0 ? (
                         <CSTable>
+                            {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
-                                <CSTableCell text="Name"/>
-                                <CSTableCell text="Description"/>
-                                <CSTableCell text="SKU code"/>
+                                <CSTableCell text="Name"  grow={2}/>
+                                <CSTableCell text="Description" grow={4}/>
+                                <CSTableCell text="SKU code" grow={2}/>
+                                <CSTableCell text="Rating"/>
                                 <CSTableCell text="Image"/>
                                 <CSTableCell text="One off"/>
                                 <CSTableCell text="Recurring"/>
-                                <CSTableCell maxWidth="4rem"/>
+                                <CSTableCell text="Edit charges" maxWidth="6rem" grow={2} />
                             </CSTableHeader>
-                            {/* COMMERCIAL PRODUCT TABLE */}
+
                             <CSTableBody>
                                 {this.state.CPs ? Object.values(this.state.CPs)
                                     .sort(this.rowSort)
@@ -461,25 +463,28 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, true) &&
                                                         <CSTableRow>
-                                                            <CSTableCell>
+                                                            <CSTableCell grow={2}>
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>Description value</span>
+                                                            <CSTableCell grow={4}>
+                                                                <span>{row.cspmb__Price_Item_Description__c}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell grow={2}>
+                                                                <span>{row.SKU__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>SKU code value</span>
+                                                                <span>{row.Rating__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>Image </span>
+                                                                <span>{row.Image_URL__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>One off value</span>
+                                                                <span>One off value </span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>recurring value</span>
+                                                                <span>Recurring value</span>
                                                             </CSTableCell>
-                                                            <CSTableCell maxWidth="4rem">
+                                                            <CSTableCell maxWidth="6rem" grow={2}>
                                                                 <CSButton
                                                                     label={row.Id}
                                                                     labelHidden
@@ -510,25 +515,28 @@ class CPGrid extends React.Component {
                                                             className="addon-row"
                                                             key={addonAssociation.Id}
                                                         >
-                                                            <CSTableCell>
+                                                            <CSTableCell grow={2}>
                                                                 <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>Description value</span>
+                                                            <CSTableCell grow={4}>
+                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell grow={2}>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>SKU code value</span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>Image </span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>One off value</span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>recurring value</span>
+                                                                <span></span>
                                                             </CSTableCell>
-                                                            <CSTableCell maxWidth="4rem">
+                                                            <CSTableCell maxWidth="6rem" grow={2}>
                                                                 <CSButton
                                                                     label="Edit"
                                                                     labelHidden
@@ -549,11 +557,17 @@ class CPGrid extends React.Component {
                         </CSTable>
                     ) :
                         <CSTable>
+                            {/* PACKAGES WITH CPS PRODUCT TABLE */}
                             <CSTableHeader>
-                                <CSTableCell maxWidth="4rem"/>
-                                <CSTableCell text="Name"/>
+                                <CSTableCell text="Name" grow={2}/>
+                                <CSTableCell text="Description" grow={4}/>
+                                <CSTableCell text="SKU code" grow={2} />
+                                <CSTableCell text="Rating"/>
+                                <CSTableCell text="Image " />
+                                <CSTableCell text="One off" />
+                                <CSTableCell text="recurring" />
+                                <CSTableCell text="Edit charges" maxWidth="6rem" grow={2}/>
                             </CSTableHeader>
-
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
                                     .sort(this.rowSort)
@@ -562,36 +576,39 @@ class CPGrid extends React.Component {
                                             <React.Fragment key={row.Id}>
                                                 <>
                                                     {this.showCP(row, false, true) &&
-                                                    <CSTableRow>
-                                                        <CSTableCell>
-                                                            <span>{row.Name}</span>
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>Description value</span>
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>SKU code value</span>
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>Image </span>
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>One off value</span>
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>recurring value</span>
-                                                        </CSTableCell>
-                                                        <CSTableCell maxWidth="4rem">
-                                                            <CSButton
-                                                                label={row.Id}
-                                                                labelHidden
-                                                                btnType="default"
-                                                                iconName="apps"
-                                                                size="xsmall"
-                                                                onClick={() => handleOnPackageClick(row.Id)}
-                                                            />
-                                                        </CSTableCell>
-                                                    </CSTableRow>
+                                                        <CSTableRow>
+                                                            <CSTableCell grow={2}>
+                                                                <span>{row.Name}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell grow={4}>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell grow={2}>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell maxWidth="6rem" grow={2}>
+                                                                <CSButton
+                                                                    label={row.Id}
+                                                                    labelHidden
+                                                                    btnType="default"
+                                                                    iconName="apps"
+                                                                    size="xsmall"
+                                                                    onClick={() => handleOnPackageClick(row.Id)}
+                                                                />
+                                                            </CSTableCell>
+                                                        </CSTableRow>
                                                     }
                                                 </>
                                                 {row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
@@ -608,27 +625,32 @@ class CPGrid extends React.Component {
                                                         } else return true;
                                                     })
                                                     .map((cpAssociation) => (
-                                                        <CSTableRow className="addon-row"
-                                                                    key={cpAssociation.Id}>
-                                                            <CSTableCell>
+                                                        <CSTableRow
+                                                            className="package-cp-row"
+                                                            key={cpAssociation.Id}
+                                                        >
+                                                            <CSTableCell grow={2}>
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>Description value</span>
+                                                            <CSTableCell grow={4}>
+                                                                <span></span>
+                                                            </CSTableCell>
+                                                            <CSTableCell grow={2}>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>SKU code value</span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>Image </span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>One off value</span>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
-                                                                <span>recurring value</span>
+                                                                <span></span>
                                                             </CSTableCell>
-                                                            <CSTableCell maxWidth="4rem">
+                                                            <CSTableCell maxWidth="6rem" grow={2}>
                                                                 <CSButton
                                                                     label="Edit"
                                                                     labelHidden

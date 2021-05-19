@@ -31,7 +31,7 @@ html {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 1rem;
-    .cs-toggle-element {
+    .cs-toggle-element .cs-label-wrapper {
         cursor: pointer;
     }
 }
@@ -43,6 +43,12 @@ html {
     .cs-table {
         flex: 1 1 0;
         overflow-y: auto;
+        .cs-table-cell > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            white-space: nowrap;
+        }
         .cs-table-header {
             position: sticky;
             top: 0;
