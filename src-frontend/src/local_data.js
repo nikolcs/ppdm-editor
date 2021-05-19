@@ -123,11 +123,13 @@ invokeAction = function (...args) {
                         "coppraWrappers": [
                             {
                                 "id": "a1N4L000000kFVNUA2",
-                                "name": "CPPRA-000015"
+                                "name": "CPPRA-000015",
+                                "recurringAdjustment": 15
                             },
                             {
                                 "id": "a1N4L000000kFVMUA2",
-                                "name": "CPPRA-000014"
+                                "name": "CPPRA-000014",
+                                "recurringAdjustment": 15
                             }
                         ],
                         "id": "a1S4L000001A0GhUAK",
@@ -138,11 +140,13 @@ invokeAction = function (...args) {
                         "coppraWrappers": [
                             {
                                 "id": "a1N4L000000kFWGUA2",
-                                "name": "CPPRA-000029"
+                                "name": "CPPRA-000029",
+                                "oneOffAdjustment": 1
                             },
                             {
                                 "id": "a1N4L000000kFWFUA2",
-                                "name": "CPPRA-000028"
+                                "name": "CPPRA-000028",
+                                "oneOffAdjustment": 1
                             }
                         ],
                         "id": "a1S4L000001A0HGUA0",

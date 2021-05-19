@@ -5,7 +5,7 @@ global with sharing class CSRemoteActionDelegation {
         List<cspmb__Pricing_Element__c> pricingElements =
             [SELECT Id, Name,
                     cspmb__pricing_element_type__r.cspmb__type__c, cspmb__commercial_product__r.Id, cspmb__commercial_product__r.Name,
-                (SELECT Id, Name
+                (SELECT Id, Name, cspmb__one_off_adjustment__c, cspmb__recurring_adjustment__c
                     FROM cspmb__commercial_product_pricing_rule_assocs__r)
             FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product__r.Id = : cpId];
@@ -41,10 +41,14 @@ global with sharing class CSRemoteActionDelegation {
     global class CoppraWrapper {
         public Id id {get; set;}
         public String name {get; set;}
+        public Decimal recurringAdjustment {get; set;}
+        public Decimal oneOffAdjustment {get; set;}
 
         public CoppraWrapper(cspmb__Price_Item_Pricing_Rule_Association__c coppra) {
             this.id = coppra.Id;
             this.name = coppra.Name;
+            this.recurringAdjustment = coppra.cspmb__recurring_adjustment__c;
+            this.oneOffAdjustment = coppra.cspmb__one_off_adjustment__c;
         }
     }
 
