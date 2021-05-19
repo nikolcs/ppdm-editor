@@ -93,7 +93,6 @@ class CPGrid extends React.Component {
     }
 
     onSearchChange = (event) => {
-        console.log("search");
         this.setState({
             searchTerm: event.target.value
         });
@@ -125,11 +124,12 @@ class CPGrid extends React.Component {
         VFRemotingService.saveNew('New Master product from React3', 'Master');
     }
 
-    showCP = (cp, byAddons) => {
+    showCP = (cp, byAddons, byCPs) => {
         if (this.state.searchTerm) {
             if (
                 (cp.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                 || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x => (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
+                || (byCPs && cp.cspmb__member_commercial_product_associations__r && cp.cspmb__member_commercial_product_associations__r.filter(x => (x.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
             ) {
                 return true;
             } else {
@@ -437,7 +437,6 @@ class CPGrid extends React.Component {
                                 <CSTableCell maxWidth="4rem"/>
                                 <CSTableCell text="Name"/>
                             </CSTableHeader>
-                            {/* (row.cspmb__Price_Item_Add_On_Price_Item_Association__r || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) */}
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableBody>
                                 {this.state.CPs ? Object.values(this.state.CPs)
@@ -494,7 +493,8 @@ class CPGrid extends React.Component {
                                                                 <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
                                                             </CSTableCell>
                                                         </CSTableRow>
-                                                    )) : null}
+                                                    )) : null
+                                                }
                                             </React.Fragment>
                                         )
                                     }) : null
@@ -507,56 +507,64 @@ class CPGrid extends React.Component {
                                 <CSTableCell maxWidth="4rem"/>
                                 <CSTableCell text="Name"/>
                             </CSTableHeader>
+
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
                                     .sort(this.rowSort)
-                                    .filter(row => {
-                                        if (this.state.searchTerm) {
-                                            if (
-                                                (row.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                                            ) {
-                                                return true;
-                                            } else {
-                                                return false;
-                                            }
-                                        } else return true;
-                                    })
                                     .map((row) => {
                                         return (
                                             <React.Fragment key={row.Id}>
-                                                <CSTableRow>
-                                                    <CSTableCell maxWidth="4rem">
-                                                        <CSButton
-                                                            label={row.Id}
-                                                            labelHidden
-                                                            btnType="default"
-                                                            iconName="apps"
-                                                            size="xsmall"
-                                                            onClick={() => handleOnPackageClick(row.Id)}
-                                                        />
-                                                    </CSTableCell>
-                                                    <CSTableCell>
-                                                        <CSIcon className="pkg-icon" name="package_outline" origin="cs" />
-                                                        <span>{row.Name}</span>
-                                                    </CSTableCell>
-                                                </CSTableRow>
-                                                {row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r.map((cpAssociation) => (
-                                                    <CSTableRow className="package-cp-row" key={cpAssociation.Id}>
+                                                <>
+                                                    {this.showCP(row, false, true) &&
+                                                    <CSTableRow>
                                                         <CSTableCell maxWidth="4rem">
                                                             <CSButton
-                                                                label="Edit"
+                                                                label={row.Id}
                                                                 labelHidden
                                                                 btnType="default"
                                                                 iconName="apps"
                                                                 size="xsmall"
-                                                                onClick={() => handleOnCPClick(cpAssociation.cspmb__member_commercial_product__r.Id)}
+                                                                onClick={() => handleOnPackageClick(row.Id)}
                                                             />
                                                         </CSTableCell>
                                                         <CSTableCell>
-                                                            <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
+                                                            <span>{row.Name}</span>
                                                         </CSTableCell>
                                                     </CSTableRow>
-                                                )) : null}
+                                                    }
+                                                </>
+                                                {row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
+                                                    .filter(cpAssociation => {
+                                                        if (this.state.searchTerm) {
+                                                            if (
+                                                                this.showCP(row, false, true) ||
+                                                                (cpAssociation.cspmb__member_commercial_product__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                            ) {
+                                                                return true;
+                                                            } else {
+                                                                return false;
+                                                            }
+                                                        } else return true;
+                                                    })
+                                                    .map((cpAssociation) => (
+                                                        <CSTableRow className="addon-row"
+                                                                    key={cpAssociation.Id}>
+                                                            <CSTableCell maxWidth="4rem">
+                                                                <CSButton
+                                                                    label="Edit"
+                                                                    labelHidden
+                                                                    btnType="default"
+                                                                    iconName="apps"
+                                                                    size="xsmall"
+                                                                    onClick={() => handleOnCPClick(cpAssociation.Id)}
+                                                                />
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
+                                                            </CSTableCell>
+                                                        </CSTableRow>
+                                                    )) : null
+                                                }
                                             </React.Fragment>
                                         )
                                     }) : null
