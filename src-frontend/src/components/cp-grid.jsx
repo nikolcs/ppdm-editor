@@ -71,8 +71,15 @@ class CPGrid extends React.Component {
     }
 
     handleSave = () => {
-        console.log("handleSave")
-        this.closeModal();
+        console.log("handleSave");
+        console.log(this.state.detailsId);
+        VFRemotingService.updateRecurringPricing(this.state.detailsId).then(
+            result => {
+                console.log('then of handleSave promisa');
+                console.log(result);
+                this.closeModal();
+            }
+        )
     }
 
     onSearchChange = (event) => {
@@ -87,13 +94,6 @@ class CPGrid extends React.Component {
     }
 
     componentDidMount() {
-        // VFRemotingService.getAccount("GenePoint").then(
-        //     result => {
-        //         this.setState({Account: result});
-        //         console.log("getAccount");
-        //         console.log(result);
-        //     }
-        // )
         VFRemotingService.getCPs().then(
             result => {
                 this.setState({CPs: result});

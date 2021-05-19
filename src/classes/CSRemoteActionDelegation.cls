@@ -1,25 +1,25 @@
 global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
-    global static Account getAccount(String accountName) {
-        Account account = [SELECT Id, Name, Phone, Type, NumberOfEmployees
-        FROM Account WHERE Name = :accountName];
-        return account;
-    }
-
-    @RemoteAction
     global static cspmb__Price_Item__c getCommercialProduct(String cpId) {
-        cspmb__Price_Item__c cp = [SELECT Id, Name
-        FROM cspmb__Price_Item__c WHERE Id = :cpId];
-        return cp;
+        List<cspmb__Price_Item__c> cpL = [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id = :cpId LIMIT 1];
+        if (cpL.size() > 0) {
+            cspmb__Price_Item__c cp = cpL[0];
+            return cp;
+        }
+        return null;
     }
 
     @RemoteAction
     global static cspmb__Price_Item_Add_On_Price_Item_Association__c getCPAOAssociation(String cpaoaId) {
-        cspmb__Price_Item_Add_On_Price_Item_Association__c cpaoa =
+        List<cspmb__Price_Item_Add_On_Price_Item_Association__c> cpaoaL =
             [SELECT Id, Name, cspmb__Add_On_Price_Item__r.Name, cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c
-            FROM cspmb__Price_Item_Add_On_Price_Item_Association__c WHERE Id = :cpaoaId];
-        return cpaoa;
+            FROM cspmb__Price_Item_Add_On_Price_Item_Association__c WHERE Id = :cpaoaId LIMIT 1];
+        if (cpaoaL.size() > 0) {
+            cspmb__Price_Item_Add_On_Price_Item_Association__c cpaoa = cpaoaL[0];
+            return cpaoa;
+        }
+        return null;
     }
 
     @RemoteAction
@@ -49,42 +49,6 @@ global with sharing class CSRemoteActionDelegation {
         }
     }
 
-//    SELECT Id, Name, RecordTypeId, Type, Owner.FirstName, Owner.Id, Owner.LastName, Owner.Name, Owner.Username,
-//            (SELECT Id, BillingStreet, CurrencyIsoCode, EndDate, OwnerExpirationNotice, StartDate, Status FROM Contracts),
-//            (SELECT Id, Body, IsPrivate, Title FROM Notes),
-//            (SELECT Id, Name, FirstName, LastName FROM Contacts)
-//            FROM Account
-
-//    @RemoteAction
-//    global static List<cspmb__Price_Item__c> createNewCP() {
-//        //function should be static and global else it will throw error
-//        List<cspmb__Commercial_Product_Association__c> cpa1 = [SELECT Id,Name FROM cspmb__Commercial_Product_Association__c];
-//        if(cpa1!=null && !cpa1.isEmpty()){
-//            return cpa1;
-//        }else{
-//            return  new List<cspmb__Commercial_Product_Association__c>();
-//        }
-//    }
-
-
-//    @RemoteAction
-//    global static String saveData(String jsonData, String recordId) {
-//
-//        //get the stack we want to save.
-//        Stack__c s = [
-//                SELECT Id, Roles__c
-//                FROM Stack__c
-//                WHERE Id = :recordId LIMIT 1];
-//        s.Roles__c = jsonData;
-//
-//        try {
-//            update s
-//        }catch (Exception e){
-//            return e;
-//        }
-//        return 'success';
-//    }
-
     @RemoteAction
     global static String saveNew(String name, String role) {
         // get list of commercial products
@@ -102,7 +66,29 @@ global with sharing class CSRemoteActionDelegation {
         return 'success';
     }
 
-    // public static Map<Id, SObject> upsertAddons(List<cspmb__Add_On_Price_Item__c> records, Boolean reselectRecords) {
-    //     return new AddonGridController().upsertRecords(records, reselectRecords);
-    // }
+    @RemoteAction
+    global static void updateRecurringPricing(String productId) {
+
+        List<cspmb__Pricing_Element_Type__c> recurringPETL =
+            [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
+            WHERE cspmb__type__c = 'Recurring Charge' AND Name = 'Recurring Charge' LIMIT 1];
+
+        String recurringPETId = recurringPETL[0].Id;
+
+        List<cspmb__Pricing_Element__c> recurringList =
+            [SELECT Id, Name FROM cspmb__Pricing_Element__c
+                WHERE cspmb__commercial_product__r.Id =: productId
+                AND cspmb__pricing_element_type__r.cspmb__type__c = 'Recurring Charge'
+                AND cspmb__pricing_element_type__r.Name = 'Recurring Charge'];
+
+        if (recurringList.size() > 0) {
+            return;
+        } else {
+            cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
+            newRC.cspmb__pricing_element_type__c = recurringPETId;
+            newRC.cspmb__commercial_product__c = productId;
+            insert newRC;
+        }
+    }
 }
+

@@ -11,12 +11,12 @@
         window.CS.PPDM = {
             vfRemotingManager: Visualforce.remoting.Manager,
             actions: {
-                getAccount: '{!$RemoteAction.CSRemoteActionDelegation.getAccount}',
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
                 saveNew: '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',
+                updateRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateRecurringPricing}',
             },
             session: {
                 id: '{!$Api.Session_Id}'

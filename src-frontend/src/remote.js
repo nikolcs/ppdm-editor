@@ -47,16 +47,6 @@ export class VFRemotingService {
         });
     }
 
-    static getAccount = (accountName) => {
-        return VFRemotingService.invokeRemoteAction(
-            {
-                options: { escape: false, buffer: false },
-                remoteActionName: CS.PPDM.actions.getAccount
-            },
-            [accountName]
-        );
-    };
-
     static getPackages = () => {
         return VFRemotingService.invokeRemoteAction(
             {
@@ -122,6 +112,16 @@ export class VFRemotingService {
             {
                 options: { escape: false, buffer: false },
                 remoteActionName: CS.PPDM.actions.getCPAOAssociation,
+            },
+            [id]
+        );
+    };
+
+    static updateRecurringPricing = (id) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateRecurringPricing,
             },
             [id]
         );
