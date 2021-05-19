@@ -1,22 +1,68 @@
 global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
-    global static cspmb__Price_Item__c getCommercialProduct(String cpId) {
-        List<cspmb__Price_Item__c> cpL =
+    global static CommercialProductWrapper getCommercialProduct(String cpId) {
+        List<cspmb__Pricing_Element__c> pricingElements =
             [SELECT Id, Name,
-                (SELECT Id, Name,
-                        cspmb__pricing_element_type__r.cspmb__type__c
-
-//                (SELECT Id, Name
-//                        FROM cspmb__commercial_product_pricing_rule_assocs__r)
-                FROM cspmb__pricing_elements__r AS pricingEl)
-            FROM cspmb__Price_Item__c
-            WHERE Id = :cpId LIMIT 1];
-        if (cpL.size() > 0) {
-            cspmb__Price_Item__c cp = cpL[0];
-            return cp;
+                    cspmb__pricing_element_type__r.cspmb__type__c, cspmb__commercial_product__r.Id, cspmb__commercial_product__r.Name,
+                (SELECT Id, Name
+                    FROM cspmb__commercial_product_pricing_rule_assocs__r)
+            FROM cspmb__Pricing_Element__c
+            WHERE cspmb__commercial_product__r.Id = : cpId];
+        if (pricingElements.size() > 0) {
+            return toCommercialProductWrapper(pricingElements);
         }
         return null;
+    }
+
+    global class CommercialProductWrapper {
+        public Id id {get; set;}
+        public String name {get; set;}
+        public List<PricingElementWrapper> pricingElementWrappers {get; set;}
+        public CommercialProductWrapper(){
+            this.pricingElementWrappers = new List<PricingElementWrapper>();
+        }
+    }
+
+    global class PricingElementWrapper {
+        public Id id {get; set;}
+        public String name {get; set;}
+        public String type {get; set;}
+        public List<CoppraWrapper> coppraWrappers {get; set;}
+
+        public PricingElementWrapper(cspmb__Pricing_Element__c pe) {
+            this.id = pe.Id;
+            this.name = pe.Name;
+            this.type = pe.cspmb__pricing_element_type__r.cspmb__type__c;
+            this.coppraWrappers = new List<CoppraWrapper>();
+        }
+    }
+
+    global class CoppraWrapper {
+        public Id id {get; set;}
+        public String name {get; set;}
+
+        public CoppraWrapper(cspmb__Price_Item_Pricing_Rule_Association__c coppra) {
+            this.id = coppra.Id;
+            this.name = coppra.Name;
+        }
+    }
+
+    static CommercialProductWrapper toCommercialProductWrapper(List<cspmb__Pricing_Element__c> listPE) {
+        CommercialProductWrapper cp = new CommercialProductWrapper();
+
+        for(cspmb__Pricing_Element__c pe : listPE) {
+            PricingElementWrapper elem = new PricingElementWrapper(pe);
+            for (cspmb__Price_Item_Pricing_Rule_Association__c asoc : pe.cspmb__commercial_product_pricing_rule_assocs__r) {
+               CoppraWrapper c = new CoppraWrapper(asoc);
+               elem.coppraWrappers.add(c);
+            }
+            cp.pricingElementWrappers.add(elem);
+        }
+        cp.id = listPE[0].cspmb__commercial_product__r.Id;
+        cp.name = listPE[0].cspmb__commercial_product__r.Name;
+
+        return cp;
     }
 
     @RemoteAction
@@ -47,13 +93,17 @@ global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
     global static List<cspmb__Price_Item__c> getCPs() {
+
         List<cspmb__Price_Item__c> cps =
             [SELECT Id,Name,
                 (SELECT Id, Name, CreatedById, cspmb__Sequence__c,
                         cspmb__Add_On_Price_Item__r.Name,
                         cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c
-                FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
-            FROM cspmb__Price_Item__c WHERE cspmb__Role__c = 'Commercial Product'];
+                    FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
+                FROM cspmb__Price_Item__c
+                WHERE cspmb__Role__c = 'Commercial Product'
+//                AND SKU__c LIKE 'STH%' // !STARHUB
+            ];
         if(cps!=null && !cps.isEmpty()){
             return cps;
         } else {

@@ -116,8 +116,40 @@ invokeAction = function (...args) {
 
         case "getCommercialProduct":
             data = {
-                "Id": "a1P4L000008rke0UAA",
-                "Name": "test"
+                "id": "a1P4L000008rke0UAA",
+                "name": "test",
+                "pricingElementWrappers": [
+                    {
+                        "coppraWrappers": [
+                            {
+                                "id": "a1N4L000000kFVNUA2",
+                                "name": "CPPRA-000015"
+                            },
+                            {
+                                "id": "a1N4L000000kFVMUA2",
+                                "name": "CPPRA-000014"
+                            }
+                        ],
+                        "id": "a1S4L000001A0GhUAK",
+                        "name": "PE-000016",
+                        "type": "Recurring Charge"
+                    },
+                    {
+                        "coppraWrappers": [
+                            {
+                                "id": "a1N4L000000kFWGUA2",
+                                "name": "CPPRA-000029"
+                            },
+                            {
+                                "id": "a1N4L000000kFWFUA2",
+                                "name": "CPPRA-000028"
+                            }
+                        ],
+                        "id": "a1S4L000001A0HGUA0",
+                        "name": "PE-000023",
+                        "type": "One-off Charge"
+                    }
+                ]
             }
             return delayResponse(data, args);
 
