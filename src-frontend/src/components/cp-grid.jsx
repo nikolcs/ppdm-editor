@@ -40,16 +40,23 @@ class CPGrid extends React.Component {
 
         activeProduct: '',
 
-        oneOffPriceEditable: false,
-        recurringPriceEditable: false,
+        oneOffPriceEditable: true,
+        recurringPriceEditable: true,
 
         detailsName: '',
         detailsId: '',
-
+        detailsRecurringCharge: '',
+        detailsOneOffCharge: '',
     };
 
     handleInputOnChange = (event) => {
         this.setState({ detailsName: event.target.value});
+    }
+    handleRCOnChange = (event) => {
+        this.setState({ detailsRecurringCharge: event.target.value});
+    }
+    handleOOOnChange = (event) => {
+        this.setState({ detailsOneOffCharge: event.target.value});
     }
 
     openModal = (modalId) => {
@@ -58,14 +65,17 @@ class CPGrid extends React.Component {
     closeModal = () => {
         this.setState({
             visibleModal: undefined,
+            activeProduct: '',
+
             detailsName: '',
             detailsId: '',
-            activeProduct: ''
+            detailsRecurringCharge: '',
+            detailsOneOffCharge: '',
         });
         setTimeout(() => {
             this.setState( {
-                oneOffPriceEditable: false,
-                recurringPriceEditable: false,
+                oneOffPriceEditable: true,
+                recurringPriceEditable: true,
             })
         }, 150);
     }
@@ -73,13 +83,13 @@ class CPGrid extends React.Component {
     handleSave = () => {
         console.log("handleSave");
         console.log(this.state.detailsId);
-        VFRemotingService.updateRecurringPricing(this.state.detailsId).then(
-            result => {
-                console.log('then of handleSave promisa');
-                console.log(result);
-                this.closeModal();
-            }
-        )
+        if(this.state.detailsRecurringCharge) {
+            VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge).then()
+        }
+        if(this.state.detailsOneOffCharge) {
+            VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge).then()
+        }
+        this.closeModal();
     }
 
     onSearchChange = (event) => {
@@ -232,7 +242,7 @@ class CPGrid extends React.Component {
                                 <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />
                                 <div className="placeholder"></div>
                                 <div className="input-wrapper">
-                                    <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} />
+                                    <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} value={this.state.detailsRecurringCharge} onChange={this.handleRCOnChange}/>
                                     {!this.state.recurringPriceEditable &&
                                         <CSButton
                                             size="small"
@@ -245,7 +255,7 @@ class CPGrid extends React.Component {
                                     }
                                 </div>
                                 <div className="input-wrapper">
-                                    <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} />
+                                    <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} value={this.state.detailsOneOffCharge} onChange={this.handleOOOnChange}/>
                                     {!this.state.oneOffPriceEditable &&
                                         <CSButton
                                             size="small"

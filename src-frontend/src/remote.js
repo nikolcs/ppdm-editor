@@ -117,13 +117,22 @@ export class VFRemotingService {
         );
     };
 
-    static updateRecurringPricing = (id) => {
+    static updateRecurringPricing = (id, recurringCharge) => {
         return VFRemotingService.invokeRemoteAction(
             {
                 options: { escape: false, buffer: false },
                 remoteActionName: CS.PPDM.actions.updateRecurringPricing,
             },
-            [id]
+            [id, recurringCharge]
+        );
+    };
+    static updateOneOffPricing = (id, oneOffCharge) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateOneOffPricing,
+            },
+            [id, oneOffCharge]
         );
     };
 }

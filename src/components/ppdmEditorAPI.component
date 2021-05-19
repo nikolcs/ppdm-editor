@@ -17,6 +17,7 @@
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',
                 updateRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateRecurringPricing}',
+                updateOneOffPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateOneOffPricing}',
             },
             session: {
                 id: '{!$Api.Session_Id}'
@@ -32,33 +33,6 @@
             }
         };
     </script>
-
-<!--    <script>-->
-<!--        function saveJSON(jsonData,recordId){-->
-<!--            var jsonString = JSON.stringify(jsonData);-->
-
-<!--            Visualforce.remoting.Manager.invokeAction(-->
-<!--                '{!$RemoteAction.CSRemoteActionDelegation.saveData}',-->
-<!--                jsonString,-->
-<!--                recordId,-->
-<!--                function(result, event) {-->
-<!--                    alert(result);-->
-<!--                });-->
-<!--        };-->
-<!--    </script>-->
-
-<!--    <script>-->
-<!--        function createJSON(jsonData){-->
-<!--            var jsonString = JSON.stringify(jsonData);-->
-
-<!--            Visualforce.remoting.Manager.invokeAction(-->
-<!--                '{!$RemoteAction.CSRemoteActionDelegation.saveNew}',-->
-<!--                jsonString,-->
-<!--                function(result, event) {-->
-<!--                    alert(result);-->
-<!--                });-->
-<!--        }-->
-<!--    </script>-->
 
     <div id="root"></div>
 
