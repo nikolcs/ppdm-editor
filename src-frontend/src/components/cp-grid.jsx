@@ -119,11 +119,6 @@ class CPGrid extends React.Component {
         );
     }
 
-    handleOnClick = () => {
-        console.log('handle on click called!');
-        VFRemotingService.saveNew('New Master product from React3', 'Master');
-    }
-
     showCP = (cp, byAddons, byCPs) => {
         if (this.state.searchTerm) {
             if (
@@ -422,7 +417,6 @@ class CPGrid extends React.Component {
                     </CSModal>
 
                     <div className="action-row">
-                        <CSButton label="save new cp" onClick={this.handleOnClick}/>
                         <CSInputSearch
                             placeholder="Search"
                             width="20rem"
@@ -434,8 +428,13 @@ class CPGrid extends React.Component {
                     {this.state.activeTab === 0 ? (
                         <CSTable>
                             <CSTableHeader>
-                                <CSTableCell maxWidth="4rem"/>
                                 <CSTableCell text="Name"/>
+                                <CSTableCell text="Description"/>
+                                <CSTableCell text="SKU code"/>
+                                <CSTableCell text="Image"/>
+                                <CSTableCell text="One off"/>
+                                <CSTableCell text="Recurring"/>
+                                <CSTableCell maxWidth="4rem"/>
                             </CSTableHeader>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableBody>
@@ -447,6 +446,24 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, true) &&
                                                         <CSTableRow>
+                                                            <CSTableCell>
+                                                                <span>{row.Name}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Description value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>SKU code value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Image </span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>One off value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>recurring value</span>
+                                                            </CSTableCell>
                                                             <CSTableCell maxWidth="4rem">
                                                                 <CSButton
                                                                     label={row.Id}
@@ -456,9 +473,6 @@ class CPGrid extends React.Component {
                                                                     size="xsmall"
                                                                     onClick={() => handleOnCPClick(row.Id)}
                                                                 />
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Name}</span>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -477,8 +491,28 @@ class CPGrid extends React.Component {
                                                         } else return true;
                                                     })
                                                     .map((addonAssociation) => (
-                                                        <CSTableRow className="addon-row"
-                                                                    key={addonAssociation.Id}>
+                                                        <CSTableRow
+                                                            className="addon-row"
+                                                            key={addonAssociation.Id}
+                                                        >
+                                                            <CSTableCell>
+                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Description value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>SKU code value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Image </span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>One off value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>recurring value</span>
+                                                            </CSTableCell>
                                                             <CSTableCell maxWidth="4rem">
                                                                 <CSButton
                                                                     label="Edit"
@@ -488,9 +522,6 @@ class CPGrid extends React.Component {
                                                                     size="xsmall"
                                                                     onClick={() => handleOnAddonClick(addonAssociation.Id)}
                                                                 />
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
@@ -517,6 +548,24 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, false, true) &&
                                                     <CSTableRow>
+                                                        <CSTableCell>
+                                                            <span>{row.Name}</span>
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>Description value</span>
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>SKU code value</span>
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>Image </span>
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>One off value</span>
+                                                        </CSTableCell>
+                                                        <CSTableCell>
+                                                            <span>recurring value</span>
+                                                        </CSTableCell>
                                                         <CSTableCell maxWidth="4rem">
                                                             <CSButton
                                                                 label={row.Id}
@@ -526,9 +575,6 @@ class CPGrid extends React.Component {
                                                                 size="xsmall"
                                                                 onClick={() => handleOnPackageClick(row.Id)}
                                                             />
-                                                        </CSTableCell>
-                                                        <CSTableCell>
-                                                            <span>{row.Name}</span>
                                                         </CSTableCell>
                                                     </CSTableRow>
                                                     }
@@ -549,6 +595,24 @@ class CPGrid extends React.Component {
                                                     .map((cpAssociation) => (
                                                         <CSTableRow className="addon-row"
                                                                     key={cpAssociation.Id}>
+                                                            <CSTableCell>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Description value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>SKU code value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>Image </span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>One off value</span>
+                                                            </CSTableCell>
+                                                            <CSTableCell>
+                                                                <span>recurring value</span>
+                                                            </CSTableCell>
                                                             <CSTableCell maxWidth="4rem">
                                                                 <CSButton
                                                                     label="Edit"
@@ -558,9 +622,6 @@ class CPGrid extends React.Component {
                                                                     size="xsmall"
                                                                     onClick={() => handleOnCPClick(cpAssociation.Id)}
                                                                 />
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null

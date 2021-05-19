@@ -87,16 +87,6 @@ export class VFRemotingService {
         );
     };
 
-    static saveNew = (name, role) => {
-        return VFRemotingService.invokeRemoteAction(
-            {
-                options: { escape: false, buffer: false },
-                remoteActionName: CS.PPDM.actions.saveNew,
-            },
-            [name, role]
-        );
-    };
-
     static getCommercialProduct = (id) => {
         return VFRemotingService.invokeRemoteAction(
             {
