@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-    CSIcon,
     CSTable,
     CSTableHeader,
     CSTableBody,
     CSTableRow,
     CSTableCell,
+    CSDropdown,
+    CSToggle,
     CSButton,
     CSInputSearch,
     CSModal,
@@ -34,6 +35,7 @@ class CPGrid extends React.Component {
 
         searchTerm: '',
         activeTab: 0,
+        showAddons: true,
 
         Packages: '',
         CPs: '',
@@ -133,6 +135,10 @@ class CPGrid extends React.Component {
         } else return true;
     }
 
+    toggleShowAddons = () => {
+        this.setState({showAddons: !this.state.showAddons});
+    }
+
     render() {
         const sampleLookup = {
             columns: [
@@ -218,6 +224,24 @@ class CPGrid extends React.Component {
                         active={this.state.activeTab === 1}
                     />
                 </CSTabGroup>
+
+                <div className="action-row">
+                    <CSInputSearch
+                        placeholder="Search"
+                        width="20rem"
+                        onChange={this.onSearchChange}
+                        value={this.props.searchTerm}
+                    />
+                    {this.state.activeTab === 0 ? (
+                        <CSToggle
+                            label="Show Add-Ons"
+                            onClick={this.toggleShowAddons}
+                            checked={this.state.showAddons}
+                            labelPosition="left"
+                        />
+                    ) : null
+                    }
+                </div>
 
                 <div className="table-wrapper">
                     <CSModal
@@ -416,15 +440,6 @@ class CPGrid extends React.Component {
                         </CSModalFooter>
                     </CSModal>
 
-                    <div className="action-row">
-                        <CSInputSearch
-                            placeholder="Search"
-                            width="20rem"
-                            onChange={this.onSearchChange}
-                            value={this.props.searchTerm}
-                        />
-                    </div>
-
                     {this.state.activeTab === 0 ? (
                         <CSTable>
                             <CSTableHeader>
@@ -477,7 +492,7 @@ class CPGrid extends React.Component {
                                                         </CSTableRow>
                                                     }
                                                 </>
-                                                {row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
+                                                {this.state.showAddons && row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
                                                     .filter(addonAssociation => {
                                                         if (this.state.searchTerm) {
                                                             if (
