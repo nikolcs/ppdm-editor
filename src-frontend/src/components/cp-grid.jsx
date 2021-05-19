@@ -17,7 +17,6 @@ import {
     CSLookup,
     CSTabGroup,
     CSTab,
-    CSTooltip
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -83,7 +82,7 @@ class CPGrid extends React.Component {
         }, 150);
     }
 
-    /* modal save button handler */
+    /* modal save button handler - not used currently */
     handleSave = () => {
         console.log("handleSave");
         console.log(this.state.detailsId);
@@ -99,7 +98,19 @@ class CPGrid extends React.Component {
     /* Popup save button handler */
     handlePopupSave = () => {
         console.log("handleDropdownSave");
-        /* close modal here */
+        /* close dropdown here */
+        this.setState({
+            detailsName: '',
+            detailsId: '',
+            detailsRecurringCharge: '',
+            detailsOneOffCharge: '',
+        });
+    }
+
+    /* Popup close button handler */
+    handlePopupClose = () => {
+        console.log("handlePopupSave");
+        /* close dropdown here */
         this.setState({
             detailsName: '',
             detailsId: '',
@@ -113,7 +124,6 @@ class CPGrid extends React.Component {
             searchTerm: event.target.value
         });
     }
-
     rowSort(ob1, ob2) {
         return 0;
     }
@@ -201,17 +211,37 @@ class CPGrid extends React.Component {
         }
 
         const handleOnCPEditClick = (id) => {
+            console.log("getCommercialProduct in handleOnCPEditClick")
+            console.log(result);
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
+                    let recurringHelper;
+                    let oneOffHelper;
+                    result.pricingElementWrappers.map((pe) => {
+                        if (pe.type === 'One-off Charge') {
+                            pe.coppraWrappers.map((coppra) => {
+                                if (coppra.targetPrice === 'Sales') return;
+                                else if (coppra.targetPrice === 'List') {
+                                    oneOffHelper = coppra.recurringAdjustment;
+                                }
+                            })
+                        }
+                        else if (pe.type === 'Recurring Charge') {
+                            pe.coppraWrappers.map((coppra) => {
+                                if (coppra.targetPrice === 'Sales') return;
+                                else if (coppra.targetPrice === 'List') {
+                                    recurringHelper = coppra.recurringAdjustment;
+                                }
+                            })
+                        }
+                    })
                     this.setState({
-                        detailsRecurringCharge: result.pricingElementWrappers[0].coppraWrappers[0].recurringAdjustment,
-                        detailsOneOffCharge: result.pricingElementWrappers[1].coppraWrappers[1].oneOffAdjustment,
+                        detailsRecurringCharge: recurringHelper,
+                        detailsOneOffCharge: oneOffHelper,
                         detailsName: result.name,
                         detailsId: result.id,
                         activeProduct: 'CP'
                     });
-                    console.log("getCommercialProduct in handleOnCPEditClick")
-                    console.log(result);
                 }
             );
         }
@@ -220,7 +250,7 @@ class CPGrid extends React.Component {
             VFRemotingService.getCPAOAssociation(id).then(
                 result => {
                     this.setState({detailsName: result.cspmb__Add_On_Price_Item__r.Name, visibleModal: 'commercial-product-details', activeProduct: 'Addon'});
-                    console.log("getCPAOAssociation in handleOnAddonClick")
+                    console.log("getCPAOAssociation in handleOnAddonClick");
                     console.log(result);
                 }
             );
@@ -509,45 +539,11 @@ class CPGrid extends React.Component {
                                                                 <span>Recurring value</span>
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
-                                                                <CSTooltip
-                                                                    stickyOnClick
-                                                                    variant="basic"
-                                                                    content={
-                                                                        <div className="dropdown-charges">
-                                                                            <CSInputText
-                                                                                label="One-Off Charge"
-                                                                                value={this.state.detailsOneOffCharge}
-                                                                                onChange={this.handleOOOnChange}
-                                                                            />
-                                                                            <CSInputText
-                                                                                label="Recurring Charge"
-                                                                                value={this.state.detailsRecurringCharge}
-                                                                                onChange={this.handleRCOnChange}
-                                                                            />
-                                                                            <div className="dropdown-footer">
-                                                                                <CSButton
-                                                                                    label="Close"
-                                                                                    onClick={this.handlePopupSave}
-                                                                                />
-                                                                                <CSButton
-                                                                                    label="Save"
-                                                                                    btnStyle="brand"
-                                                                                    onClick={this.handlePopupSave}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    }
-                                                                >
-                                                                    <CSButton
-                                                                        label="Label is hidden"
-                                                                        labelHidden
-                                                                        iconOrigin="cs"
-                                                                        iconName="currency_dollar"
-                                                                        onClick={() => handleOnCPEditClick(row.Id)}
-                                                                    />
-                                                                </CSTooltip>
                                                                 <CSDropdown
                                                                     mode="custom"
+                                                                    iconOrigin="cs"
+                                                                    iconName="currency_dollar"
+                                                                    onDropdownOpen={() => handleOnCPEditClick(row.Id)}
                                                                 >
                                                                     <div className="dropdown-charges">
                                                                         <CSInputText
@@ -563,10 +559,12 @@ class CPGrid extends React.Component {
                                                                         <div className="dropdown-footer">
                                                                             <CSButton
                                                                                 label="Close"
+                                                                                onClick={this.handlePopupClose}
                                                                             />
                                                                             <CSButton
                                                                                 label="Save"
                                                                                 btnStyle="brand"
+                                                                                onClick={this.handlePopupSave}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -615,14 +613,35 @@ class CPGrid extends React.Component {
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
-                                                                <CSButton
-                                                                    label="Edit"
-                                                                    labelHidden
-                                                                    btnType="default"
-                                                                    iconName="apps"
-                                                                    size="xsmall"
-                                                                    onClick={() => handleOnAddonClick(addonAssociation.Id)}
-                                                                />
+                                                                <CSDropdown
+                                                                    mode="custom"
+                                                                    iconOrigin="cs"
+                                                                    iconName="currency_dollar"
+                                                                >
+                                                                    <div className="dropdown-charges">
+                                                                        <CSInputText
+                                                                            label="One-Off Charge"
+                                                                            value={this.state.detailsRecurringCharge}
+                                                                            onChange={this.handleRCOnChange}
+                                                                        />
+                                                                        <CSInputText
+                                                                            label="Recurring Charge"
+                                                                            value={this.state.detailsOneOffCharge}
+                                                                            onChange={this.handleOOOnChange}
+                                                                        />
+                                                                        <div className="dropdown-footer">
+                                                                            <CSButton
+                                                                                label="Close"
+                                                                                onClick={this.handlePopupClose}
+                                                                            />
+                                                                            <CSButton
+                                                                                label="Save"
+                                                                                btnStyle="brand"
+                                                                                onClick={this.handlePopupSave}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </CSDropdown>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
@@ -677,26 +696,33 @@ class CPGrid extends React.Component {
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
-                                                                <CSButton
-                                                                    label="test"
-                                                                    labelHidden
-                                                                    btnType="default"
-                                                                    iconName="apps"
-                                                                    size="xsmall"
-                                                                    onClick={() => handleOnPackageClick(row.Id)}
-                                                                />
-                                                                <CSDropdown>
+                                                                <CSDropdown
+                                                                    mode="custom"
+                                                                    iconOrigin="cs"
+                                                                    iconName="currency_dollar"
+                                                                >
                                                                     <div className="dropdown-charges">
                                                                         <CSInputText
                                                                             label="One-Off Charge"
-                                                                            value={this.state.detailsOneOffCharge}
-                                                                            onChange={this.handleOOOnChange}
+                                                                            value={this.state.detailsRecurringCharge}
+                                                                            onChange={this.handleRCOnChange}
                                                                         />
                                                                         <CSInputText
                                                                             label="Recurring Charge"
                                                                             value={this.state.detailsOneOffCharge}
                                                                             onChange={this.handleOOOnChange}
                                                                         />
+                                                                        <div className="dropdown-footer">
+                                                                            <CSButton
+                                                                                label="Close"
+                                                                                onClick={this.handlePopupClose}
+                                                                            />
+                                                                            <CSButton
+                                                                                label="Save"
+                                                                                btnStyle="brand"
+                                                                                onClick={this.handlePopupSave}
+                                                                            />
+                                                                        </div>
                                                                     </div>
                                                                 </CSDropdown>
                                                             </CSTableCell>
@@ -743,14 +769,35 @@ class CPGrid extends React.Component {
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell maxWidth="6rem" grow={2}>
-                                                                <CSButton
-                                                                    label="Edit"
-                                                                    labelHidden
-                                                                    btnType="default"
-                                                                    iconName="apps"
-                                                                    size="xsmall"
-                                                                    onClick={() => handleOnCPEditClick(cpAssociation.Id)}
-                                                                />
+                                                                <CSDropdown
+                                                                    mode="custom"
+                                                                    iconOrigin="cs"
+                                                                    iconName="currency_dollar"
+                                                                >
+                                                                    <div className="dropdown-charges">
+                                                                        <CSInputText
+                                                                            label="One-Off Charge"
+                                                                            value={this.state.detailsRecurringCharge}
+                                                                            onChange={this.handleRCOnChange}
+                                                                        />
+                                                                        <CSInputText
+                                                                            label="Recurring Charge"
+                                                                            value={this.state.detailsOneOffCharge}
+                                                                            onChange={this.handleOOOnChange}
+                                                                        />
+                                                                        <div className="dropdown-footer">
+                                                                            <CSButton
+                                                                                label="Close"
+                                                                                onClick={this.handlePopupClose}
+                                                                            />
+                                                                            <CSButton
+                                                                                label="Save"
+                                                                                btnStyle="brand"
+                                                                                onClick={this.handlePopupSave}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </CSDropdown>
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null

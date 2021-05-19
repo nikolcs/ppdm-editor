@@ -123,12 +123,14 @@ invokeAction = function (...args) {
                             {
                                 "id": "a1N4L000000kFVNUA2",
                                 "name": "CPPRA-000015",
-                                "recurringAdjustment": 15
+                                "recurringAdjustment": 15,
+                                "targetPrice": "Sales"
                             },
                             {
                                 "id": "a1N4L000000kFVMUA2",
                                 "name": "CPPRA-000014",
-                                "recurringAdjustment": 15
+                                "recurringAdjustment": 15,
+                                "targetPrice": "List"
                             }
                         ],
                         "id": "a1S4L000001A0GhUAK",
@@ -140,12 +142,14 @@ invokeAction = function (...args) {
                             {
                                 "id": "a1N4L000000kFWGUA2",
                                 "name": "CPPRA-000029",
-                                "oneOffAdjustment": 1
+                                "oneOffAdjustment": 1,
+                                "targetPrice": "Sales"
                             },
                             {
                                 "id": "a1N4L000000kFWFUA2",
                                 "name": "CPPRA-000028",
-                                "oneOffAdjustment": 1
+                                "oneOffAdjustment": 1,
+                                "targetPrice": "List"
                             }
                         ],
                         "id": "a1S4L000001A0HGUA0",
