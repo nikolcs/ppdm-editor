@@ -71,6 +71,9 @@ html {
             margin-right: 0.5rem;
             margin-top: 1px;
         }
+        .cs-table-row:last-child .cs-table-cell {
+            border-bottom: 1px solid #dddbda;
+        }
     }
 }
 

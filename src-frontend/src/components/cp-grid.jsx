@@ -340,10 +340,10 @@ class CPGrid extends React.Component {
                                 <CSTableCell text="Image"/>
                                 <CSTableCell text="Name"  grow={2}/>
                                 <CSTableCell text="Description" grow={4}/>
-                                <CSTableCell text="SKU code" grow={2}/>
+                                <CSTableCell text="Commercial Product Code" grow={2}/>
                                 <CSTableCell text="Rating"/>
-                                <CSTableCell text="One off"/>
-                                <CSTableCell text="Recurring"/>
+                                <CSTableCell text="Displayed One off"/>
+                                <CSTableCell text="Displayed Recurring"/>
                                 <CSTableCell text="Edit charges" maxWidth="6rem" grow={2} />
                             </CSTableHeader>
 
