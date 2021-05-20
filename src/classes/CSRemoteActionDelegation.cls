@@ -138,10 +138,14 @@ global with sharing class CSRemoteActionDelegation {
                     Rating__c,
                     Displayed_One_Off_Price__c,
                     Displayed_Recurring_Price__c,
-                (SELECT Id, Name, CreatedById, cspmb__Sequence__c,
+                (SELECT Id, Name,
+                        Displayed_One_Off_Price__c,
+                        Displayed_Recurring_Price__c,
                         cspmb__Add_On_Price_Item__r.Name,
-                        cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c
-                    FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
+                        cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c,
+                        cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Code__c,
+                        cspmb__Add_On_Price_Item__r.Image_URL__c
+                FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
                 FROM cspmb__Price_Item__c
                 WHERE cspmb__Role__c = 'Commercial Product'
                 AND cspmb__Price_Item_Code__c LIKE 'STH%' // !STARHUB
