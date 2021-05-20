@@ -120,7 +120,7 @@ class CPGrid extends React.Component {
         });
     }
     rowSort(ob1, ob2) {
-        return 0;
+        return -1;
     }
 
     componentDidMount() {
@@ -337,11 +337,11 @@ class CPGrid extends React.Component {
                         <CSTable>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
+                                <CSTableCell text="Image"/>
                                 <CSTableCell text="Name"  grow={2}/>
                                 <CSTableCell text="Description" grow={4}/>
                                 <CSTableCell text="SKU code" grow={2}/>
                                 <CSTableCell text="Rating"/>
-                                <CSTableCell text="Image"/>
                                 <CSTableCell text="One off"/>
                                 <CSTableCell text="Recurring"/>
                                 <CSTableCell text="Edit charges" maxWidth="6rem" grow={2} />
@@ -356,6 +356,9 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, true) &&
                                                         <CSTableRow>
+                                                            <CSTableCell>
+                                                                <img src={row.Image_URL__c}/>
+                                                            </CSTableCell>
                                                             <CSTableCell grow={2}>
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
@@ -367,9 +370,6 @@ class CPGrid extends React.Component {
                                                             </CSTableCell>
                                                             <CSTableCell>
                                                                 <span>{row.Rating__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <img src={row.Image_URL__c}/>
                                                             </CSTableCell>
                                                             <CSTableCell>
                                                                 <span>{row.Displayed_One_Off_Price__c}</span>
@@ -401,6 +401,9 @@ class CPGrid extends React.Component {
                                                             className="addon-row"
                                                             key={addonAssociation.Id}
                                                         >
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
                                                             <CSTableCell grow={2}>
                                                                 <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
                                                             </CSTableCell>
@@ -408,9 +411,6 @@ class CPGrid extends React.Component {
                                                                 <span>{addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2}>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
@@ -438,11 +438,11 @@ class CPGrid extends React.Component {
                         <CSTable>
                             {/* PACKAGES WITH CPS PRODUCT TABLE */}
                             <CSTableHeader>
+                                <CSTableCell text="Image " />
                                 <CSTableCell text="Name" grow={2}/>
                                 <CSTableCell text="Description" grow={4}/>
                                 <CSTableCell text="SKU code" grow={2} />
                                 <CSTableCell text="Rating"/>
-                                <CSTableCell text="Image " />
                                 <CSTableCell text="One off" />
                                 <CSTableCell text="recurring" />
                                 <CSTableCell text="Edit charges" maxWidth="6rem" grow={2}/>
@@ -456,6 +456,9 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, false, true) &&
                                                         <CSTableRow>
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
                                                             <CSTableCell grow={2}>
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
@@ -463,9 +466,6 @@ class CPGrid extends React.Component {
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2}>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>
@@ -501,6 +501,9 @@ class CPGrid extends React.Component {
                                                             className="package-cp-row"
                                                             key={cpAssociation.Id}
                                                         >
+                                                            <CSTableCell>
+                                                                <span></span>
+                                                            </CSTableCell>
                                                             <CSTableCell grow={2}>
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
@@ -508,9 +511,6 @@ class CPGrid extends React.Component {
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2}>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell>

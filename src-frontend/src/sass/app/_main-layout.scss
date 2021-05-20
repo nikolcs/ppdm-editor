@@ -63,8 +63,8 @@ html {
         }
         .addon-row,
         .package-cp-row {
-            &.cs-table-row .cs-table-cell:first-child > span {
-                padding-left: 1.5rem;
+            &.cs-table-row .cs-table-cell:nth-child(2) > span {
+                padding-left: 2rem;
             }
         }
         .pkg-icon {
