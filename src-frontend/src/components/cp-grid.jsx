@@ -124,9 +124,25 @@ class CPGrid extends React.Component {
             searchTerm: event.target.value
         });
     }
-    rowSort(ob1, ob2) {
-        return -1;
+    rowSortCP(ob1, ob2) {
+        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
+        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
+        return 0;
     }
+
+    rowSortPackage(ob1, ob2) {
+        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
+        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
+        return 0;
+    }
+
+    rowSortAddon(ob1, ob2) {
+        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() < ob2.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return -1; }
+        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() > ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return 1; }
+        return 0;
+    }
+
+
 
     componentDidMount() {
         VFRemotingService.getCPs().then(
@@ -157,7 +173,12 @@ class CPGrid extends React.Component {
 
                 || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r &&
                     cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x =>
-                        (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
+                        (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (x.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                    ).length > 0
+                )
+
+
                 || (byCPs && cp.cspmb__member_commercial_product_associations__r &&
                         cp.cspmb__member_commercial_product_associations__r.filter(x =>
                             (x.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
@@ -368,7 +389,7 @@ class CPGrid extends React.Component {
 
                             <CSTableBody>
                                 {this.state.CPs ? Object.values(this.state.CPs)
-                                    .sort(this.rowSort)
+                                    .sort(this.rowSortCP)
                                     .map((row) => {
                                         return (
                                             <React.Fragment key={row.Id}>
@@ -391,11 +412,13 @@ class CPGrid extends React.Component {
                                                     }
                                                 </>
                                                 {this.state.showAddons && row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
+                                                    .sort(this.rowSortAddon)
                                                     .filter(addonAssociation => {
                                                         if (this.state.searchTerm) {
                                                             if (
                                                                 this.showCP(row, false) ||
-                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                                                             ) {
                                                                 return true;
                                                             } else {
@@ -444,7 +467,7 @@ class CPGrid extends React.Component {
                             </CSTableHeader>
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
-                                    .sort(this.rowSort)
+                                    .sort(this.rowSortPackage)
                                     .map((row) => {
                                         return (
                                             <React.Fragment key={row.Id}>
@@ -475,6 +498,7 @@ class CPGrid extends React.Component {
                                                     }
                                                 </>
                                                 {row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
+                                                    .sort(this.rowSortCP)
                                                     .filter(cpAssociation => {
                                                         if (this.state.searchTerm) {
                                                             if (
