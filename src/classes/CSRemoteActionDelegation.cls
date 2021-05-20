@@ -199,7 +199,8 @@ global with sharing class CSRemoteActionDelegation {
         [SELECT Id, Name, Displayed_Recurring_Price__c FROM cspmb__Price_Item__c WHERE Id =: productId];
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
-            cp.Displayed_Recurring_Price__c = recurringCharge * TAX;
+            Decimal roundHelper = recurringCharge * TAX;
+            cp.Displayed_Recurring_Price__c = roundHelper.setScale(2);
             update(cp);
         }
 
@@ -278,7 +279,8 @@ global with sharing class CSRemoteActionDelegation {
         [SELECT Id, Name, Displayed_One_Off_Price__c FROM cspmb__Price_Item__c WHERE Id =: productId];
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
-            cp.Displayed_One_Off_Price__c = oneOffCharge * TAX;
+            Decimal roundHelper = oneOffCharge * TAX;
+            cp.Displayed_One_Off_Price__c = roundHelper.setScale(2);
             update(cp);
         }
 
