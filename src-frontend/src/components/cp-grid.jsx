@@ -217,14 +217,14 @@ class CPGrid extends React.Component {
                         result.pricingElementWrappers?.map((pe) => {
                             if (pe.type === 'One-off Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
                                         oneOffHelper = coppra.oneOffAdjustment;
                                     }
                                 })
                             }
                             if (pe.type === 'Recurring Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
                                         recurringHelper = coppra.recurringAdjustment;
                                     }
                                 })
