@@ -87,8 +87,8 @@ class CPGrid extends React.Component {
     handleSave = () => {
         console.log("handleSave");
         this.setState({chargesSaving : true});
-        Promise.all([VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || null).then()],
-            [VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || null).then()]
+        Promise.all([VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then()],
+            [VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then()]
         ).then( () => {
             VFRemotingService.getCPs().then(
                 result => {
