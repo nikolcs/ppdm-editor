@@ -32,27 +32,15 @@ invokeAction = function (...args) {
                     "cspmb__Price_Item_Add_On_Price_Item_Association__r": [
                         {
                             "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
-                            "Id": "a1K4L000000g5nrUAA",
-                            "Name": "PAO-2",
-                            "CreatedById": "0054L000000y47iQAA",
-                            "cspmb__Sequence__c": 0,
-                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mCQAS",
-                            "cspmb__Add_On_Price_Item__r": {
-                                "Name": "Add On 3",
-                                "cspmb__Add_On_Price_Item_Description__c": "Add On 3 desc",
-                                "Id": "a0x4L000001M0mCQAS"
-                            }
-                        },
-                        {
-                            "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
                             "Id": "a1K4L000000g4WhUAI",
                             "Name": "PAO-0",
-                            "CreatedById": "0054L000000y47iQAA",
-                            "cspmb__Sequence__c": 0,
+                            "Displayed_One_Off_Price__c": 40,
+                            "Displayed_Recurring_Price__c": 10,
                             "cspmb__Add_On_Price_Item__c": "a0x4L000001M0g3QAC",
                             "cspmb__Add_On_Price_Item__r": {
                                 "Name": "Add on 1",
                                 "cspmb__Add_On_Price_Item_Description__c": "addon desc",
+                                "cspmb__Add_On_Price_Item_Code__c": "123",
                                 "Id": "a0x4L000001M0g3QAC"
                             }
                         },
@@ -60,13 +48,24 @@ invokeAction = function (...args) {
                             "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
                             "Id": "a1K4L000000g5nmUAA",
                             "Name": "PAO-1",
-                            "CreatedById": "0054L000000y47iQAA",
-                            "cspmb__Sequence__c": 0,
                             "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mBQAS",
                             "cspmb__Add_On_Price_Item__r": {
                                 "Name": "Add On 2",
                                 "cspmb__Add_On_Price_Item_Description__c": "add on 2 desc",
+                                "cspmb__Add_On_Price_Item_Code__c": "123",
                                 "Id": "a0x4L000001M0mBQAS"
+                            }
+                        },
+                        {
+                            "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
+                            "Id": "a1K4L000000g5nrUAA",
+                            "Name": "PAO-2",
+                            "cspmb__Add_On_Price_Item__c": "a0x4L000001M0mCQAS",
+                            "cspmb__Add_On_Price_Item__r": {
+                                "Name": "Add On 3",
+                                "cspmb__Add_On_Price_Item_Description__c": "Add On 3 desc",
+                                "cspmb__Add_On_Price_Item_Code__c": "2435646",
+                                "Id": "a0x4L000001M0mCQAS"
                             }
                         }
                     ]
@@ -80,15 +79,15 @@ invokeAction = function (...args) {
                     "Id": "a1P4L000008rn4kUAA",
                     "Name": "iphone 9",
                     "cspmb__Price_Item_Code__c": "STH-BB-3000FH",
-                    "Displayed_One_Off_Price__c": 50,
-                    "Displayed_Recurring_Price__c": 25
+                    "Displayed_One_Off_Price__c": 47,
+                    "Displayed_Recurring_Price__c": 0
                 },
                 {
                     "Id": "a1P4L000008rn4pUAA",
                     "Name": "Samsung S9",
                     "cspmb__Price_Item_Code__c": "STH-BB-3000FH",
                     "Displayed_One_Off_Price__c": 47,
-                    "Displayed_Recurring_Price__c": 20
+                    "Displayed_Recurring_Price__c": 458
                 },
                 {
                     "Id": "a1P4L000008rli0UAA",
