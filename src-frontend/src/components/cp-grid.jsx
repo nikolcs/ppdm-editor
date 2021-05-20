@@ -511,7 +511,7 @@ class CPGrid extends React.Component {
                                                             <CSTableCell grow={2} className="col-Name">
                                                                 <CSIcon
                                                                     className="pkg-icon"
-                                                                    name="package_outline"
+                                                                    name="package_solid"
                                                                     origin="cs"
                                                                 />
                                                                 <span>{row.Name}</span>
@@ -523,7 +523,7 @@ class CPGrid extends React.Component {
                                                             <CSTableCell text={row.Displayed_One_Off_Price__c} className="col-OneOff"/>
                                                             <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring"/>
                                                             <CSTableCell className="col-EditCharges">
-                                                                {chargesDropdown(row.Id)}
+                                                                {chargesDropdownMock(row.Displayed_One_Off_Price__c, row.Displayed_Recurring_Price__c)}
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -548,29 +548,29 @@ class CPGrid extends React.Component {
                                                             key={cpAssociation.Id}
                                                         >
                                                             <CSTableCell className="col-Image">
-                                                                <span></span>
+                                                                <img src={cpAssociation.cspmb__member_commercial_product__r.Image_URL__c}/>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2} className="col-Name">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
                                                             {/* cells below need json fetch update when remote service is done for packages */}
                                                             <CSTableCell grow={4} className="col-Description">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Description}</span>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2} className="col-CommercialProductCode">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Code}</span>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Code__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Rating">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Rating}</span>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Rating__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-OneOff">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.OneOffPrice}</span>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Recurring">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.RecurringPrice}</span>
+                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-EditCharges">
-                                                                {chargesDropdown(cpAssociation.Id)}
+                                                                {chargesDropdownMock(cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c, cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c)}
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
