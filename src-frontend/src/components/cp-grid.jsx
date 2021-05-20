@@ -341,6 +341,37 @@ class CPGrid extends React.Component {
                 </div>
             </CSDropdown>
 
+        let chargesDropdownMock = (oneOff, recurring) =>
+            <CSDropdown
+                mode="custom"
+                iconOrigin="cs"
+                iconName="currency_dollar"
+                onDropdownClose={() => clearState()}
+            >
+                <div className="dropdown-charges">
+                    <CSInputText
+                        label="One-Off Charge"
+                        value={oneOff ? Number(oneOff / 1.07).toFixed(2) : '0'}
+                    />
+                    <CSInputText
+                        label="Recurring Charge"
+                        value={recurring ? Number(recurring / 1.07).toFixed(2) : '0'}
+                    />
+                    <div className="dropdown-footer">
+                        { this.state.chargesSaving &&
+                            <CSSpinner color="brand" size="small" inline />
+                        }
+                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
+                            <CSIcon className="success-icon" name="success" color="#009540" />
+                        }
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                        />
+                    </div>
+                </div>
+            </CSDropdown>
+
         return (
             <>
                 <CSTabGroup>
@@ -441,7 +472,7 @@ class CPGrid extends React.Component {
                                                             <CSTableCell text={addonAssociation.Displayed_One_Off_Price__c} className="col-OneOff" />
                                                             <CSTableCell text={addonAssociation.Displayed_Recurring_Price__c} className="col-Recurring" />
                                                             <CSTableCell className="col-EditCharges" >
-                                                                {chargesDropdown(addonAssociation.Id)}
+                                                                {chargesDropdownMock(addonAssociation.Displayed_One_Off_Price__c, addonAssociation.Displayed_Recurring_Price__c)}
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
