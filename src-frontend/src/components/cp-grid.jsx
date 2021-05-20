@@ -87,20 +87,34 @@ class CPGrid extends React.Component {
 
     handleSave = () => {
         console.log("handleSave");
+        const promises = [];
         this.setState({chargesSaving : true});
-        Promise.all([VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then()],
-            [VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then()]
-        ).then( () => {
+        if (this.state.detailsRecurringCharge) {
+            const updateRecurring = VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then();
+            promises.push(updateRecurring);
+        }
+        if (this.state.detailsOneOffCharge) {
+            const updateOneOff = VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then();
+            promises.push(updateOneOff);
+        }
+
+        Promise.all(promises).then( () => {
             VFRemotingService.getCPs().then(
                 result => {
-                    this.setState({CPs: result, chargesSaving: false, showSuccessIndicator: true});
+                    this.setState({CPs: result, chargesSaving: false});
                     console.log("getCPs");
                     console.log(result);
                     setTimeout(() => {
                         this.setState( {
-                            showSuccessIndicator: false,
-                        })
-                    }, 750);
+                            showSuccessIndicator: true
+                        }, () =>
+                            setTimeout( () => {
+                                this.setState({
+                                    showSuccessIndicator: false
+                                })
+                            }, 750)
+                        )
+                    }, 1);
                 }
             )
         })
@@ -329,8 +343,8 @@ class CPGrid extends React.Component {
                         { this.state.chargesSaving &&
                             <CSSpinner color="brand" size="small" inline />
                         }
-                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
-                            <CSIcon className="success-icon" name="success" color="#009540" />
+                        { !this.state.chargesSaving && this.state.showSuccessIndicator ?
+                            <CSIcon className="success-icon" name="success" color="#009540" /> : null
                         }
                         <CSButton
                             label="Save"
