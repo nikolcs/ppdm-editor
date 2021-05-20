@@ -5,7 +5,7 @@ global with sharing class CSRemoteActionDelegation {
     static final String PRICING_ELEMENT_TYPE_RECURRING = 'Recurring Charge';
     static final String PRICING_ELEMENT_TYPE_NAME_RECURRING = 'Recurring Charge';
 
-    static final Decimal TAX = 1.7;
+    static final Decimal TAX = 1.07;
 
     @RemoteAction
     global static CommercialProductWrapper getCommercialProduct(String cpId) {
@@ -117,7 +117,22 @@ global with sharing class CSRemoteActionDelegation {
     global static List<cspmb__Price_Item__c> getPackages() {
         List<cspmb__Price_Item__c> packages =
         [SELECT Id, Name,
-            (SELECT Id, Name, cspmb__member_commercial_product__r.Name FROM cspmb__member_commercial_product_associations__r)
+                cspmb__Price_Item_Description__c,
+                cspmb__Price_Item_Code__c,
+                Image_URL__c,
+                Rating__c,
+                Displayed_One_Off_Price__c,
+                Displayed_Recurring_Price__c,
+            (SELECT Id, Name,
+                    cspmb__member_commercial_product__r.Id,
+                    cspmb__member_commercial_product__r.Name,
+                    cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c,
+                    cspmb__member_commercial_product__r.cspmb__Price_Item_Code__c,
+                    cspmb__member_commercial_product__r.Image_URL__c,
+                    cspmb__member_commercial_product__r.Rating__c,
+                    cspmb__member_commercial_product__r.Displayed_One_Off_Price__c,
+                    cspmb__member_commercial_product__r.Displayed_Recurring_Price__c
+            FROM cspmb__member_commercial_product_associations__r)
         FROM cspmb__Price_Item__c WHERE cspmb__Role__c = 'Package'];
 
         if(packages!=null && !packages.isEmpty()){
