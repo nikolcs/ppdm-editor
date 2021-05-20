@@ -87,6 +87,9 @@ html {
         }
         .cs-table-cell.col-Description {
             min-width: 15rem;
+            span {
+                white-space: pre-wrap;
+            }
         }
         .cs-table-cell.col-CommercialProductCode {
             min-width: 10.5rem;

@@ -148,9 +148,19 @@ class CPGrid extends React.Component {
     showCP = (cp, byAddons, byCPs) => {
         if (this.state.searchTerm) {
             if (
-                (cp.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
-                || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x => (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
-                || (byCPs && cp.cspmb__member_commercial_product_associations__r && cp.cspmb__member_commercial_product_associations__r.filter(x => (x.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
+                (cp.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.cspmb__Price_Item_Code__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.cspmb__Price_Item_Description__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.Rating__c || '').toString().toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.Displayed_One_Off_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.Displayed_Recurring_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
+
+                || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r &&
+                    cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x =>
+                        (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
+                || (byCPs && cp.cspmb__member_commercial_product_associations__r &&
+                        cp.cspmb__member_commercial_product_associations__r.filter(x =>
+                            (x.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
             ) {
                 return true;
             } else {
@@ -275,41 +285,40 @@ class CPGrid extends React.Component {
             });
         }
 
-        let chargesDropdown = (id) => <CSDropdown
-                                mode="custom"
-                                iconOrigin="cs"
-                                iconName="currency_dollar"
-                                onDropdownOpen={() => handleOnCPEditClick(id)}
-                                onDropdownClose={() => clearState()}
-                            >
-                                <div className="dropdown-charges">
-                                    <CSInputText
-                                        label="One-Off Charge"
-                                        value={this.state.detailsOneOffCharge}
-                                        onChange={this.onChangeOneOff}
-                                    />
-                                    <CSInputText
-                                        label="Recurring Charge"
-                                        value={this.state.detailsRecurringCharge}
-                                        onChange={this.onChangeRecurring}
-                                    />
-                                    <div className="dropdown-footer">
-                                        { this.state.chargesSaving &&
-                                            <CSSpinner color="brand" size="small" inline />
-                                        }
-                                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
-                                            <CSIcon className="success-icon" name="success" color="#009540" />
-                                        }
-
-
-                                        <CSButton
-                                            label="Save"
-                                            btnStyle="brand"
-                                            onClick={this.handlePopupSave}
-                                        />
-                                    </div>
-                                </div>
-                            </CSDropdown>
+        let chargesDropdown = (id) =>
+            <CSDropdown
+                mode="custom"
+                iconOrigin="cs"
+                iconName="currency_dollar"
+                onDropdownOpen={() => handleOnCPEditClick(id)}
+                onDropdownClose={() => clearState()}
+            >
+                <div className="dropdown-charges">
+                    <CSInputText
+                        label="One-Off Charge"
+                        value={this.state.detailsOneOffCharge}
+                        onChange={this.onChangeOneOff}
+                    />
+                    <CSInputText
+                        label="Recurring Charge"
+                        value={this.state.detailsRecurringCharge}
+                        onChange={this.onChangeRecurring}
+                    />
+                    <div className="dropdown-footer">
+                        { this.state.chargesSaving &&
+                            <CSSpinner color="brand" size="small" inline />
+                        }
+                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
+                            <CSIcon className="success-icon" name="success" color="#009540" />
+                        }
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={this.handlePopupSave}
+                        />
+                    </div>
+                </div>
+            </CSDropdown>
 
         return (
             <>
@@ -325,7 +334,6 @@ class CPGrid extends React.Component {
                         active={this.state.activeTab === 1}
                     />
                 </CSTabGroup>
-
                 <div className="action-row">
                     <CSInputSearch
                         placeholder="Search"
@@ -340,8 +348,7 @@ class CPGrid extends React.Component {
                             checked={this.state.showAddons}
                             labelPosition="left"
                         />
-                    ) : null
-                    }
+                    ) : null}
                 </div>
 
                 <div className="table-wrapper">
@@ -424,7 +431,7 @@ class CPGrid extends React.Component {
                         </CSTable>
                     ) :
                         <CSTable>
-                            {/* PACKAGES WITH CPS PRODUCT TABLE */}
+                            {/* PACKAGES WITH CPs TABLE */}
                             <CSTableHeader>
                                 <CSTableCell text="Image" className="col-Image" />
                                 <CSTableCell text="Name" grow={2} className="col-Name" />
@@ -455,6 +462,7 @@ class CPGrid extends React.Component {
                                                                 />
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
+                                                            {/* cells below need json fetch update when remote service is done for packages */}
                                                             <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description"/>
                                                             <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode"/>
                                                             <CSTableCell text={row.Rating__c} className="col-Rating"/>

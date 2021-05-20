@@ -28,7 +28,7 @@ invokeAction = function (...args) {
                     "Image_URL__c": "https://ppdmui1-dev-ed--c.visualforce.com/resource/1621434285000/cpimage0",
                     "Rating__c": 5,
                     "Displayed_One_Off_Price__c": 10,
-                    "Displayed_Recurring_Price__c": 205,
+                    "Displayed_Recurring_Price__c": 17,
                     "cspmb__Price_Item_Add_On_Price_Item_Association__r": [
                         {
                             "cspmb__Price_Item__c": "a1P4L000008rke0UAA",
@@ -75,6 +75,20 @@ invokeAction = function (...args) {
                     "Id": "a1P4L000008rlhqUAA",
                     "Name": "cp 1",
                     "cspmb__Price_Item_Code__c": "STH-BB-1000FB"
+                },
+                {
+                    "Id": "a1P4L000008rn4kUAA",
+                    "Name": "iphone 9",
+                    "cspmb__Price_Item_Code__c": "STH-BB-3000FH",
+                    "Displayed_One_Off_Price__c": 50,
+                    "Displayed_Recurring_Price__c": 25
+                },
+                {
+                    "Id": "a1P4L000008rn4pUAA",
+                    "Name": "Samsung S9",
+                    "cspmb__Price_Item_Code__c": "STH-BB-3000FH",
+                    "Displayed_One_Off_Price__c": 47,
+                    "Displayed_Recurring_Price__c": 20
                 },
                 {
                     "Id": "a1P4L000008rli0UAA",
