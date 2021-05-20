@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    CSIcon,
     CSTable,
     CSTableHeader,
     CSTableBody,
@@ -337,14 +338,14 @@ class CPGrid extends React.Component {
                         <CSTable>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
-                                <CSTableCell text="Image" maxWidth="6.5rem"/>
-                                <CSTableCell text="Name"  grow={2}/>
-                                <CSTableCell text="Description" grow={4}/>
-                                <CSTableCell text="Commercial Product Code" grow={2}/>
-                                <CSTableCell text="Rating"/>
-                                <CSTableCell text="Displayed One off"/>
-                                <CSTableCell text="Displayed Recurring"/>
-                                <CSTableCell text="Edit charges" maxWidth="6rem" grow={2} />
+                                <CSTableCell text="Image" className="col-Image"/>
+                                <CSTableCell text="Name"  grow={2} className="col-Name"/>
+                                <CSTableCell text="Description" grow={4} className="col-Description"/>
+                                <CSTableCell text="Commercial Product Code" grow={2} className="col-CommercialProductCode"/>
+                                <CSTableCell text="Rating" className="col-Rating"/>
+                                <CSTableCell text="Displayed One off" className="col-OneOff"/>
+                                <CSTableCell text="Displayed Recurring" className="col-Recurring"/>
+                                <CSTableCell text="Edit charges" grow={2}  className="col-EditCharges"/>
                             </CSTableHeader>
 
                             <CSTableBody>
@@ -356,28 +357,16 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, true) &&
                                                         <CSTableRow>
-                                                            <CSTableCell maxWidth="6.5rem">
+                                                            <CSTableCell className="col-Image">
                                                                 <img src={row.Image_URL__c}/>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={2}>
-                                                                <span>{row.Name}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell grow={4}>
-                                                                <span>{row.cspmb__Price_Item_Description__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell grow={2}>
-                                                                <span>{row.cspmb__Price_Item_Code__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Rating__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Displayed_One_Off_Price__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Displayed_Recurring_Price__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell maxWidth="6rem" grow={2}>
+                                                            <CSTableCell text={row.Name} grow={2} className="col-Name" />
+                                                            <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description" />
+                                                            <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode" />
+                                                            <CSTableCell text={row.Rating__c} className="col-Rating" />
+                                                            <CSTableCell text={row.Displayed_One_Off_Price__c} className="col-OneOff" />
+                                                            <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring" />
+                                                            <CSTableCell grow={2} className="col-EditCharges">
                                                                 {chargesDropdown(row.Id)}
                                                             </CSTableCell>
                                                         </CSTableRow>
@@ -401,28 +390,16 @@ class CPGrid extends React.Component {
                                                             className="addon-row"
                                                             key={addonAssociation.Id}
                                                         >
-                                                            <CSTableCell maxWidth="6.5rem">
+                                                            <CSTableCell className="col-Image">
                                                                 <span></span>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={2}>
-                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell grow={4}>
-                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell grow={2}>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span></span>
-                                                            </CSTableCell>
-                                                            <CSTableCell maxWidth="6rem" grow={2}>
+                                                            <CSTableCell text={addonAssociation.cspmb__Add_On_Price_Item__r.Name} grow={2} className="col-Name" />
+                                                            <CSTableCell text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c} grow={4} className="col-Description" />
+                                                            <CSTableCell grow={2} className="col-CommercialProductCode" />
+                                                            <CSTableCell className="col-Rating" />
+                                                            <CSTableCell className="col-OneOff" />
+                                                            <CSTableCell className="col-Recurring" />
+                                                            <CSTableCell grow={2} className="col-EditCharges" >
                                                                 {chargesDropdown(addonAssociation.Id)}
                                                             </CSTableCell>
                                                         </CSTableRow>
@@ -438,14 +415,14 @@ class CPGrid extends React.Component {
                         <CSTable>
                             {/* PACKAGES WITH CPS PRODUCT TABLE */}
                             <CSTableHeader>
-                                <CSTableCell text="Image" maxWidth="6.5rem" />
-                                <CSTableCell text="Name" grow={2}/>
-                                <CSTableCell text="Description" grow={4}/>
-                                <CSTableCell text="SKU code" grow={2} />
-                                <CSTableCell text="Rating"/>
-                                <CSTableCell text="One off" />
-                                <CSTableCell text="recurring" />
-                                <CSTableCell text="Edit charges" maxWidth="6rem" grow={2}/>
+                                <CSTableCell text="Image" className="col-Image" />
+                                <CSTableCell text="Name" grow={2} className="col-Name" />
+                                <CSTableCell text="Description" grow={4} className="col-Description" />
+                                <CSTableCell text="Commercial Product Code" grow={2}  className="col-CommercialProductCode" />
+                                <CSTableCell text="Rating" className="col-Rating" />
+                                <CSTableCell text="One off"  className="col-OneOff" />
+                                <CSTableCell text="recurring"  className="col-Recurring" />
+                                <CSTableCell text="Edit charges" grow={2} className="col-EditCharges" />
                             </CSTableHeader>
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
@@ -456,28 +433,23 @@ class CPGrid extends React.Component {
                                                 <>
                                                     {this.showCP(row, false, true) &&
                                                         <CSTableRow>
-                                                            <CSTableCell maxWidth="6.5rem">
+                                                            <CSTableCell className="col-Image">
                                                                 <img src={row.Image_URL__c}/>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={2}>
+                                                            <CSTableCell grow={2} className="col-Name">
+                                                                <CSIcon
+                                                                    className="pkg-icon"
+                                                                    name="package_outline"
+                                                                    origin="cs"
+                                                                />
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={4}>
-                                                                <span>{row.cspmb__Price_Item_Description__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell grow={2}>
-                                                                <span>{row.cspmb__Price_Item_Code__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Rating__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Displayed_One_Off_Price__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell>
-                                                                <span>{row.Displayed_Recurring_Price__c}</span>
-                                                            </CSTableCell>
-                                                            <CSTableCell maxWidth="6rem" grow={2}>
+                                                            <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description"/>
+                                                            <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode"/>
+                                                            <CSTableCell text={row.Rating__c} className="col-Rating"/>
+                                                            <CSTableCell text={row.Displayed_One_Off_Price__c} className="col-OneOff"/>
+                                                            <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring"/>
+                                                            <CSTableCell grow={2} className="col-EditCharges">
                                                                 {chargesDropdown(row.Id)}
                                                             </CSTableCell>
                                                         </CSTableRow>
@@ -501,29 +473,29 @@ class CPGrid extends React.Component {
                                                             className="package-cp-row"
                                                             key={cpAssociation.Id}
                                                         >
-                                                            <CSTableCell maxWidth="6.5rem">
+                                                            <CSTableCell className="col-Image">
                                                                 <span></span>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={2}>
+                                                            <CSTableCell grow={2} className="col-Name">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
                                                             {/* cells below need json fetch update when remote service is done for packages */}
-                                                            <CSTableCell grow={4}>
+                                                            <CSTableCell grow={4} className="col-Description">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Description}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell grow={2}>
+                                                            <CSTableCell grow={2} className="col-CommercialProductCode">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Code}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
+                                                            <CSTableCell className="col-Rating">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Rating}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
+                                                            <CSTableCell className="col-OneOff">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.OneOffPrice}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell>
+                                                            <CSTableCell className="col-Recurring">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.RecurringPrice}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell maxWidth="6rem" grow={2}>
+                                                            <CSTableCell grow={2} className="col-EditCharges">
                                                                 {chargesDropdown(cpAssociation.Id)}
                                                             </CSTableCell>
                                                         </CSTableRow>

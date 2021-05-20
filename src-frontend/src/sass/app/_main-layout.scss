@@ -70,12 +70,43 @@ html {
                 padding-left: 2rem;
             }
         }
+        .cs-table-row:last-child .cs-table-cell {
+            border-bottom: 1px solid #dddbda;
+        }
         .pkg-icon {
             margin-right: 0.5rem;
             margin-top: 1px;
         }
-        .cs-table-row:last-child .cs-table-cell {
-            border-bottom: 1px solid #dddbda;
+        /* column widths */
+        .cs-table-cell.cs-table-cell.col-Image {
+            min-width: 7rem;
+            max-width: 7rem;
+        }
+        .cs-table-cell.col-Name {
+
+        }
+        .cs-table-cell.col-Description {
+
+        }
+        .cs-table-cell.col-CommercialProductCode {
+            min-width: 10.5rem;
+            max-width: 10.5rem;
+        }
+        .cs-table-cell.col-Rating {
+            min-width: 4rem;
+            max-width: 4rem;
+        }
+        .cs-table-cell.col-OneOff {
+            min-width: 8rem;
+            max-width: 8rem;
+        }
+        .cs-table-cell.col-Recurring {
+            min-width: 9rem;
+            max-width: 9rem;
+        }
+        .cs-table-cell.col-EditCharges {
+            min-width: 6rem;
+            max-width: 6rem;
         }
     }
 }
