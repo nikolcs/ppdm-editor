@@ -43,20 +43,23 @@ html {
     .cs-table {
         flex: 1 1 0;
         overflow-y: auto;
-        .cs-table-cell > span {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            white-space: nowrap;
-        }
-        .cs-table-cell img {
-            display: inline-block;
-            max-width: 100%;
-            object-fit: contain;
-        }
         .cs-table-header {
             position: sticky;
             top: 0;
+        }
+        .cs-table-body .cs-table-cell {
+            padding: 0.5rem;
+            > span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+                white-space: nowrap;
+            }
+            img {
+                display: inline-block;
+                max-width: 100%;
+                object-fit: contain;
+            }
         }
         .addon-row,
         .package-cp-row {

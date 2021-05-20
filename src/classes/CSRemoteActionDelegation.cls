@@ -170,13 +170,20 @@ global with sharing class CSRemoteActionDelegation {
 
         //get existing recurring charges on CP with Id
         List<cspmb__Pricing_Element__c> recurringList =
-            [SELECT Id, Name FROM cspmb__Pricing_Element__c
+            [SELECT Id, Name,
+                (SELECT Id, Name
+                    FROM cspmb__commercial_product_pricing_rule_assocs__r
+                    WHERE cspmb__pricing_rule__c = :starhubPricingRule)
+                FROM cspmb__Pricing_Element__c
                 WHERE cspmb__commercial_product__r.Id =: productId
                 AND cspmb__pricing_element_type__r.cspmb__type__c = 'Recurring Charge'
                 AND cspmb__pricing_element_type__r.Name = 'Recurring Charge'];
 
-        if (recurringList.size() > 0) {
-            return;
+        if (recurringList.size() > 0 && recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
+            for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
+                coppra.cspmb__recurring_adjustment__c = recurringCharge;
+                update(coppra);
+            }
         } else {
             // create new pricing element
             cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
@@ -237,23 +244,20 @@ global with sharing class CSRemoteActionDelegation {
         //get existing recurring charges on CP with Id
         List<cspmb__Pricing_Element__c> oneOffList =
         [SELECT Id, Name,
-            (SELECT Id, Name,
-                    cspmb__one_off_adjustment__c,
-                    cspmb__recurring_adjustment__c,
-                    cspmb__target_price__c,
-                    cspmb__pricing_rule__c
-                FROM cspmb__commercial_product_pricing_rule_assocs__r AS coppra
-            WHERE cspmb__pricing_rule__c = :starhubPricingRule)
+            (SELECT Id, Name
+                FROM cspmb__commercial_product_pricing_rule_assocs__r
+                WHERE cspmb__pricing_rule__c = :starhubPricingRule)
             FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product__r.Id =: productId
             AND cspmb__pricing_element_type__r.cspmb__type__c = 'One-off Charge'
             AND cspmb__pricing_element_type__r.Name = 'One-off Charge'];
 
-        //edit existing pricing element
-        if (oneOffList.size() > 0) {
-//            cspmb__Pricing_Element__c pricingElement = oneOffList[0];
-//            pricingElement.
-            return;
+        //edit existing pricing element if exist
+        if (oneOffList.size() > 0 && oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
+            for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
+                coppra.cspmb__one_off_adjustment__c = oneOffCharge;
+                update(coppra);
+            }
         } else {
             // create new pricing element
             cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();

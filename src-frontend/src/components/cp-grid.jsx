@@ -16,7 +16,7 @@ import {
     CSInputText,
     CSLookup,
     CSTabGroup,
-    CSTab,
+    CSTab, CSSpinner,
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -49,6 +49,8 @@ class CPGrid extends React.Component {
         detailsId: '',
         detailsRecurringCharge: '',
         detailsOneOffCharge: '',
+
+        chargesSaving: false
     };
 
     handleInputOnChange = (event) => {
@@ -84,41 +86,25 @@ class CPGrid extends React.Component {
 
     handleSave = () => {
         console.log("handleSave");
-        console.log(this.state.detailsId);
-        if(this.state.detailsRecurringCharge) {
-            VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge).then()
-        }
-        if(this.state.detailsOneOffCharge) {
-            VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge).then()
-        }
-    }
-
-    /* Popup save button handler */
-    handlePopupSave = () => {
-        console.log("handleDropdownSave");
-        // tu dodati saving spinner
-        this.handleSave();
-        setTimeout(() => {
+        this.setState({chargesSaving : true});
+        Promise.all([VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || null).then()],
+            [VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || null).then()]
+        ).then( () => {
             VFRemotingService.getCPs().then(
                 result => {
                     this.setState({CPs: result});
                     console.log("getCPs");
                     console.log(result);
-                    // tu dodati success ikonu sa animacijom, uzmi sa cs-grida
+                    this.setState({chargesSaving : false})
                 }
             )
-        }, 500);
+        })
+    }
 
-        // update table
-
-        // VFRemotingService.getPackages().then(
-        //     result => {
-        //         this.setState({Packages: result});
-        //         console.log("getPackages");
-        //         console.log(result);
-        //     }
-        // );
-        /* close dropdown here */
+    /* Popup save button handler */
+    handlePopupSave = () => {
+        console.log("handleDropdownSave");
+        this.handleSave();
     }
 
     /* Popup close button handler */
@@ -293,20 +279,17 @@ class CPGrid extends React.Component {
                             >
                                 <div className="dropdown-charges">
                                     <CSInputText
-                                        label="Recurring Charge"
-                                        value={this.state.detailsRecurringCharge}
-                                        onChange={this.onChangeRecurring}
-                                    />
-                                    <CSInputText
                                         label="One-Off Charge"
                                         value={this.state.detailsOneOffCharge}
                                         onChange={this.onChangeOneOff}
                                     />
+                                    <CSInputText
+                                        label="Recurring Charge"
+                                        value={this.state.detailsRecurringCharge}
+                                        onChange={this.onChangeRecurring}
+                                    />
                                     <div className="dropdown-footer">
-                                        {/*<CSButton*/}
-                                        {/*    label="Close"*/}
-                                        {/*    onClick={this.handlePopupClose}*/}
-                                        {/*/>*/}
+                                        { this.state.chargesSaving && <CSSpinner color="brand" size="small" inline />}
                                         <CSButton
                                             label="Save"
                                             btnStyle="brand"
