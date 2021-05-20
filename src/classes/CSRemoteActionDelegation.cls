@@ -5,14 +5,15 @@ global with sharing class CSRemoteActionDelegation {
         List<cspmb__Pricing_Element__c> pricingElements =
             [SELECT Id, Name,
                     cspmb__pricing_element_type__r.cspmb__type__c, cspmb__commercial_product__r.Id, cspmb__commercial_product__r.Name,
-                (SELECT Id, Name, cspmb__one_off_adjustment__c, cspmb__recurring_adjustment__c
+                (SELECT Id, Name, cspmb__one_off_adjustment__c, cspmb__recurring_adjustment__c, cspmb__target_price__c
                     FROM cspmb__commercial_product_pricing_rule_assocs__r)
             FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product__r.Id = : cpId];
         if (pricingElements.size() > 0) {
             return toCommercialProductWrapper(pricingElements);
+        } else {
+            return toCommercialProductWrapperWithoutPriceItem(cpId);
         }
-        return null;
     }
 
     global class CommercialProductWrapper {
@@ -43,12 +44,14 @@ global with sharing class CSRemoteActionDelegation {
         public String name {get; set;}
         public Decimal recurringAdjustment {get; set;}
         public Decimal oneOffAdjustment {get; set;}
+        public String targetPrice {get; set;}
 
         public CoppraWrapper(cspmb__Price_Item_Pricing_Rule_Association__c coppra) {
             this.id = coppra.Id;
             this.name = coppra.Name;
             this.recurringAdjustment = coppra.cspmb__recurring_adjustment__c;
             this.oneOffAdjustment = coppra.cspmb__one_off_adjustment__c;
+            this.targetPrice = coppra.cspmb__target_price__c;
         }
     }
 
@@ -66,6 +69,22 @@ global with sharing class CSRemoteActionDelegation {
         cp.id = listPE[0].cspmb__commercial_product__r.Id;
         cp.name = listPE[0].cspmb__commercial_product__r.Name;
 
+        return cp;
+    }
+
+    static CommercialProductWrapper toCommercialProductWrapperWithoutPriceItem(String id) {
+        CommercialProductWrapper cp = new CommercialProductWrapper();
+        cspmb__Price_Item__c commercialProduct = new cspmb__Price_Item__c();
+
+        List<cspmb__Price_Item__c> commercialProductList = [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id=: id];
+
+        if (commercialProductList.size() > 0) {
+            commercialProduct = commercialProductList[0];
+        }
+
+        cp.id = commercialProduct.Id;
+        cp.name = commercialProduct.Name;
+        cp.pricingElementWrappers = null;
         return cp;
     }
 
@@ -100,36 +119,25 @@ global with sharing class CSRemoteActionDelegation {
 
         List<cspmb__Price_Item__c> cps =
             [SELECT Id,Name,
+                    cspmb__Price_Item_Description__c,
+                    SKU__c,
+                    Image_URL__c,
+                    Rating__c,
+                    Displayed_One_Off_Price__c,
+                    Displayed_Recurring_Price__c,
                 (SELECT Id, Name, CreatedById, cspmb__Sequence__c,
                         cspmb__Add_On_Price_Item__r.Name,
                         cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c
                     FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
                 FROM cspmb__Price_Item__c
                 WHERE cspmb__Role__c = 'Commercial Product'
-//                AND SKU__c LIKE 'STH%' // !STARHUB
+                AND SKU__c LIKE 'STH%' // !STARHUB
             ];
         if(cps!=null && !cps.isEmpty()){
             return cps;
         } else {
             return  new List<cspmb__Price_Item__c>();
         }
-    }
-
-    @RemoteAction
-    global static String saveNew(String name, String role) {
-        // get list of commercial products
-        cspmb__Price_Item__c[] cpList = [SELECT Id, Name FROM cspmb__Price_Item__c];
-        //get the stack we want to save.
-        cspmb__Price_Item__c newCP = new cspmb__Price_Item__c(Name = name, cspmb__Role__c = role);
-
-        cpList.add(newCP);
-        try {
-            upsert cpList;
-        } catch (Exception e)
-        {
-            return e.getStackTraceString();
-        }
-        return 'success';
     }
 
     @RemoteAction
@@ -145,9 +153,20 @@ global with sharing class CSRemoteActionDelegation {
         //get pricing element type for recurring charge
         List<cspmb__Pricing_Element_Type__c> recurringPETL =
             [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
-            WHERE cspmb__type__c = 'Recurring Charge' AND Name = 'Recurring Charge' LIMIT 1];
+                WHERE cspmb__type__c = 'Recurring Charge'
+                AND Name = 'Recurring Charge'
+                LIMIT 1];
 
         String recurringPETId = recurringPETL[0].Id;
+
+        //get CP to update displayed prices
+        List<cspmb__Price_Item__c> commercialProductsList =
+        [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id =: productId];
+        if (commercialProductsList.size() > 0) {
+            cspmb__Price_Item__c cp = commercialProductsList[0];
+            cp.Displayed_Recurring_Price__c = recurringCharge;
+            update(cp);
+        }
 
         //get existing recurring charges on CP with Id
         List<cspmb__Pricing_Element__c> recurringList =
@@ -206,14 +225,34 @@ global with sharing class CSRemoteActionDelegation {
 
         String OneOffPETId = oneOffPETL[0].Id;
 
+        //get CP to update displayed prices
+        List<cspmb__Price_Item__c> commercialProductsList =
+        [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id =: productId];
+        if (commercialProductsList.size() > 0) {
+            cspmb__Price_Item__c cp = commercialProductsList[0];
+            cp.Displayed_One_Off_Price__c = oneOffCharge;
+            update(cp);
+        }
+
         //get existing recurring charges on CP with Id
         List<cspmb__Pricing_Element__c> oneOffList =
-        [SELECT Id, Name FROM cspmb__Pricing_Element__c
-        WHERE cspmb__commercial_product__r.Id =: productId
-        AND cspmb__pricing_element_type__r.cspmb__type__c = 'One-off Charge'
-        AND cspmb__pricing_element_type__r.Name = 'One-off Charge'];
+        [SELECT Id, Name,
+            (SELECT Id, Name,
+                    cspmb__one_off_adjustment__c,
+                    cspmb__recurring_adjustment__c,
+                    cspmb__target_price__c,
+                    cspmb__pricing_rule__c
+                FROM cspmb__commercial_product_pricing_rule_assocs__r AS coppra
+            WHERE cspmb__pricing_rule__c = :starhubPricingRule)
+            FROM cspmb__Pricing_Element__c
+            WHERE cspmb__commercial_product__r.Id =: productId
+            AND cspmb__pricing_element_type__r.cspmb__type__c = 'One-off Charge'
+            AND cspmb__pricing_element_type__r.Name = 'One-off Charge'];
 
+        //edit existing pricing element
         if (oneOffList.size() > 0) {
+//            cspmb__Pricing_Element__c pricingElement = oneOffList[0];
+//            pricingElement.
             return;
         } else {
             // create new pricing element

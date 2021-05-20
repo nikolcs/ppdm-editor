@@ -49,6 +49,11 @@ html {
             max-width: 100%;
             white-space: nowrap;
         }
+        .cs-table-cell img {
+            display: inline-block;
+            max-width: 100%;
+            object-fit: contain;
+        }
         .cs-table-header {
             position: sticky;
             top: 0;
