@@ -1,11 +1,22 @@
 global with sharing class CSRemoteActionDelegation {
 
+    static final String PRICING_ELEMENT_TYPE_ONE_OFF = 'One-off Charge';
+    static final String PRICING_ELEMENT_TYPE_NAME_ONE_OFF = 'One Off Charge';
+    static final String PRICING_ELEMENT_TYPE_RECURRING = 'Recurring Charge';
+    static final String PRICING_ELEMENT_TYPE_NAME_RECURRING = 'Recurring Charge';
+
+    static final Decimal TAX = 1.7;
+
     @RemoteAction
     global static CommercialProductWrapper getCommercialProduct(String cpId) {
         List<cspmb__Pricing_Element__c> pricingElements =
             [SELECT Id, Name,
                     cspmb__pricing_element_type__r.cspmb__type__c, cspmb__commercial_product__r.Id, cspmb__commercial_product__r.Name,
-                (SELECT Id, Name, cspmb__one_off_adjustment__c, cspmb__recurring_adjustment__c, cspmb__target_price__c
+                (SELECT Id, Name,
+                        cspmb__one_off_adjustment__c,
+                        cspmb__recurring_adjustment__c,
+                        cspmb__target_price__c,
+                        cspmb__pricing_rule__r.Name
                     FROM cspmb__commercial_product_pricing_rule_assocs__r)
             FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product__r.Id = : cpId];
@@ -45,6 +56,7 @@ global with sharing class CSRemoteActionDelegation {
         public Decimal recurringAdjustment {get; set;}
         public Decimal oneOffAdjustment {get; set;}
         public String targetPrice {get; set;}
+        public String pricingRuleName {get; set;}
 
         public CoppraWrapper(cspmb__Price_Item_Pricing_Rule_Association__c coppra) {
             this.id = coppra.Id;
@@ -52,6 +64,7 @@ global with sharing class CSRemoteActionDelegation {
             this.recurringAdjustment = coppra.cspmb__recurring_adjustment__c;
             this.oneOffAdjustment = coppra.cspmb__one_off_adjustment__c;
             this.targetPrice = coppra.cspmb__target_price__c;
+            this.pricingRuleName = coppra.cspmb__pricing_rule__r.Name;
         }
     }
 
@@ -144,40 +157,43 @@ global with sharing class CSRemoteActionDelegation {
     global static void updateRecurringPricing(String productId, Decimal recurringCharge) {
 
         String pricingElId = '';
+        String recurringPETId = '';
 
-        //get default pricing rule
+        // get default pricing rule
         List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing Rule for Starhub' LIMIT 1];
 //        List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing rule' LIMIT 1];
         String starhubPricingRule = pricingRules[0].Id;
 
-        //get pricing element type for recurring charge
+        // get pricing element type for recurring charge
         List<cspmb__Pricing_Element_Type__c> recurringPETL =
             [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
-                WHERE cspmb__type__c = 'Recurring Charge'
-                AND Name = 'Recurring Charge'
+                WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                AND Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
                 LIMIT 1];
 
-        String recurringPETId = recurringPETL[0].Id;
+        if(recurringPETL.size() > 0) {
+            recurringPETId = recurringPETL[0].Id;
+        }
 
-        //get CP to update displayed prices
+        // get CP to update displayed prices
         List<cspmb__Price_Item__c> commercialProductsList =
-        [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id =: productId];
+        [SELECT Id, Name, Displayed_Recurring_Price__c FROM cspmb__Price_Item__c WHERE Id =: productId];
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
-            cp.Displayed_Recurring_Price__c = recurringCharge;
+            cp.Displayed_Recurring_Price__c = recurringCharge * TAX;
             update(cp);
         }
 
-        //get existing recurring charges on selected CP that are of starhubPricingRule
+        // get existing recurring charges on selected CP that are of starhubPricingRule
         List<cspmb__Pricing_Element__c> recurringList =
             [SELECT Id, Name,
-                (SELECT Id, Name
+                (SELECT Id, Name, cspmb__recurring_adjustment__c
                     FROM cspmb__commercial_product_pricing_rule_assocs__r
                     WHERE cspmb__pricing_rule__c = :starhubPricingRule)
                 FROM cspmb__Pricing_Element__c
                 WHERE cspmb__commercial_product__r.Id =: productId
-                AND cspmb__pricing_element_type__r.cspmb__type__c = 'Recurring Charge'
-                AND cspmb__pricing_element_type__r.Name = 'Recurring Charge'
+                AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
                 AND Id IN (SELECT cspmb__pricing_element__c
                                 FROM cspmb__Price_Item_Pricing_Rule_Association__c
                                 WHERE cspmb__pricing_rule__c = :starhubPricingRule)];
@@ -185,7 +201,7 @@ global with sharing class CSRemoteActionDelegation {
         if (recurringList.size() > 0 && recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
             for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
                 coppra.cspmb__recurring_adjustment__c = recurringCharge;
-                update(coppra);
+                update coppra;
             }
         } else {
             // create new pricing element
@@ -222,43 +238,46 @@ global with sharing class CSRemoteActionDelegation {
     global static void updateOneOffPricing(String productId, Decimal oneOffCharge) {
 
         String pricingElId = '';
+        String OneOffPETId = '';
 
-        //get default pricing rule
+        // get default pricing rule
         List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing Rule for Starhub' LIMIT 1];
 //        List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing rule' LIMIT 1];
         String starhubPricingRule = pricingRules[0].Id;
 
-        //get pricing element type for recurring charge
+        // get pricing element type for recurring charge
         List<cspmb__Pricing_Element_Type__c> oneOffPETL =
-        [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
-        WHERE cspmb__type__c = 'One-off Charge' AND Name = 'One-off Charge' LIMIT 1];
+        [SELECT Id, Name  FROM cspmb__Pricing_Element_Type__c
+            WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF AND Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF LIMIT 1];
 
-        String OneOffPETId = oneOffPETL[0].Id;
+        if(oneOffPETL.size() > 0) {
+            OneOffPETId = oneOffPETL[0].Id;
+        }
 
-        //get CP to update displayed prices
+        // get CP to update displayed prices
         List<cspmb__Price_Item__c> commercialProductsList =
-        [SELECT Id, Name FROM cspmb__Price_Item__c WHERE Id =: productId];
+        [SELECT Id, Name, Displayed_One_Off_Price__c FROM cspmb__Price_Item__c WHERE Id =: productId];
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
-            cp.Displayed_One_Off_Price__c = oneOffCharge;
+            cp.Displayed_One_Off_Price__c = oneOffCharge * TAX;
             update(cp);
         }
 
-        //get existing recurring charges on selected CP that are of starhubPricingRule
+        // get existing recurring charges on selected CP that are of starhubPricingRule
         List<cspmb__Pricing_Element__c> oneOffList =
         [SELECT Id, Name,
-            (SELECT Id, Name
+            (SELECT Id, Name, cspmb__one_off_adjustment__c
                 FROM cspmb__commercial_product_pricing_rule_assocs__r
                 WHERE cspmb__pricing_rule__c = :starhubPricingRule)
             FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product__r.Id =: productId
-            AND cspmb__pricing_element_type__r.cspmb__type__c = 'One-off Charge'
-            AND cspmb__pricing_element_type__r.Name = 'One-off Charge'
+            AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+            AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
             AND Id IN (SELECT cspmb__pricing_element__c
                             FROM cspmb__Price_Item_Pricing_Rule_Association__c
                             WHERE cspmb__pricing_rule__c = :starhubPricingRule)];
 
-        //edit existing pricing element if exist
+        // edit existing pricing element if exist
         if (oneOffList.size() > 0 && oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
             for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
                 coppra.cspmb__one_off_adjustment__c = oneOffCharge;
@@ -293,6 +312,7 @@ global with sharing class CSRemoteActionDelegation {
             newCOPPRASales.cspmb__one_off_adjustment__c = oneOffCharge;
             insert newCOPPRASales;
         }
+        return;
     }
 }
 
