@@ -83,10 +83,10 @@ html {
             max-width: 7rem;
         }
         .cs-table-cell.col-Name {
-
+            min-width: 6rem;
         }
         .cs-table-cell.col-Description {
-
+            min-width: 15rem;
         }
         .cs-table-cell.col-CommercialProductCode {
             min-width: 10.5rem;
@@ -134,6 +134,7 @@ html {
         }
         .dropdown-footer {
             display: inline-flex;
+            align-items: center;
             padding: 0.25rem 0 0 0;
             .cs-btn:last-child {
                 margin-left: 0.5rem;
@@ -143,5 +144,26 @@ html {
     .cs-dropdown-outer-item-wrapper .cs-dropdown-item-wrapper li .cs-btn::after {
         border: 1px solid #dddbda;
         border-radius: 0.25rem;
+    }
+
+    .success-icon {
+        animation: success-pseudo 0.75s;
+        opacity: 0;
+    }
+}
+
+/* animations */
+@keyframes success-pseudo {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    66% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
     }
 }

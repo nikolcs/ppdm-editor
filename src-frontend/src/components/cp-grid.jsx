@@ -93,10 +93,14 @@ class CPGrid extends React.Component {
         ).then( () => {
             VFRemotingService.getCPs().then(
                 result => {
-                    this.setState({CPs: result});
+                    this.setState({CPs: result, chargesSaving: false, showSuccessIndicator: true});
                     console.log("getCPs");
                     console.log(result);
-                    this.setState({chargesSaving : false})
+                    setTimeout(() => {
+                        this.setState( {
+                            showSuccessIndicator: false,
+                        })
+                    }, 750);
                 }
             )
         })
@@ -290,7 +294,14 @@ class CPGrid extends React.Component {
                                         onChange={this.onChangeRecurring}
                                     />
                                     <div className="dropdown-footer">
-                                        { this.state.chargesSaving && <CSSpinner color="brand" size="small" inline />}
+                                        { this.state.chargesSaving &&
+                                            <CSSpinner color="brand" size="small" inline />
+                                        }
+                                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
+                                            <CSIcon className="success-icon" name="success" color="#009540" />
+                                        }
+
+
                                         <CSButton
                                             label="Save"
                                             btnStyle="brand"
