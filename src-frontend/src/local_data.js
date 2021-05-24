@@ -234,6 +234,8 @@ invokeAction = function (...args) {
                 {
                     "Id": "a1P4L000008rlhrUAA",
                     "Name": "package 3",
+                    "cspmb__Price_Item_Description__c": "Description",
+                    "cspmb__Price_Item_Code__c": "STH-BB-2000FB",
                     "cspmb__member_commercial_product_associations__r": [
                         {
                             "cspmb__parent_commercial_product__c": "a1P4L000008rlhrUAA",
@@ -241,8 +243,11 @@ invokeAction = function (...args) {
                             "Name": "CPA-00003",
                             "cspmb__member_commercial_product__c": "a1P4L000008rli0UAA",
                             "cspmb__member_commercial_product__r": {
+                                "Id": "a1P4L000008rli0UAA",
                                 "Name": "cp3",
-                                "Id": "a1P4L000008rli0UAA"
+                                "cspmb__Price_Item_Code__c": "STH-BB-5000FB",
+                                "Displayed_One_Off_Price__c": 27.82,
+                                "Displayed_Recurring_Price__c": 13.19
                             }
                         }
                     ]
@@ -250,6 +255,7 @@ invokeAction = function (...args) {
                 {
                     "Id": "a1P4L000008rke5UAA",
                     "Name": "test package",
+                    "cspmb__Price_Item_Code__c": "STH-BB-2000FB",
                     "cspmb__member_commercial_product_associations__r": [
                         {
                             "cspmb__parent_commercial_product__c": "a1P4L000008rke5UAA",
@@ -257,8 +263,14 @@ invokeAction = function (...args) {
                             "Name": "CPA-00000",
                             "cspmb__member_commercial_product__c": "a1P4L000008rke0UAA",
                             "cspmb__member_commercial_product__r": {
+                                "Id": "a1P4L000008rke0UAA",
                                 "Name": "test",
-                                "Id": "a1P4L000008rke0UAA"
+                                "cspmb__Price_Item_Description__c": "Enjoy the best WiFi coverage at home with StarHub Broadband",
+                                "cspmb__Price_Item_Code__c": "STH-BB-2000FB",
+                                "Image_URL__c": "https://ppdmui1-dev-ed--c.visualforce.com/resource/1621434285000/cpimage0",
+                                "Rating__c": 5,
+                                "Displayed_One_Off_Price__c": 10,
+                                "Displayed_Recurring_Price__c": 17
                             }
                         }
                     ]
@@ -266,6 +278,12 @@ invokeAction = function (...args) {
                 {
                     "Id": "a1P4L000008rli5UAA",
                     "Name": "package 1",
+                    "cspmb__Price_Item_Description__c": "Description",
+                    "cspmb__Price_Item_Code__c": "STH-BB-2000FB",
+                    "Image_URL__c": "https://ppdmui1-dev-ed--c.visualforce.com/resource/1621434285000/cpimage0",
+                    "Rating__c": 10,
+                    "Displayed_One_Off_Price__c": 25,
+                    "Displayed_Recurring_Price__c": 100,
                     "cspmb__member_commercial_product_associations__r": [
                         {
                             "cspmb__parent_commercial_product__c": "a1P4L000008rli5UAA",
@@ -273,8 +291,13 @@ invokeAction = function (...args) {
                             "Name": "CPA-00001",
                             "cspmb__member_commercial_product__c": "a1P4L000008rlhqUAA",
                             "cspmb__member_commercial_product__r": {
+                                "Id": "a1P4L000008rlhqUAA",
                                 "Name": "cp 1",
-                                "Id": "a1P4L000008rlhqUAA"
+                                "cspmb__Price_Item_Description__c": "Description-cp",
+                                "cspmb__Price_Item_Code__c": "STH-BB-1000FB",
+                                "Rating__c": 5,
+                                "Displayed_One_Off_Price__c": 24.61,
+                                "Displayed_Recurring_Price__c": 5.35
                             }
                         }
                     ]
@@ -282,6 +305,7 @@ invokeAction = function (...args) {
                 {
                     "Id": "a1P4L000008rliAUAQ",
                     "Name": "package 2",
+                    "cspmb__Price_Item_Code__c": "STH-BB-3000FB",
                     "cspmb__member_commercial_product_associations__r": [
                         {
                             "cspmb__parent_commercial_product__c": "a1P4L000008rliAUAQ",
@@ -289,8 +313,11 @@ invokeAction = function (...args) {
                             "Name": "CPA-00002",
                             "cspmb__member_commercial_product__c": "a1P4L000008rlhvUAA",
                             "cspmb__member_commercial_product__r": {
+                                "Id": "a1P4L000008rlhvUAA",
                                 "Name": "cp 2",
-                                "Id": "a1P4L000008rlhvUAA"
+                                "cspmb__Price_Item_Code__c": "STH-BB-1000FB",
+                                "Displayed_One_Off_Price__c": 0,
+                                "Displayed_Recurring_Price__c": 8.56
                             }
                         }
                     ]

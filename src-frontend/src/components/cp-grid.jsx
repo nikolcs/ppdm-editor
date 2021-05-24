@@ -37,6 +37,7 @@ class CPGrid extends React.Component {
         searchTerm: '',
         activeTab: 0,
         showAddons: true,
+        showCPs: true,
 
         Packages: '',
         CPs: '',
@@ -175,28 +176,54 @@ class CPGrid extends React.Component {
         );
     }
 
-    showCP = (cp, byAddons, byCPs) => {
+    showCPAndAddons = (cp, byAddons) => {
         if (this.state.searchTerm) {
             if (
                 (cp.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (cp.cspmb__Price_Item_Code__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (cp.cspmb__Price_Item_Description__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
-                (cp.Rating__c || '').toString().toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (cp.Rating__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (cp.Displayed_One_Off_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (cp.Displayed_Recurring_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
 
                 || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r &&
-                    cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(x =>
-                        (x.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
-                        (x.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                    cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(addon =>
+                        (addon.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (addon.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (addon.cspmb__Add_On_Price_Item__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (addon.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (addon.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Code__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                     ).length > 0
                 )
-
-
-                || (byCPs && cp.cspmb__member_commercial_product_associations__r &&
-                        cp.cspmb__member_commercial_product_associations__r.filter(x =>
-                            (x.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())).length > 0)
             ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else return true;
+    }
+
+    showPackageAndCPs = (pkg, byCPs) => {
+        if (this.state.searchTerm) {
+            if (
+                (pkg.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (pkg.cspmb__Price_Item_Code__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (pkg.cspmb__Price_Item_Description__c || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (pkg.Rating__c || '').toString().toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (pkg.Displayed_One_Off_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                (pkg.Displayed_Recurring_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
+
+                || (byCPs && pkg.cspmb__member_commercial_product_associations__r &&
+                    pkg.cspmb__member_commercial_product_associations__r.filter(cp =>
+                        (cp.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (cp.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (cp.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (cp.cspmb__member_commercial_product__r.Rating__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (cp.cspmb__member_commercial_product__r.cspmb__Price_Item_Code__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                        (cp.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                    ).length > 0
+                )
+        ) {
                 return true;
             } else {
                 return false;
@@ -206,6 +233,10 @@ class CPGrid extends React.Component {
 
     toggleShowAddons = () => {
         this.setState({showAddons: !this.state.showAddons});
+    }
+
+    toggleShowCPs = () => {
+        this.setState({showCPs: !this.state.showCPs});
     }
 
     render() {
@@ -415,6 +446,14 @@ class CPGrid extends React.Component {
                             labelPosition="left"
                         />
                     ) : null}
+                    {this.state.activeTab === 1 ? (
+                        <CSToggle
+                            label="Show Commercial Products"
+                            onClick={this.toggleShowCPs}
+                            checked={this.state.showCPs}
+                            labelPosition="left"
+                        />
+                    ) : null}
                 </div>
 
                 <div className="table-wrapper">
@@ -439,7 +478,7 @@ class CPGrid extends React.Component {
                                         return (
                                             <React.Fragment key={row.Id}>
                                                 <>
-                                                    {this.showCP(row, true) &&
+                                                    {this.showCPAndAddons(row, true) &&
                                                         <CSTableRow>
                                                             <CSTableCell className="col-Image">
                                                                 <img src={row.Image_URL__c}/>
@@ -458,12 +497,10 @@ class CPGrid extends React.Component {
                                                 </>
                                                 {this.state.showAddons && row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
                                                     .sort(this.rowSortAddon)
-                                                    .filter(addonAssociation => {
+                                                    .filter(() => {
                                                         if (this.state.searchTerm) {
                                                             if (
-                                                                this.showCP(row, false) ||
-                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
-                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                                this.showCPAndAddons(row, true)
                                                             ) {
                                                                 return true;
                                                             } else {
@@ -517,7 +554,7 @@ class CPGrid extends React.Component {
                                         return (
                                             <React.Fragment key={row.Id}>
                                                 <>
-                                                    {this.showCP(row, false, true) &&
+                                                    {this.showPackageAndCPs(row, true) &&
                                                         <CSTableRow>
                                                             <CSTableCell className="col-Image">
                                                                 <img src={row.Image_URL__c}/>
@@ -530,7 +567,6 @@ class CPGrid extends React.Component {
                                                                 />
                                                                 <span>{row.Name}</span>
                                                             </CSTableCell>
-                                                            {/* cells below need json fetch update when remote service is done for packages */}
                                                             <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description"/>
                                                             <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode"/>
                                                             <CSTableCell text={row.Rating__c} className="col-Rating"/>
@@ -542,13 +578,12 @@ class CPGrid extends React.Component {
                                                         </CSTableRow>
                                                     }
                                                 </>
-                                                {row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
+                                                {this.state.showCPs && row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
                                                     .sort(this.rowSortCP)
-                                                    .filter(cpAssociation => {
+                                                    .filter(() => {
                                                         if (this.state.searchTerm) {
                                                             if (
-                                                                this.showCP(row, false, true) ||
-                                                                (cpAssociation.cspmb__member_commercial_product__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase())
+                                                                this.showPackageAndCPs(row, true)
                                                             ) {
                                                                 return true;
                                                             } else {
@@ -567,7 +602,6 @@ class CPGrid extends React.Component {
                                                             <CSTableCell grow={2} className="col-Name">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
                                                             </CSTableCell>
-                                                            {/* cells below need json fetch update when remote service is done for packages */}
                                                             <CSTableCell grow={4} className="col-Description">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c}</span>
                                                             </CSTableCell>
