@@ -55,6 +55,21 @@ class CPGrid extends React.Component {
         chargesSaving: false
     };
 
+    handleTabClick = (tabName) => {
+        if (tabName === 'CP') {
+            this.setState({
+                searchTerm: this.state.activeTab === 1 ? '' : this.state.searchTerm,
+                activeTab: 0
+            })
+        }
+        if (tabName === 'Packages') {
+            this.setState({
+                searchTerm: this.state.activeTab === 0 ? '' : this.state.searchTerm,
+                activeTab: 1
+            })
+        }
+    }
+
     handleInputOnChange = (event) => {
         this.setState({ detailsName: event.target.value});
     }
@@ -186,7 +201,7 @@ class CPGrid extends React.Component {
                 (cp.Displayed_One_Off_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (cp.Displayed_Recurring_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
 
-                || (byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r &&
+                || (this.state.showAddons && byAddons && cp.cspmb__Price_Item_Add_On_Price_Item_Association__r &&
                     cp.cspmb__Price_Item_Add_On_Price_Item_Association__r.filter(addon =>
                         (addon.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                         (addon.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
@@ -213,7 +228,7 @@ class CPGrid extends React.Component {
                 (pkg.Displayed_One_Off_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                 (pkg.Displayed_Recurring_Price__c || '').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
 
-                || (byCPs && pkg.cspmb__member_commercial_product_associations__r &&
+                || (this.state.showCPs && byCPs && pkg.cspmb__member_commercial_product_associations__r &&
                     pkg.cspmb__member_commercial_product_associations__r.filter(cp =>
                         (cp.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
                         (cp.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
@@ -422,12 +437,12 @@ class CPGrid extends React.Component {
                 <CSTabGroup>
                     <CSTab
                         name="Commercial Products"
-                        onClick={() => this.setState({activeTab: 0})}
+                        onClick={() => this.handleTabClick('CP')}
                         active={this.state.activeTab === 0}
                     />
                     <CSTab
                         name="Packages"
-                        onClick={() => this.setState({activeTab: 1})}
+                        onClick={() => this.handleTabClick('Packages')}
                         active={this.state.activeTab === 1}
                     />
                 </CSTabGroup>
@@ -436,7 +451,7 @@ class CPGrid extends React.Component {
                         placeholder="Search"
                         width="20rem"
                         onChange={this.onSearchChange}
-                        value={this.props.searchTerm}
+                        value={this.state.searchTerm}
                     />
                     {this.state.activeTab === 0 ? (
                         <CSToggle
@@ -448,7 +463,7 @@ class CPGrid extends React.Component {
                     ) : null}
                     {this.state.activeTab === 1 ? (
                         <CSToggle
-                            label="Show Commercial Products"
+                            label="Show Package Members"
                             onClick={this.toggleShowCPs}
                             checked={this.state.showCPs}
                             labelPosition="left"
