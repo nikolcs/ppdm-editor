@@ -444,7 +444,7 @@ class CPGrid extends React.Component {
 
         return (
             <>
-                <CSTabGroup>
+                <CSTabGroup variant="large">
                     <CSTab
                         name="PLM"
                         onClick={() => this.handleTabClick('PLM')}
@@ -461,36 +461,36 @@ class CPGrid extends React.Component {
                         active={this.state.activeTab === 'Packages'}
                     />
                 </CSTabGroup>
-                <div className="action-row">
-                    <CSInputSearch
-                        placeholder="Search"
-                        width="20rem"
-                        onChange={this.onSearchChange}
-                        value={this.state.searchTerm}
-                    />
-                    {this.state.activeTab === 'CPs' ? (
-                        <CSToggle
-                            label="Show Add-Ons"
-                            onClick={this.toggleShowAddons}
-                            checked={this.state.showAddons}
-                            labelPosition="left"
+                {this.state.activeTab !== 'PLM' &&
+                    <div className="action-row">
+                        <CSInputSearch
+                            placeholder="Search"
+                            width="20rem"
+                            onChange={this.onSearchChange}
+                            value={this.state.searchTerm}
                         />
-                    ) : null}
-                    {this.state.activeTab === 'Packages' ? (
-                        <CSToggle
-                            label="Show Package Members"
-                            onClick={this.toggleShowCPs}
-                            checked={this.state.showCPs}
-                            labelPosition="left"
-                        />
-                    ) : null}
-                </div>
-
-                {this.state.activeTab === 'PLM' &&
-                    <div className="plm-iframe-wrapper">
-                        <iframe src=""></iframe>
+                        {this.state.activeTab === 'CPs' ? (
+                            <CSToggle
+                                label="Show Add-Ons"
+                                onClick={this.toggleShowAddons}
+                                checked={this.state.showAddons}
+                                labelPosition="left"
+                            />
+                        ) : null}
+                        {this.state.activeTab === 'Packages' ? (
+                            <CSToggle
+                                label="Show Package Members"
+                                onClick={this.toggleShowCPs}
+                                checked={this.state.showCPs}
+                                labelPosition="left"
+                            />
+                        ) : null}
                     </div>
                 }
+
+                <div className={this.state.activeTab === 'PLM' ? '' : 'hidden'}>
+                    <div className="plm-wrapper" id="lightning"></div>
+                </div>
                 <div className="table-wrapper">
                     {this.state.activeTab === 'CPs' &&
                         <CSTable>
@@ -763,184 +763,181 @@ class CPGrid extends React.Component {
                 </CSModal>
 
 
+                {/*<CSModal*/}
+                {/*    visible={this.state.visibleModal === 'commercial-product-details'}*/}
+                {/*    size="medium"*/}
+                {/*    animated*/}
+                {/*    closeButton*/}
+                {/*    onClose={this.closeModal}*/}
+                {/*    className="cp-details-modal"*/}
+                {/*>*/}
+                {/*    <CSModalHeader*/}
+                {/*        title="Set List Price of Existing Commercial Product"*/}
+                {/*        subtitle={getProductNameValue()}*/}
+                {/*    />*/}
+                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
+                {/*        <div className="column-wrapper">*/}
+                {/*            <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />*/}
+                {/*            <div className="placeholder"></div>*/}
+                {/*            <div className="input-wrapper">*/}
+                {/*                <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} value={this.state.detailsRecurringCharge} onChange={this.onChangeRecurring}/>*/}
+                {/*                {!this.state.recurringPriceEditable &&*/}
+                {/*                    <CSButton*/}
+                {/*                        size="small"*/}
+                {/*                        label="edit"*/}
+                {/*                        labelHidden*/}
+                {/*                        iconName="edit"*/}
+                {/*                        iconColor="rgba(0, 0, 0, 0.25)"*/}
+                {/*                        onClick={() => this.setState({recurringPriceEditable: true})}*/}
+                {/*                    />*/}
+                {/*                }*/}
+                {/*            </div>*/}
+                {/*            <div className="input-wrapper">*/}
+                {/*                <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} value={this.state.detailsOneOffCharge} onChange={this.onChangeOneOff}/>*/}
+                {/*                {!this.state.oneOffPriceEditable &&*/}
+                {/*                    <CSButton*/}
+                {/*                        size="small"*/}
+                {/*                        label="edit"*/}
+                {/*                        labelHidden*/}
+                {/*                        iconName="edit"*/}
+                {/*                        iconColor="rgba(0, 0, 0, 0.25)"*/}
+                {/*                        onClick={() => this.setState({oneOffPriceEditable: true})}*/}
+                {/*                    />*/}
+                {/*                }*/}
+                {/*            </div>*/}
+                {/*            <div className="field-wrapper">*/}
+                {/*                <label>Pricing Rule Group</label>*/}
+                {/*                <div className="lookup-btn-wrapper">*/}
+                {/*                    <CSLookup*/}
+                {/*                        fieldToBeDisplayed="Account"*/}
+                {/*                        label="Account"*/}
+                {/*                        labelHidden*/}
+                {/*                        lookupColumns={sampleLookup.columns}*/}
+                {/*                        lookupOptions={sampleLookup.data}*/}
+                {/*                        borderRadius="0.25rem 0 0 0.25rem"*/}
+                {/*                        mode="client"*/}
+                {/*                    />*/}
+                {/*                    <CSButton*/}
+                {/*                        className="open-modal-btn"*/}
+                {/*                        label="New"*/}
+                {/*                        borderRadius="0 0.25rem 0.25rem 0"*/}
+                {/*                        onClick={() => this.setState({thirdModalVisible: true})}*/}
+                {/*                    />*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </CSModalBody>*/}
+                {/*    <CSModalFooter align="right">*/}
+                {/*        <CSButton*/}
+                {/*            label="Cancel"*/}
+                {/*            onClick={this.closeModal}*/}
+                {/*        />*/}
+                {/*        <CSButton*/}
+                {/*            label="Save"*/}
+                {/*            btnStyle="brand"*/}
+                {/*            onClick={this.handleSave}*/}
+                {/*        />*/}
+                {/*    </CSModalFooter>*/}
+                {/*</CSModal>*/}
 
+                {/*<CSModal*/}
+                {/*    visible={this.state.secondModalVisible}*/}
+                {/*    size="small"*/}
+                {/*    animated*/}
+                {/*    closeButton*/}
+                {/*    onClose={() => this.setState({secondModalVisible: false})}*/}
+                {/*    className="cp-details-modal-second"*/}
+                {/*>*/}
+                {/*    <CSModalHeader title="New Price Rule"/>*/}
+                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
+                {/*        <CSButton*/}
+                {/*            className="prepopulate-btn"*/}
+                {/*            label="prepopulate data"*/}
+                {/*            labelHidden*/}
+                {/*            iconName="edit"*/}
+                {/*            size="small"*/}
+                {/*            btnType="transparent"*/}
+                {/*            btnStyle="brand"*/}
+                {/*        />*/}
+                {/*        <div className="column-wrapper">*/}
+                {/*            <div className="col">*/}
+                {/*                <CSInputText label="Pricing Rule Name"/>*/}
+                {/*                <CSInputText label="Pricing Rule Code"/>*/}
+                {/*            </div>*/}
+                {/*            <div className="col">*/}
+                {/*                <CSInputText label="Context"/>*/}
+                {/*                <CSInputText label="Description"/>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </CSModalBody>*/}
+                {/*    <CSModalFooter align="right">*/}
+                {/*        <CSButton*/}
+                {/*            label="Cancel"*/}
+                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
+                {/*        />*/}
+                {/*        <CSButton*/}
+                {/*            label="Save and New"*/}
+                {/*            btnStyle="brand"*/}
+                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
+                {/*        />*/}
+                {/*        <CSButton*/}
+                {/*            label="Save"*/}
+                {/*            btnStyle="brand"*/}
+                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
+                {/*        />*/}
+                {/*    </CSModalFooter>*/}
+                {/*</CSModal>*/}
 
-
-                <CSModal
-                    visible={this.state.visibleModal === 'commercial-product-details'}
-                    size="medium"
-                    animated
-                    closeButton
-                    onClose={this.closeModal}
-                    className="cp-details-modal"
-                >
-                    <CSModalHeader
-                        title="Set List Price of Existing Commercial Product"
-                        subtitle={getProductNameValue()}
-                    />
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <div className="column-wrapper">
-                            <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />
-                            <div className="placeholder"></div>
-                            <div className="input-wrapper">
-                                <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} value={this.state.detailsRecurringCharge} onChange={this.onChangeRecurring}/>
-                                {!this.state.recurringPriceEditable &&
-                                    <CSButton
-                                        size="small"
-                                        label="edit"
-                                        labelHidden
-                                        iconName="edit"
-                                        iconColor="rgba(0, 0, 0, 0.25)"
-                                        onClick={() => this.setState({recurringPriceEditable: true})}
-                                    />
-                                }
-                            </div>
-                            <div className="input-wrapper">
-                                <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} value={this.state.detailsOneOffCharge} onChange={this.onChangeOneOff}/>
-                                {!this.state.oneOffPriceEditable &&
-                                    <CSButton
-                                        size="small"
-                                        label="edit"
-                                        labelHidden
-                                        iconName="edit"
-                                        iconColor="rgba(0, 0, 0, 0.25)"
-                                        onClick={() => this.setState({oneOffPriceEditable: true})}
-                                    />
-                                }
-                            </div>
-                            <div className="field-wrapper">
-                                <label>Pricing Rule Group</label>
-                                <div className="lookup-btn-wrapper">
-                                    <CSLookup
-                                        fieldToBeDisplayed="Account"
-                                        label="Account"
-                                        labelHidden
-                                        lookupColumns={sampleLookup.columns}
-                                        lookupOptions={sampleLookup.data}
-                                        borderRadius="0.25rem 0 0 0.25rem"
-                                        mode="client"
-                                    />
-                                    <CSButton
-                                        className="open-modal-btn"
-                                        label="New"
-                                        borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({thirdModalVisible: true})}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={this.closeModal}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={this.handleSave}
-                        />
-                    </CSModalFooter>
-                </CSModal>
-
-                <CSModal
-                    visible={this.state.secondModalVisible}
-                    size="small"
-                    animated
-                    closeButton
-                    onClose={() => this.setState({secondModalVisible: false})}
-                    className="cp-details-modal-second"
-                >
-                    <CSModalHeader title="New Price Rule"/>
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <CSButton
-                            className="prepopulate-btn"
-                            label="prepopulate data"
-                            labelHidden
-                            iconName="edit"
-                            size="small"
-                            btnType="transparent"
-                            btnStyle="brand"
-                        />
-                        <div className="column-wrapper">
-                            <div className="col">
-                                <CSInputText label="Pricing Rule Name"/>
-                                <CSInputText label="Pricing Rule Code"/>
-                            </div>
-                            <div className="col">
-                                <CSInputText label="Context"/>
-                                <CSInputText label="Description"/>
-                            </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save and New"
-                            btnStyle="brand"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={() => this.setState({secondModalVisible: false})}
-                        />
-                    </CSModalFooter>
-                </CSModal>
-
-                <CSModal
-                    visible={this.state.thirdModalVisible}
-                    size="small"
-                    animated
-                    closeButton
-                    onClose={() => this.setState({thirdModalVisible: false})}
-                    className="cp-details-modal-second"
-                >
-                    <CSModalHeader title="New Price Rule"/>
-                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <CSButton
-                            className="prepopulate-btn"
-                            label="prepopulate data"
-                            labelHidden
-                            iconName="edit"
-                            size="small"
-                            btnType="transparent"
-                            btnStyle="brand"
-                        />
-                        <div className="column-wrapper">
-                            <div className="col">
-                                <CSInputText label="Pricing Rule Group Name"/>
-                                <CSInputText label="Pricing Rule Group Code"/>
-                            </div>
-                            <div className="col">
-                                <CSInputText label="Priority"/>
-                                <CSInputText label="Description"/>
-                            </div>
-                            <div className="col">
-                                <CSInputText label="Rule Group Compounding Type"/>
-                            </div>
-                        </div>
-                    </CSModalBody>
-                    <CSModalFooter align="right">
-                        <CSButton
-                            label="Cancel"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save and New"
-                            btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
-                        />
-                    </CSModalFooter>
-                </CSModal>
+                {/*<CSModal*/}
+                {/*    visible={this.state.thirdModalVisible}*/}
+                {/*    size="small"*/}
+                {/*    animated*/}
+                {/*    closeButton*/}
+                {/*    onClose={() => this.setState({thirdModalVisible: false})}*/}
+                {/*    className="cp-details-modal-second"*/}
+                {/*>*/}
+                {/*    <CSModalHeader title="New Price Rule"/>*/}
+                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
+                {/*        <CSButton*/}
+                {/*            className="prepopulate-btn"*/}
+                {/*            label="prepopulate data"*/}
+                {/*            labelHidden*/}
+                {/*            iconName="edit"*/}
+                {/*            size="small"*/}
+                {/*            btnType="transparent"*/}
+                {/*            btnStyle="brand"*/}
+                {/*        />*/}
+                {/*        <div className="column-wrapper">*/}
+                {/*            <div className="col">*/}
+                {/*                <CSInputText label="Pricing Rule Group Name"/>*/}
+                {/*                <CSInputText label="Pricing Rule Group Code"/>*/}
+                {/*            </div>*/}
+                {/*            <div className="col">*/}
+                {/*                <CSInputText label="Priority"/>*/}
+                {/*                <CSInputText label="Description"/>*/}
+                {/*            </div>*/}
+                {/*            <div className="col">*/}
+                {/*                <CSInputText label="Rule Group Compounding Type"/>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </CSModalBody>*/}
+                {/*    <CSModalFooter align="right">*/}
+                {/*        <CSButton*/}
+                {/*            label="Cancel"*/}
+                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
+                {/*        />*/}
+                {/*        <CSButton*/}
+                {/*            label="Save and New"*/}
+                {/*            btnStyle="brand"*/}
+                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
+                {/*        />*/}
+                {/*        <CSButton*/}
+                {/*            label="Save"*/}
+                {/*            btnStyle="brand"*/}
+                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
+                {/*        />*/}
+                {/*    </CSModalFooter>*/}
+                {/*</CSModal>*/}
             </>
         );
     }
