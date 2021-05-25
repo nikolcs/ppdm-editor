@@ -13,8 +13,8 @@ global with sharing class CSRemoteActionDelegation {
             [SELECT Id, Name,
                     cspmb__pricing_element_type__r.cspmb__type__c, cspmb__commercial_product__r.Id, cspmb__commercial_product__r.Name,
                 (SELECT Id, Name,
-                        Discount_Amount_One_Off__c,
-                        Discount_Amount_Recurring__c,
+                        cspmb__one_off_adjustment__c,
+                        cspmb__recurring_adjustment__c,
                         cspmb__target_price__c,
                         cspmb__pricing_rule__r.Name
                     FROM cspmb__commercial_product_pricing_rule_assocs__r)
@@ -53,16 +53,16 @@ global with sharing class CSRemoteActionDelegation {
     global class CoppraWrapper {
         public Id id {get; set;}
         public String name {get; set;}
-        public Decimal discountAmountRecurring {get; set;}
-        public Decimal discountAmountOneOff {get; set;}
+        public Decimal recurringAdjustment {get; set;}
+        public Decimal oneOffAdjustment {get; set;}
         public String targetPrice {get; set;}
         public String pricingRuleName {get; set;}
 
         public CoppraWrapper(cspmb__Price_Item_Pricing_Rule_Association__c coppra) {
             this.id = coppra.Id;
             this.name = coppra.Name;
-            this.discountAmountRecurring = coppra.Discount_Amount_Recurring__c;
-            this.discountAmountOneOff = coppra.Discount_Amount_One_Off__c;
+            this.recurringAdjustment = coppra.cspmb__recurring_adjustment__c;
+            this.oneOffAdjustment = coppra.cspmb__one_off_adjustment__c;
             this.targetPrice = coppra.cspmb__target_price__c;
             this.pricingRuleName = coppra.cspmb__pricing_rule__r.Name;
         }
@@ -207,7 +207,7 @@ global with sharing class CSRemoteActionDelegation {
         // get existing recurring charges on selected CP that are of starhubPricingRule
         List<cspmb__Pricing_Element__c> recurringList =
             [SELECT Id, Name,
-                (SELECT Id, Name, Discount_Amount_Recurring__c
+                (SELECT Id, Name, cspmb__recurring_adjustment__c
                     FROM cspmb__commercial_product_pricing_rule_assocs__r
                     WHERE cspmb__pricing_rule__c = :starhubPricingRule)
                 FROM cspmb__Pricing_Element__c
@@ -220,7 +220,7 @@ global with sharing class CSRemoteActionDelegation {
 
         if (recurringList.size() > 0 && recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
             for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
-                coppra.Discount_Amount_Recurring__c = recurringCharge;
+                coppra.cspmb__recurring_adjustment__c = recurringCharge;
                 update coppra;
             }
         } else {
@@ -239,7 +239,7 @@ global with sharing class CSRemoteActionDelegation {
             newCOPPRAList.cspmb__association_type__c = 'Pricing change';
             newCOPPRAList.cspmb__target_price__c = 'List';
             newCOPPRAList.cspmb__recurring_adjustment_type__c = 'Price Override';
-            newCOPPRAList.Discount_Amount_Recurring__c = recurringCharge;
+            newCOPPRAList.cspmb__recurring_adjustment__c = recurringCharge;
             insert newCOPPRAList;
 
             // create coppra sales
@@ -249,7 +249,7 @@ global with sharing class CSRemoteActionDelegation {
             newCOPPRASales.cspmb__association_type__c = 'Pricing change';
             newCOPPRASales.cspmb__target_price__c = 'Sales';
             newCOPPRASales.cspmb__recurring_adjustment_type__c = 'Price Override';
-            newCOPPRASales.Discount_Amount_Recurring__c = recurringCharge;
+            newCOPPRASales.cspmb__recurring_adjustment__c = recurringCharge;
             insert newCOPPRASales;
         }
     }
@@ -287,7 +287,7 @@ global with sharing class CSRemoteActionDelegation {
         // get existing recurring charges on selected CP that are of starhubPricingRule
         List<cspmb__Pricing_Element__c> oneOffList =
         [SELECT Id, Name,
-            (SELECT Id, Name, Discount_Amount_One_Off__c
+            (SELECT Id, Name, cspmb__one_off_adjustment__c
                 FROM cspmb__commercial_product_pricing_rule_assocs__r
                 WHERE cspmb__pricing_rule__c = :starhubPricingRule)
             FROM cspmb__Pricing_Element__c
@@ -301,7 +301,7 @@ global with sharing class CSRemoteActionDelegation {
         // edit existing pricing element if exist
         if (oneOffList.size() > 0 && oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
             for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
-                coppra.Discount_Amount_One_Off__c = oneOffCharge;
+                coppra.cspmb__one_off_adjustment__c = oneOffCharge;
                 update(coppra);
             }
         } else {
@@ -320,7 +320,7 @@ global with sharing class CSRemoteActionDelegation {
             newCOPPRAList.cspmb__association_type__c = 'Pricing change';
             newCOPPRAList.cspmb__target_price__c = 'List';
             newCOPPRAList.cspmb__one_off_adjustment_type__c = 'Price Override';
-            newCOPPRAList.Discount_Amount_One_Off__c = oneOffCharge;
+            newCOPPRAList.cspmb__one_off_adjustment__c = oneOffCharge;
             insert newCOPPRAList;
 
             // create coppra sales
@@ -330,7 +330,7 @@ global with sharing class CSRemoteActionDelegation {
             newCOPPRASales.cspmb__association_type__c = 'Pricing change';
             newCOPPRASales.cspmb__target_price__c = 'Sales';
             newCOPPRASales.cspmb__one_off_adjustment_type__c = 'Price Override';
-            newCOPPRASales.Discount_Amount_One_Off__c = oneOffCharge;
+            newCOPPRASales.cspmb__one_off_adjustment__c = oneOffCharge;
             insert newCOPPRASales;
         }
         return;
