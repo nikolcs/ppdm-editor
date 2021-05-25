@@ -42,6 +42,7 @@ class CPGrid extends React.Component {
 
         Packages: '',
         CPs: '',
+        Promotions: '',
 
         activeProduct: '',
 
@@ -220,20 +221,17 @@ class CPGrid extends React.Component {
     handleOnPromotionOpen = (id) => {
         VFRemotingService.getCommercialProductPromotions(id).then(
             result => {
+                this.setState({Promotions: result});
                 console.log("getCommercialProductPromotions in handleOnPromotionOpen")
                 console.log(result);
+
             })
     }
 
-    openNewPromotionModal = () => {
+    createNewPromotionHandler = () => {
         this.setState({showNewPromotionModal: true})
+        // non-ux stuff
     }
-
-    createNewPromotion = () => {
-
-    }
-
-
 
     componentDidMount() {
         VFRemotingService.getCPs().then(
@@ -856,11 +854,10 @@ class CPGrid extends React.Component {
                     <CSModalBody padding="1rem 1.5rem 1rem 1.5rem" minHeight="40vh">
                         <CSButton
                             label="Create new promotion"
-                            onClick={() => this.openNewPromotionModal()}
+                            onClick={() => this.createNewPromotionHandler()}
                             className="create-new-promotion-btn"
                         />
-                        <CSSection title="Name" collapsible>
-                            <CSInputText label="Promotion Name" readOnly value="Summer 2020" />
+                        <CSSection title="Promotion Name" collapsible>
                             <CSInputText label="Code" readOnly value="Summer 2020" />
                             <CSInputText label="Discount Type" readOnly value="Summer 2020" />
                             <div className="placeholder"></div>

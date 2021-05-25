@@ -333,6 +333,50 @@ invokeAction = function (...args) {
             // data =
             return delayResponse(data, args);
 
+        case "getCommercialProductPromotions":
+            data = {
+                "id": "a1P4L000008rnIgUAI",
+                "name": "StarHub TV+",
+                "pricingElementWrappers": [
+                    {
+                        "coppraWrappers": [
+                            {
+                                "associationType": "Pricing change",
+                                "id": "a1N4L000000kIZXUA2",
+                                "name": "CPPRA-000105",
+                                "OneOffAdjustmentType": "Relative Discount",
+                                "pricingRuleCode": "STH-TV-24MTHCT-2-3-Promos",
+                                "pricingRuleContext": "Cart",
+                                "pricingRuleDescription": "Starhub TV Buy 2 Get 3",
+                                "pricingRuleName": "Starhub TV 24MTH CT Buy 2 Get 3 Rule",
+                                "pricingRulePredicateLogic": "CPPRA-000104",
+                                "recurringAdjustment": 100,
+                                "RecurringAdjustmentType": "Relative Discount",
+                                "targetPrice": "Sales"
+                            },
+                            {
+                                "associationType": "Pricing change",
+                                "id": "a1N4L000000kIZXUA2",
+                                "name": "CPPRA-000105",
+                                "OneOffAdjustmentType": "Relative Discount",
+                                "pricingRuleCode": "STH-TV-24MTHCT-2-3-Promos",
+                                "pricingRuleContext": "Cart",
+                                "pricingRuleDescription": "Starhub TV Buy 2 Get 3",
+                                "pricingRuleName": "Starhub TV 24MTH CT Buy 2 Get 3 Rule",
+                                "pricingRulePredicateLogic": "CPPRA-000104",
+                                "recurringAdjustment": 100,
+                                "RecurringAdjustmentType": "Relative Discount",
+                                "targetPrice": "Sales"
+                            }
+                        ],
+                        "id": "a1S4L000001A2dCUAS",
+                        "name": "PE-000049",
+                        "type": "Recurring Charge"
+                    }
+                ]
+            }
+            return delayResponse(data, args);
+
         default:
             return Promise.reject(`Couldn't find action ${args[0]}`);
     }
@@ -355,7 +399,8 @@ window.CS.PPDM = {
         saveNew: 'saveNew',
         getPackages: 'getPackages',
         updateRecurringPricing: 'updateRecurringPricing',
-        updateOneOffPricing: 'updateOneOffPricing'
+        updateOneOffPricing: 'updateOneOffPricing',
+        getCommercialProductPromotions: 'getCommercialProductPromotions'
     },
     session: {
         id: 'Session_Id'
