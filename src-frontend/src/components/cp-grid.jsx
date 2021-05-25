@@ -35,7 +35,7 @@ class CPGrid extends React.Component {
         thirdModalVisible: false,
 
         searchTerm: '',
-        activeTab: 0,
+        activeTab: 'CPs',
         showAddons: true,
         showCPs: true,
 
@@ -56,16 +56,22 @@ class CPGrid extends React.Component {
     };
 
     handleTabClick = (tabName) => {
-        if (tabName === 'CP') {
+        if (tabName === 'CPs') {
             this.setState({
-                searchTerm: this.state.activeTab === 1 ? '' : this.state.searchTerm,
-                activeTab: 0
+                searchTerm: this.state.activeTab === 'Packages' ? '' : this.state.searchTerm,
+                activeTab: 'CPs'
             })
         }
         if (tabName === 'Packages') {
             this.setState({
-                searchTerm: this.state.activeTab === 0 ? '' : this.state.searchTerm,
-                activeTab: 1
+                searchTerm: this.state.activeTab === 'CPs' ? '' : this.state.searchTerm,
+                activeTab: 'Packages'
+            })
+        }
+        if (tabName === 'PLM') {
+            this.setState({
+                searchTerm: '',
+                activeTab: 'PLM'
             })
         }
     }
@@ -172,7 +178,11 @@ class CPGrid extends React.Component {
         return 0;
     }
 
-
+    /* PROMOTIONS HANDLER */
+    handleBtnPromotions() {
+        console.log("handleBtnPromotions called")
+        this.openModal('Promotions');
+    }
 
     componentDidMount() {
         VFRemotingService.getCPs().then(
@@ -436,14 +446,19 @@ class CPGrid extends React.Component {
             <>
                 <CSTabGroup>
                     <CSTab
+                        name="PLM"
+                        onClick={() => this.handleTabClick('PLM')}
+                        active={this.state.activeTab === 'PLM'}
+                    />
+                    <CSTab
                         name="Commercial Products"
-                        onClick={() => this.handleTabClick('CP')}
-                        active={this.state.activeTab === 0}
+                        onClick={() => this.handleTabClick('CPs')}
+                        active={this.state.activeTab === 'CPs'}
                     />
                     <CSTab
                         name="Packages"
                         onClick={() => this.handleTabClick('Packages')}
-                        active={this.state.activeTab === 1}
+                        active={this.state.activeTab === 'Packages'}
                     />
                 </CSTabGroup>
                 <div className="action-row">
@@ -453,7 +468,7 @@ class CPGrid extends React.Component {
                         onChange={this.onSearchChange}
                         value={this.state.searchTerm}
                     />
-                    {this.state.activeTab === 0 ? (
+                    {this.state.activeTab === 'CPs' ? (
                         <CSToggle
                             label="Show Add-Ons"
                             onClick={this.toggleShowAddons}
@@ -461,7 +476,7 @@ class CPGrid extends React.Component {
                             labelPosition="left"
                         />
                     ) : null}
-                    {this.state.activeTab === 1 ? (
+                    {this.state.activeTab === 'Packages' ? (
                         <CSToggle
                             label="Show Package Members"
                             onClick={this.toggleShowCPs}
@@ -471,19 +486,24 @@ class CPGrid extends React.Component {
                     ) : null}
                 </div>
 
+                {this.state.activeTab === 'PLM' &&
+                    <div className="plm-iframe-wrapper">
+                        <iframe src=""></iframe>
+                    </div>
+                }
                 <div className="table-wrapper">
-                    {this.state.activeTab === 0 ? (
+                    {this.state.activeTab === 'CPs' &&
                         <CSTable>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
                                 <CSTableCell text="Image" className="col-Image"/>
-                                <CSTableCell text="Name"  grow={2} className="col-Name"/>
+                                <CSTableCell text="Name" grow={2} className="col-Name"/>
                                 <CSTableCell text="Description" grow={4} className="col-Description"/>
                                 <CSTableCell text="Commercial Product Code" grow={2} className="col-CommercialProductCode"/>
                                 <CSTableCell text="Rating" className="col-Rating"/>
                                 <CSTableCell text="Displayed One off" className="col-OneOff"/>
                                 <CSTableCell text="Displayed Recurring" className="col-Recurring"/>
-                                <CSTableCell text="Edit charges" className="col-EditCharges"/>
+                                <CSTableCell text="Actions" className="col-Actions"/>
                             </CSTableHeader>
 
                             <CSTableBody>
@@ -494,20 +514,31 @@ class CPGrid extends React.Component {
                                             <React.Fragment key={row.Id}>
                                                 <>
                                                     {this.showCPAndAddons(row, true) &&
-                                                        <CSTableRow>
-                                                            <CSTableCell className="col-Image">
-                                                                <img src={row.Image_URL__c}/>
-                                                            </CSTableCell>
-                                                            <CSTableCell text={row.Name} grow={2} className="col-Name" />
-                                                            <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description" />
-                                                            <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode" />
-                                                            <CSTableCell text={row.Rating__c} className="col-Rating" />
-                                                            <CSTableCell text={row.Displayed_One_Off_Price__c} className="col-OneOff" />
-                                                            <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring" />
-                                                            <CSTableCell className="col-EditCharges">
-                                                                {chargesDropdown(row.Id)}
-                                                            </CSTableCell>
-                                                        </CSTableRow>
+                                                    <CSTableRow>
+                                                        <CSTableCell className="col-Image">
+                                                            <img src={row.Image_URL__c}/>
+                                                        </CSTableCell>
+                                                        <CSTableCell text={row.Name} grow={2} className="col-Name"/>
+                                                        <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4}
+                                                                     className="col-Description"/>
+                                                        <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2}
+                                                                     className="col-CommercialProductCode"/>
+                                                        <CSTableCell text={row.Rating__c} className="col-Rating"/>
+                                                        <CSTableCell text={row.Displayed_One_Off_Price__c}
+                                                                     className="col-OneOff"/>
+                                                        <CSTableCell text={row.Displayed_Recurring_Price__c}
+                                                                     className="col-Recurring"/>
+                                                        <CSTableCell className="col-Actions">
+                                                            {chargesDropdown(row.Id)}
+                                                            <CSButton
+                                                                label="Manage Promotions"
+                                                                className="manage-promotions"
+                                                                labelHidden
+                                                                iconName="ribbon"
+                                                                onClick={() => this.handleBtnPromotions()}
+                                                            />
+                                                        </CSTableCell>
+                                                    </CSTableRow>
                                                     }
                                                 </>
                                                 {this.state.showAddons && row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
@@ -529,16 +560,33 @@ class CPGrid extends React.Component {
                                                             key={addonAssociation.Id}
                                                         >
                                                             <CSTableCell className="col-Image">
-                                                                <img src={addonAssociation.cspmb__Add_On_Price_Item__r.Image_URL__c}/>
+                                                                <img
+                                                                    src={addonAssociation.cspmb__Add_On_Price_Item__r.Image_URL__c}/>
                                                             </CSTableCell>
-                                                            <CSTableCell text={addonAssociation.cspmb__Add_On_Price_Item__r.Name} grow={2} className="col-Name" />
-                                                            <CSTableCell text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c} grow={4} className="col-Description" />
-                                                            <CSTableCell text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Code__c} grow={2} className="col-CommercialProductCode" />
-                                                            <CSTableCell className="col-Rating" />
-                                                            <CSTableCell text={addonAssociation.Displayed_One_Off_Price__c} className="col-OneOff" />
-                                                            <CSTableCell text={addonAssociation.Displayed_Recurring_Price__c} className="col-Recurring" />
-                                                            <CSTableCell className="col-EditCharges" >
+                                                            <CSTableCell
+                                                                text={addonAssociation.cspmb__Add_On_Price_Item__r.Name}
+                                                                grow={2} className="col-Name"/>
+                                                            <CSTableCell
+                                                                text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}
+                                                                grow={4} className="col-Description"/>
+                                                            <CSTableCell
+                                                                text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Code__c}
+                                                                grow={2} className="col-CommercialProductCode"/>
+                                                            <CSTableCell className="col-Rating"/>
+                                                            <CSTableCell text={addonAssociation.Displayed_One_Off_Price__c}
+                                                                         className="col-OneOff"/>
+                                                            <CSTableCell
+                                                                text={addonAssociation.Displayed_Recurring_Price__c}
+                                                                className="col-Recurring"/>
+                                                            <CSTableCell className="col-Actions">
                                                                 {chargesDropdownMock(addonAssociation.Displayed_One_Off_Price__c, addonAssociation.Displayed_Recurring_Price__c)}
+                                                                <CSButton
+                                                                    label="Manage Promotions"
+                                                                    className="manage-promotions"
+                                                                    labelHidden
+                                                                    iconName="ribbon"
+                                                                    onClick={() => this.handleBtnPromotions()}
+                                                                />
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
@@ -549,7 +597,8 @@ class CPGrid extends React.Component {
                                 }
                             </CSTableBody>
                         </CSTable>
-                    ) :
+                    }
+                    {this.state.activeTab === 'Packages' &&
                         <CSTable>
                             {/* PACKAGES WITH CPs TABLE */}
                             <CSTableHeader>
@@ -560,7 +609,7 @@ class CPGrid extends React.Component {
                                 <CSTableCell text="Rating" className="col-Rating" />
                                 <CSTableCell text="Displayed One off"  className="col-OneOff" />
                                 <CSTableCell text="Displayed Recurring"  className="col-Recurring" />
-                                <CSTableCell text="Edit charges" className="col-EditCharges" />
+                                <CSTableCell text="Actions" className="col-Actions" />
                             </CSTableHeader>
                             <CSTableBody>
                                 {this.state.Packages ? Object.values(this.state.Packages)
@@ -587,8 +636,15 @@ class CPGrid extends React.Component {
                                                             <CSTableCell text={row.Rating__c} className="col-Rating"/>
                                                             <CSTableCell text={row.Displayed_One_Off_Price__c} className="col-OneOff"/>
                                                             <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring"/>
-                                                            <CSTableCell className="col-EditCharges">
+                                                            <CSTableCell className="col-Actions">
                                                                 {chargesDropdownMock(row.Displayed_One_Off_Price__c, row.Displayed_Recurring_Price__c)}
+                                                                <CSButton
+                                                                    label="Manage Promotions"
+                                                                    className="manage-promotions"
+                                                                    labelHidden
+                                                                    iconName="ribbon"
+                                                                    onClick={() => this.handleBtnPromotions()}
+                                                                />
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -632,8 +688,15 @@ class CPGrid extends React.Component {
                                                             <CSTableCell className="col-Recurring">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c}</span>
                                                             </CSTableCell>
-                                                            <CSTableCell className="col-EditCharges">
+                                                            <CSTableCell className="col-Actions">
                                                                 {chargesDropdownMock(cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c, cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c)}
+                                                                <CSButton
+                                                                    label="Manage Promotions"
+                                                                    className="manage-promotions"
+                                                                    labelHidden
+                                                                    iconName="ribbon"
+                                                                    onClick={() => this.handleBtnPromotions()}
+                                                                />
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
@@ -647,201 +710,237 @@ class CPGrid extends React.Component {
                     }
                 </div>
 
-                {/*<CSModal*/}
-                {/*    visible={this.state.visibleModal === 'commercial-product-details'}*/}
-                {/*    size="medium"*/}
-                {/*    animated*/}
-                {/*    closeButton*/}
-                {/*    onClose={this.closeModal}*/}
-                {/*    className="cp-details-modal"*/}
-                {/*>*/}
-                {/*    <CSModalHeader*/}
-                {/*        title="Set List Price of Existing Commercial Product"*/}
-                {/*        subtitle={getProductNameValue()}*/}
-                {/*    />*/}
-                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
-                {/*        <div className="column-wrapper">*/}
-                {/*            <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />*/}
-                {/*            <div className="placeholder"></div>*/}
-                {/*            <div className="input-wrapper">*/}
-                {/*                <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} value={this.state.detailsRecurringCharge} onChange={this.onChangeRecurring}/>*/}
-                {/*                {!this.state.recurringPriceEditable &&*/}
-                {/*                    <CSButton*/}
-                {/*                        size="small"*/}
-                {/*                        label="edit"*/}
-                {/*                        labelHidden*/}
-                {/*                        iconName="edit"*/}
-                {/*                        iconColor="rgba(0, 0, 0, 0.25)"*/}
-                {/*                        onClick={() => this.setState({recurringPriceEditable: true})}*/}
-                {/*                    />*/}
-                {/*                }*/}
-                {/*            </div>*/}
-                {/*            <div className="input-wrapper">*/}
-                {/*                <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} value={this.state.detailsOneOffCharge} onChange={this.onChangeOneOff}/>*/}
-                {/*                {!this.state.oneOffPriceEditable &&*/}
-                {/*                    <CSButton*/}
-                {/*                        size="small"*/}
-                {/*                        label="edit"*/}
-                {/*                        labelHidden*/}
-                {/*                        iconName="edit"*/}
-                {/*                        iconColor="rgba(0, 0, 0, 0.25)"*/}
-                {/*                        onClick={() => this.setState({oneOffPriceEditable: true})}*/}
-                {/*                    />*/}
-                {/*                }*/}
-                {/*            </div>*/}
-                {/*            <div className="field-wrapper">*/}
-                {/*                <label>Pricing Rule</label>*/}
-                {/*                <div className="lookup-btn-wrapper">*/}
-                {/*                    <CSLookup*/}
-                {/*                        fieldToBeDisplayed="Account"*/}
-                {/*                        label="Account"*/}
-                {/*                        labelHidden*/}
-                {/*                        lookupColumns={sampleLookup.columns}*/}
-                {/*                        lookupOptions={sampleLookup.data}*/}
-                {/*                        borderRadius="0.25rem 0 0 0.25rem"*/}
-                {/*                        mode="client"*/}
-                {/*                    />*/}
-                {/*                    <CSButton*/}
-                {/*                        className="open-modal-btn"*/}
-                {/*                        label="New"*/}
-                {/*                        borderRadius="0 0.25rem 0.25rem 0"*/}
-                {/*                        onClick={() => this.setState({secondModalVisible: true})}*/}
-                {/*                    />*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*            <div className="field-wrapper">*/}
-                {/*                <label>Pricing Rule Group</label>*/}
-                {/*                <div className="lookup-btn-wrapper">*/}
-                {/*                    <CSLookup*/}
-                {/*                        fieldToBeDisplayed="Account"*/}
-                {/*                        label="Account"*/}
-                {/*                        labelHidden*/}
-                {/*                        lookupColumns={sampleLookup.columns}*/}
-                {/*                        lookupOptions={sampleLookup.data}*/}
-                {/*                        borderRadius="0.25rem 0 0 0.25rem"*/}
-                {/*                        mode="client"*/}
-                {/*                    />*/}
-                {/*                    <CSButton*/}
-                {/*                        className="open-modal-btn"*/}
-                {/*                        label="New"*/}
-                {/*                        borderRadius="0 0.25rem 0.25rem 0"*/}
-                {/*                        onClick={() => this.setState({thirdModalVisible: true})}*/}
-                {/*                    />*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </CSModalBody>*/}
-                {/*    <CSModalFooter align="right">*/}
-                {/*        <CSButton*/}
-                {/*            label="Cancel"*/}
-                {/*            onClick={this.closeModal}*/}
-                {/*        />*/}
-                {/*        <CSButton*/}
-                {/*            label="Save"*/}
-                {/*            btnStyle="brand"*/}
-                {/*            onClick={this.handleSave}*/}
-                {/*        />*/}
-                {/*    </CSModalFooter>*/}
-                {/*</CSModal>*/}
 
-                {/*<CSModal*/}
-                {/*    visible={this.state.secondModalVisible}*/}
-                {/*    size="small"*/}
-                {/*    animated*/}
-                {/*    closeButton*/}
-                {/*    onClose={() => this.setState({secondModalVisible: false})}*/}
-                {/*    className="cp-details-modal-second"*/}
-                {/*>*/}
-                {/*    <CSModalHeader title="New Price Rule"/>*/}
-                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
-                {/*        <CSButton*/}
-                {/*            className="prepopulate-btn"*/}
-                {/*            label="prepopulate data"*/}
-                {/*            labelHidden*/}
-                {/*            iconName="edit"*/}
-                {/*            size="small"*/}
-                {/*            btnType="transparent"*/}
-                {/*            btnStyle="brand"*/}
-                {/*        />*/}
-                {/*        <div className="column-wrapper">*/}
-                {/*            <div className="col">*/}
-                {/*                <CSInputText label="Pricing Rule Name"/>*/}
-                {/*                <CSInputText label="Pricing Rule Code"/>*/}
-                {/*            </div>*/}
-                {/*            <div className="col">*/}
-                {/*                <CSInputText label="Context"/>*/}
-                {/*                <CSInputText label="Description"/>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </CSModalBody>*/}
-                {/*    <CSModalFooter align="right">*/}
-                {/*        <CSButton*/}
-                {/*            label="Cancel"*/}
-                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
-                {/*        />*/}
-                {/*        <CSButton*/}
-                {/*            label="Save and New"*/}
-                {/*            btnStyle="brand"*/}
-                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
-                {/*        />*/}
-                {/*        <CSButton*/}
-                {/*            label="Save"*/}
-                {/*            btnStyle="brand"*/}
-                {/*            onClick={() => this.setState({secondModalVisible: false})}*/}
-                {/*        />*/}
-                {/*    </CSModalFooter>*/}
-                {/*</CSModal>*/}
 
-                {/*<CSModal*/}
-                {/*    visible={this.state.thirdModalVisible}*/}
-                {/*    size="small"*/}
-                {/*    animated*/}
-                {/*    closeButton*/}
-                {/*    onClose={() => this.setState({thirdModalVisible: false})}*/}
-                {/*    className="cp-details-modal-second"*/}
-                {/*>*/}
-                {/*    <CSModalHeader title="New Price Rule"/>*/}
-                {/*    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">*/}
-                {/*        <CSButton*/}
-                {/*            className="prepopulate-btn"*/}
-                {/*            label="prepopulate data"*/}
-                {/*            labelHidden*/}
-                {/*            iconName="edit"*/}
-                {/*            size="small"*/}
-                {/*            btnType="transparent"*/}
-                {/*            btnStyle="brand"*/}
-                {/*        />*/}
-                {/*        <div className="column-wrapper">*/}
-                {/*            <div className="col">*/}
-                {/*                <CSInputText label="Pricing Rule Group Name"/>*/}
-                {/*                <CSInputText label="Pricing Rule Group Code"/>*/}
-                {/*            </div>*/}
-                {/*            <div className="col">*/}
-                {/*                <CSInputText label="Priority"/>*/}
-                {/*                <CSInputText label="Description"/>*/}
-                {/*            </div>*/}
-                {/*            <div className="col">*/}
-                {/*                <CSInputText label="Rule Group Compounding Type"/>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </CSModalBody>*/}
-                {/*    <CSModalFooter align="right">*/}
-                {/*        <CSButton*/}
-                {/*            label="Cancel"*/}
-                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
-                {/*        />*/}
-                {/*        <CSButton*/}
-                {/*            label="Save and New"*/}
-                {/*            btnStyle="brand"*/}
-                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
-                {/*        />*/}
-                {/*        <CSButton*/}
-                {/*            label="Save"*/}
-                {/*            btnStyle="brand"*/}
-                {/*            onClick={() => this.setState({thirdModalVisible: false})}*/}
-                {/*        />*/}
-                {/*    </CSModalFooter>*/}
-                {/*</CSModal>*/}
+                <CSModal
+                    visible={this.state.visibleModal === 'Promotions'}
+                    size="medium"
+                    animated
+                    closeButton
+                    onClose={this.closeModal}
+                    className="promotions-modal"
+                >
+                    <CSModalHeader
+                        title="Manage Promotions"
+                        subtitle={getProductNameValue()}
+                    />
+                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                        <div className="column-wrapper">
+                            <CSInputText label="Enter promotion" value={getProductNameValue()} onChange={this.handleInputOnChange} />
+                            <div className="field-wrapper">
+                                <label>Pricing Rule Group</label>
+                                <div className="lookup-btn-wrapper">
+                                    <CSLookup
+                                        fieldToBeDisplayed="Account"
+                                        label="Account"
+                                        labelHidden
+                                        lookupColumns={sampleLookup.columns}
+                                        lookupOptions={sampleLookup.data}
+                                        borderRadius="0.25rem 0 0 0.25rem"
+                                        mode="client"
+                                    />
+                                    <CSButton
+                                        className="open-modal-btn"
+                                        label="New"
+                                        borderRadius="0 0.25rem 0.25rem 0"
+                                        onClick={() => this.setState({thirdModalVisible: true})}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </CSModalBody>
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={this.closeModal}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={this.handleSave}
+                        />
+                    </CSModalFooter>
+                </CSModal>
+
+
+
+
+
+                <CSModal
+                    visible={this.state.visibleModal === 'commercial-product-details'}
+                    size="medium"
+                    animated
+                    closeButton
+                    onClose={this.closeModal}
+                    className="cp-details-modal"
+                >
+                    <CSModalHeader
+                        title="Set List Price of Existing Commercial Product"
+                        subtitle={getProductNameValue()}
+                    />
+                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                        <div className="column-wrapper">
+                            <CSInputText label="Commercial Product" value={getProductNameValue()} onChange={this.handleInputOnChange} />
+                            <div className="placeholder"></div>
+                            <div className="input-wrapper">
+                                <CSInputText label="Recurring Price" readOnly={!this.state.recurringPriceEditable} value={this.state.detailsRecurringCharge} onChange={this.onChangeRecurring}/>
+                                {!this.state.recurringPriceEditable &&
+                                    <CSButton
+                                        size="small"
+                                        label="edit"
+                                        labelHidden
+                                        iconName="edit"
+                                        iconColor="rgba(0, 0, 0, 0.25)"
+                                        onClick={() => this.setState({recurringPriceEditable: true})}
+                                    />
+                                }
+                            </div>
+                            <div className="input-wrapper">
+                                <CSInputText label="One-Off Price" readOnly={!this.state.oneOffPriceEditable} value={this.state.detailsOneOffCharge} onChange={this.onChangeOneOff}/>
+                                {!this.state.oneOffPriceEditable &&
+                                    <CSButton
+                                        size="small"
+                                        label="edit"
+                                        labelHidden
+                                        iconName="edit"
+                                        iconColor="rgba(0, 0, 0, 0.25)"
+                                        onClick={() => this.setState({oneOffPriceEditable: true})}
+                                    />
+                                }
+                            </div>
+                            <div className="field-wrapper">
+                                <label>Pricing Rule Group</label>
+                                <div className="lookup-btn-wrapper">
+                                    <CSLookup
+                                        fieldToBeDisplayed="Account"
+                                        label="Account"
+                                        labelHidden
+                                        lookupColumns={sampleLookup.columns}
+                                        lookupOptions={sampleLookup.data}
+                                        borderRadius="0.25rem 0 0 0.25rem"
+                                        mode="client"
+                                    />
+                                    <CSButton
+                                        className="open-modal-btn"
+                                        label="New"
+                                        borderRadius="0 0.25rem 0.25rem 0"
+                                        onClick={() => this.setState({thirdModalVisible: true})}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </CSModalBody>
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={this.closeModal}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={this.handleSave}
+                        />
+                    </CSModalFooter>
+                </CSModal>
+
+                <CSModal
+                    visible={this.state.secondModalVisible}
+                    size="small"
+                    animated
+                    closeButton
+                    onClose={() => this.setState({secondModalVisible: false})}
+                    className="cp-details-modal-second"
+                >
+                    <CSModalHeader title="New Price Rule"/>
+                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                        <CSButton
+                            className="prepopulate-btn"
+                            label="prepopulate data"
+                            labelHidden
+                            iconName="edit"
+                            size="small"
+                            btnType="transparent"
+                            btnStyle="brand"
+                        />
+                        <div className="column-wrapper">
+                            <div className="col">
+                                <CSInputText label="Pricing Rule Name"/>
+                                <CSInputText label="Pricing Rule Code"/>
+                            </div>
+                            <div className="col">
+                                <CSInputText label="Context"/>
+                                <CSInputText label="Description"/>
+                            </div>
+                        </div>
+                    </CSModalBody>
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={() => this.setState({secondModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save and New"
+                            btnStyle="brand"
+                            onClick={() => this.setState({secondModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={() => this.setState({secondModalVisible: false})}
+                        />
+                    </CSModalFooter>
+                </CSModal>
+
+                <CSModal
+                    visible={this.state.thirdModalVisible}
+                    size="small"
+                    animated
+                    closeButton
+                    onClose={() => this.setState({thirdModalVisible: false})}
+                    className="cp-details-modal-second"
+                >
+                    <CSModalHeader title="New Price Rule"/>
+                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                        <CSButton
+                            className="prepopulate-btn"
+                            label="prepopulate data"
+                            labelHidden
+                            iconName="edit"
+                            size="small"
+                            btnType="transparent"
+                            btnStyle="brand"
+                        />
+                        <div className="column-wrapper">
+                            <div className="col">
+                                <CSInputText label="Pricing Rule Group Name"/>
+                                <CSInputText label="Pricing Rule Group Code"/>
+                            </div>
+                            <div className="col">
+                                <CSInputText label="Priority"/>
+                                <CSInputText label="Description"/>
+                            </div>
+                            <div className="col">
+                                <CSInputText label="Rule Group Compounding Type"/>
+                            </div>
+                        </div>
+                    </CSModalBody>
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save and New"
+                            btnStyle="brand"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                    </CSModalFooter>
+                </CSModal>
             </>
         );
     }

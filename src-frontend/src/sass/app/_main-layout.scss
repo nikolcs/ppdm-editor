@@ -107,9 +107,12 @@ html {
             min-width: 9rem;
             max-width: 9rem;
         }
-        .cs-table-cell.col-EditCharges {
-            min-width: 6rem;
-            max-width: 6rem;
+        .cs-table-cell.col-Actions {
+            min-width: 7rem;
+            max-width: 7rem;
+            .cs-btn.manage-promotions {
+                margin-left: 0.5rem;
+            }
         }
     }
 }
@@ -154,6 +157,17 @@ html {
         opacity: 0;
     }
 }
+
+.plm-iframe-wrapper {
+    height: 100%;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+
 
 /* animations */
 @keyframes success-pseudo {
