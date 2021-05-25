@@ -1,7 +1,24 @@
 <apex:page controller="CSRemoteActionDelegation" showHeader="true" standardStylesheets="false">
 
+
+    <apex:includeLightning />
+
+<!--    <div id="lightning" />-->
+<!--    <div id="PlmApp" />-->
+
     <c:ppdmEditorAPI />
 
-
+    <script>
+        $Lightning.use('c:PLMDemoPage', function () {
+            $Lightning.createComponent(
+                'csplm:PlmView',
+                {},
+                'lightning',
+                function (cmp) {
+                    console.log('PLM Page loaded');
+                }
+            );
+        });
+    </script>
 
 </apex:page>
