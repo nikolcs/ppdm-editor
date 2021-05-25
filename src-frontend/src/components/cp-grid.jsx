@@ -31,8 +31,8 @@ class CPGrid extends React.Component {
 
     state = {
         visibleModal: undefined,
-        secondModalVisible: false,
-        thirdModalVisible: false,
+        newPromotionModal: false,
+        createNewPRG: false,
 
         searchTerm: '',
         activeTab: 'CPs',
@@ -160,29 +160,24 @@ class CPGrid extends React.Component {
             searchTerm: event.target.value
         });
     }
-    rowSortCP(ob1, ob2) {
-        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
-        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
-        return 0;
-    }
 
-    rowSortPackage(ob1, ob2) {
-        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
-        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
-        return 0;
-    }
 
-    rowSortAddon(ob1, ob2) {
-        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() < ob2.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return -1; }
-        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() > ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return 1; }
-        return 0;
-    }
 
     /* PROMOTIONS HANDLER */
-    handleBtnPromotions() {
+    handleBtnPromotions = () => {
         console.log("handleBtnPromotions called")
         this.openModal('Promotions');
     }
+
+    openNewPromotionModal = () => {
+        this.setState({newPromotionModal: true})
+    }
+
+    createNewPromotion = () => {
+
+    }
+
+
 
     componentDidMount() {
         VFRemotingService.getCPs().then(
@@ -227,7 +222,6 @@ class CPGrid extends React.Component {
             }
         } else return true;
     }
-
     showPackageAndCPs = (pkg, byCPs) => {
         if (this.state.searchTerm) {
             if (
@@ -254,6 +248,22 @@ class CPGrid extends React.Component {
                 return false;
             }
         } else return true;
+    }
+
+    rowSortCP(ob1, ob2) {
+        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
+        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
+        return 0;
+    }
+    rowSortPackage(ob1, ob2) {
+        if(ob1.Name.toLowerCase() < ob2.Name.toLowerCase()) { return -1; }
+        if(ob1.Name.toLowerCase() > ob2.Name.toLowerCase()) { return 1; }
+        return 0;
+    }
+    rowSortAddon(ob1, ob2) {
+        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() < ob2.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return -1; }
+        if(ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase() > ob1.cspmb__Add_On_Price_Item__r.Name.toLowerCase()) { return 1; }
+        return 0;
     }
 
     toggleShowAddons = () => {
@@ -534,7 +544,8 @@ class CPGrid extends React.Component {
                                                                 label="Manage Promotions"
                                                                 className="manage-promotions"
                                                                 labelHidden
-                                                                iconName="ribbon"
+                                                                iconName="tag"
+                                                                iconOrigin="cs"
                                                                 onClick={() => this.handleBtnPromotions()}
                                                             />
                                                         </CSTableCell>
@@ -584,7 +595,8 @@ class CPGrid extends React.Component {
                                                                     label="Manage Promotions"
                                                                     className="manage-promotions"
                                                                     labelHidden
-                                                                    iconName="ribbon"
+                                                                    iconName="tag"
+                                                                    iconOrigin="cs"
                                                                     onClick={() => this.handleBtnPromotions()}
                                                                 />
                                                             </CSTableCell>
@@ -642,7 +654,8 @@ class CPGrid extends React.Component {
                                                                     label="Manage Promotions"
                                                                     className="manage-promotions"
                                                                     labelHidden
-                                                                    iconName="ribbon"
+                                                                    iconName="tag"
+                                                                    iconOrigin="cs"
                                                                     onClick={() => this.handleBtnPromotions()}
                                                                 />
                                                             </CSTableCell>
@@ -694,7 +707,8 @@ class CPGrid extends React.Component {
                                                                     label="Manage Promotions"
                                                                     className="manage-promotions"
                                                                     labelHidden
-                                                                    iconName="ribbon"
+                                                                    iconName="tag"
+                                                                    iconOrigin="cs"
                                                                     onClick={() => this.handleBtnPromotions()}
                                                                 />
                                                             </CSTableCell>
@@ -710,23 +724,68 @@ class CPGrid extends React.Component {
                     }
                 </div>
 
-
-
+                {/* MANAGE PROMOTIONS MODAL */}
                 <CSModal
                     visible={this.state.visibleModal === 'Promotions'}
                     size="medium"
                     animated
                     closeButton
                     onClose={this.closeModal}
-                    className="promotions-modal"
+                    className="manage-promotions-modal"
                 >
                     <CSModalHeader
                         title="Manage Promotions"
-                        subtitle={getProductNameValue()}
+                        subtitle="Product here?"
+                    />
+                    <CSModalBody padding="1rem 1.5rem 1rem 1.5rem">
+                        <CSButton
+                            label="Create new promotion"
+                            onClick={() => this.openNewPromotionModal()}
+                            className="create-new-promotion-btn"
+                        />
+                        <div className="promotions-wrapper">
+                            <div className="promotions-header">
+                                <div className="cell">Name</div>
+                                <div className="cell">Code</div>
+                            </div>
+                            <div className="promotion-item">
+                                <div className="cell">
+                                    test
+                                </div>
+                                <div className="cell">
+                                    test2
+                                </div>
+                            </div>
+                        </div>
+                    </CSModalBody>
+
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={this.closeModal}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={this.handleSave}
+                        />
+                    </CSModalFooter>
+                </CSModal>
+
+                {/* CREATE NEW PROMOTION MODAL */}
+                <CSModal
+                    visible={this.state.newPromotionModal}
+                    size="small"
+                    animated
+                    closeButton
+                    onClose={() => this.setState({newPromotionModal: false})}
+                    className="new-promotion-modal"
+                >
+                    <CSModalHeader
+                        title="Create New Promotion"
                     />
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
-                            <CSInputText label="Enter promotion" value={getProductNameValue()} onChange={this.handleInputOnChange} />
                             <div className="field-wrapper">
                                 <label>Pricing Rule Group</label>
                                 <div className="lookup-btn-wrapper">
@@ -743,10 +802,13 @@ class CPGrid extends React.Component {
                                         className="open-modal-btn"
                                         label="New"
                                         borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({thirdModalVisible: true})}
+                                        onClick={() => this.setState({createNewPRG: true})}
                                     />
                                 </div>
+
                             </div>
+                            <CSInputText value="100 test" label="Pricing Rule" readOnly />
+                            <CSInputText label="Code"/>
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
@@ -762,6 +824,48 @@ class CPGrid extends React.Component {
                     </CSModalFooter>
                 </CSModal>
 
+                {/* CREATE NEW PRICING GROUP */}
+                <CSModal
+                    visible={this.state.createNewPRG}
+                    size="xsmall"
+                    animated
+                    closeButton
+                    onClose={() => this.setState({createNewPRG: false})}
+                    className="create-new-prg-modal"
+                >
+                    <CSModalHeader title="Create New Price Group Rule"/>
+                    <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
+                        <CSButton
+                            className="prepopulate-btn"
+                            label="prepopulate data"
+                            labelHidden
+                            iconName="edit"
+                            size="small"
+                            btnType="transparent"
+                            btnStyle="brand"
+                        />
+                        <CSInputText label="Pricing Rule Group Name"/>
+                        <CSInputText label="Pricing Rule Group Code"/>
+                        <CSInputText label="Priority"/>
+                        <CSInputText label="Rule Group Compounding Type"/>
+                    </CSModalBody>
+                    <CSModalFooter align="right">
+                        <CSButton
+                            label="Cancel"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save and New"
+                            btnStyle="brand"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={() => this.setState({thirdModalVisible: false})}
+                        />
+                    </CSModalFooter>
+                </CSModal>
 
                 {/*<CSModal*/}
                 {/*    visible={this.state.visibleModal === 'commercial-product-details'}*/}

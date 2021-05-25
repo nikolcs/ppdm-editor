@@ -1,4 +1,142 @@
-.cp-details-modal, .cp-details-modal-second {
+.manage-promotions-modal {
+    .cs-modal-body {
+        display: flex;
+        flex-direction: column;
+        .create-new-promotion-btn {
+            max-width: 10.5rem;
+            margin-bottom: 1rem;
+        }
+        .promotions-wrapper {
+            display: flex;
+            flex-direction: column;
+            .cell {
+                flex: 1;
+                padding: 0 0.5rem;
+                @include overflow-ellipsis;
+            }
+            .promotions-header {
+                display: flex;
+                align-items: center;
+                background: #ebebeb;
+                height: 2rem;
+            }
+            .promotion-item {
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border: 1px solid #dddbda;
+                height: 3rem;
+                border-radius: 0;
+                //box-shadow: 0 1px 2px rgba(0, 0, 0, 0.33);
+                margin-bottom: 0.75rem;
+            }
+        }
+    }
+
+
+    .column-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        > * {
+            width: 50%;
+
+            &:nth-child(n) {
+                padding-right: 0.5rem;
+            }
+
+            &:nth-child(2n) {
+                padding-left: 0.5rem;
+            }
+        }
+        .lookup-btn-wrapper {
+            display: flex;
+            width: 100%;
+            .cs-lookup-wrapper {
+                flex: 1;
+                .cs-lookup-input {
+                    z-index: var(--z-index-lookup-focus);
+                }
+            }
+            .cs-btn {
+                margin-left: -2px;
+            }
+        }
+    }
+}
+
+.new-promotion-modal {
+    .column-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        > * {
+            width: 50%;
+
+            &:nth-child(n) {
+                padding-right: 0.5rem;
+            }
+
+            &:nth-child(2n) {
+                padding-left: 0.5rem;
+            }
+        }
+        .field-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            > label {
+                color: #3e3e3c;
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+                @include overflow-ellipsis;
+            }
+            .lookup-btn-wrapper {
+                display: flex;
+                width: 100%;
+                .cs-lookup-wrapper {
+                    flex: 1;
+                    .cs-lookup-input {
+                        z-index: var(--z-index-lookup-focus);
+                    }
+                }
+                .cs-btn {
+                    margin-left: -2px;
+                }
+            }
+        }
+    }
+}
+
+.create-new-prg-modal {
+    .cs-modal-body {
+        .prepopulate-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+        .cs-input-text {
+            margin-bottom: 1rem;
+        }
+        .lookup-btn-wrapper {
+            display: flex;
+            width: 100%;
+            .cs-lookup-wrapper {
+                flex: 1;
+                .cs-lookup-input {
+                    z-index: var(--z-index-lookup-focus);
+                }
+            }
+            .cs-btn {
+                margin-left: -2px;
+            }
+        }
+    }
+}
+
+
+
+
+.multi-col-modal {
     .cs-modal-body {
         .prepopulate-btn {
             position: absolute;
