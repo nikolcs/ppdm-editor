@@ -762,12 +762,13 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={this.closeModal}
+                            onClick={() => this.setState({visibleModal: ''})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={this.handleSave}
+                            //onClick={this.handleSave}
+                            onClick={() => this.setState({visibleModal: ''})}
                         />
                     </CSModalFooter>
                 </CSModal>
@@ -814,12 +815,13 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={this.closeModal}
+                            onClick={() => this.setState({newPromotionModal: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={this.handleSave}
+                            //onClick={this.handleSave}
+                            onClick={() => this.setState({newPromotionModal: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
@@ -852,17 +854,17 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({thirdModalVisible: false})}
+                            onClick={() => this.setState({createNewPRG: false})}
                         />
                         <CSButton
                             label="Save and New"
                             btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
+                            onClick={() => this.setState({createNewPRG: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={() => this.setState({thirdModalVisible: false})}
+                            onClick={() => this.setState({createNewPRG: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
