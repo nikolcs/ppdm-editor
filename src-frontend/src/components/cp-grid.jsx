@@ -727,7 +727,7 @@ class CPGrid extends React.Component {
 
                 {/* MANAGE PROMOTIONS MODAL */}
                 <CSModal
-                    visible={this.state.showManagePromotionsModal === true}
+                    visible={this.state.showManagePromotionsModal}
                     size="medium"
                     animated
                     closeButton
