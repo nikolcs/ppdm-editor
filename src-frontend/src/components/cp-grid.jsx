@@ -57,12 +57,24 @@ class CPGrid extends React.Component {
 
     handleTabClick = (tabName) => {
         if (tabName === 'CPs') {
+            VFRemotingService.getCPs().then(
+                result => {
+                    this.setState({CPs: result});
+                    console.log("getCPs in CPtabClick");
+                }
+            );
             this.setState({
                 searchTerm: this.state.activeTab === 'Packages' ? '' : this.state.searchTerm,
                 activeTab: 'CPs'
             })
         }
         if (tabName === 'Packages') {
+            VFRemotingService.getPackages().then(
+                result => {
+                    this.setState({Packages: result});
+                    console.log("getPackages in PackagesTabClick");
+                }
+            );
             this.setState({
                 searchTerm: this.state.activeTab === 'CPs' ? '' : this.state.searchTerm,
                 activeTab: 'Packages'
@@ -595,8 +607,8 @@ class CPGrid extends React.Component {
                     </div>
                 }
                 <div className={this.state.activeTab === 'PLM' ? 'plm-wrapper' : 'plm-wrapper hidden'} id="lightning"></div>
-                <div className="table-wrapper">
-                    {this.state.activeTab === 'CPs' &&
+                {this.state.activeTab === 'CPs' &&
+                    <div className="table-wrapper">
                         <CSTable>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
@@ -703,8 +715,10 @@ class CPGrid extends React.Component {
                                 }
                             </CSTableBody>
                         </CSTable>
-                    }
-                    {this.state.activeTab === 'Packages' &&
+                    </div>
+                }
+                {this.state.activeTab === 'Packages' &&
+                    <div className="table-wrapper">
                         <CSTable>
                             {/* PACKAGES WITH CPs TABLE */}
                             <CSTableHeader>
@@ -815,8 +829,8 @@ class CPGrid extends React.Component {
                                 }
                             </CSTableBody>
                         </CSTable>
-                    }
-                </div>
+                    </div>
+                }
 
                 {/* MANAGE PROMOTIONS MODAL */}
                 <CSModal
