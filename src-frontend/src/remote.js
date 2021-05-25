@@ -97,6 +97,16 @@ export class VFRemotingService {
         );
     };
 
+    static getAddOn = (id) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getAddOn,
+            },
+            [id]
+        );
+    };
+
     static getCPAOAssociation = (id) => {
         return VFRemotingService.invokeRemoteAction(
             {
@@ -121,6 +131,25 @@ export class VFRemotingService {
             {
                 options: { escape: false, buffer: false },
                 remoteActionName: CS.PPDM.actions.updateOneOffPricing,
+            },
+            [id, oneOffCharge]
+        );
+    };
+
+    static updateAddOnRecurringPricing = (id, recurringCharge) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateAddOnRecurringPricing,
+            },
+            [id, recurringCharge]
+        );
+    };
+    static updateAddOnOneOffPricing = (id, oneOffCharge) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateAddOnOneOffPricing,
             },
             [id, oneOffCharge]
         );

@@ -14,9 +14,12 @@
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
+                getAddOn: '{!$RemoteAction.CSRemoteActionDelegation.getAddOn}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',
                 updateRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateRecurringPricing}',
                 updateOneOffPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateOneOffPricing}',
+                updateAddOnRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateAddOnRecurringPricing}',
+                updateAddOnOneOffPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateAddOnOneOffPricing}',
             },
             session: {
                 id: '{!$Api.Session_Id}'
@@ -36,5 +39,6 @@
     <div id="root"></div>
 
     <script type="text/javascript" src="{! $Resource.ppdmEditorJS}"></script>
+
 
 </apex:component>

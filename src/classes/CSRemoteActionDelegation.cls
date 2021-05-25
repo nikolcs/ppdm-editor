@@ -27,11 +27,47 @@ global with sharing class CSRemoteActionDelegation {
         }
     }
 
+    @RemoteAction
+    global static AddOnAsocWrapper getAddOn(String cpId) {
+        List<cspmb__Pricing_Element__c> pricingElements =
+            [SELECT Id, Name,
+                    cspmb__pricing_element_type__r.cspmb__type__c,
+                    cspmb__commercial_product_add_on_association__r.Id,
+                    cspmb__commercial_product_add_on_association__r.Name,
+                    cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Name,
+                    cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Id,
+                (SELECT Id, Name,
+                        cspmb__one_off_adjustment__c,
+                        cspmb__recurring_adjustment__c,
+                        cspmb__target_price__c,
+                        cspmb__pricing_rule__r.Name
+                FROM cspmb__commercial_product_pricing_rule_assocs__r)
+                FROM cspmb__Pricing_Element__c
+            WHERE cspmb__commercial_product_add_on_association__r.Id = : cpId];
+        if (pricingElements.size() > 0) {
+            return toAddOnAsocWrapper(pricingElements);
+        } else {
+            return toAddOnAsocWrapperWithoutPriceItem(cpId);
+        }
+    }
+
+
     global class CommercialProductWrapper {
         public Id id {get; set;}
         public String name {get; set;}
         public List<PricingElementWrapper> pricingElementWrappers {get; set;}
         public CommercialProductWrapper(){
+            this.pricingElementWrappers = new List<PricingElementWrapper>();
+        }
+    }
+
+    global class AddOnAsocWrapper {
+        public Id id {get; set;}
+        public String name {get; set;}
+        public List<PricingElementWrapper> pricingElementWrappers {get; set;}
+        public String addOnName {get; set;}
+        public Id addOnID {get; set;}
+        public AddOnAsocWrapper(){
             this.pricingElementWrappers = new List<PricingElementWrapper>();
         }
     }
@@ -100,6 +136,44 @@ global with sharing class CSRemoteActionDelegation {
         cp.pricingElementWrappers = null;
         return cp;
     }
+
+    static AddOnAsocWrapper toAddOnAsocWrapper(List<cspmb__Pricing_Element__c> listPE) {
+        AddOnAsocWrapper aoas = new AddOnAsocWrapper();
+
+        for(cspmb__Pricing_Element__c pe : listPE) {
+            PricingElementWrapper elem = new PricingElementWrapper(pe);
+            for (cspmb__Price_Item_Pricing_Rule_Association__c asoc : pe.cspmb__commercial_product_pricing_rule_assocs__r) {
+                CoppraWrapper c = new CoppraWrapper(asoc);
+                elem.coppraWrappers.add(c);
+            }
+            aoas.pricingElementWrappers.add(elem);
+        }
+        aoas.id = listPE[0].cspmb__commercial_product_add_on_association__r.Id;
+        aoas.name = listPE[0].cspmb__commercial_product_add_on_association__r.Name;
+        aoas.addOnID = listPE[0].cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Id;
+        aoas.addOnName = listPE[0].cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Name;
+
+        return aoas;
+    }
+
+    static AddOnAsocWrapper toAddOnAsocWrapperWithoutPriceItem(String id) {
+        AddOnAsocWrapper aoas = new AddOnAsocWrapper();
+        cspmb__Price_Item_Add_On_Price_Item_Association__c aoasWithoutPE = new cspmb__Price_Item_Add_On_Price_Item_Association__c();
+
+        List<cspmb__Price_Item_Add_On_Price_Item_Association__c> aoasList = [SELECT Id, Name, cspmb__Add_On_Price_Item__r.Id, cspmb__Add_On_Price_Item__r.Name FROM cspmb__Price_Item_Add_On_Price_Item_Association__c WHERE Id=: id];
+
+        if (aoasList.size() > 0) {
+            aoasWithoutPE = aoasList[0];
+        }
+
+        aoas.id = aoasWithoutPE.Id;
+        aoas.name = aoasWithoutPE.Name;
+        aoas.addOnID = aoasWithoutPE.cspmb__Add_On_Price_Item__r.Id;
+        aoas.addOnName = aoasWithoutPE.cspmb__Add_On_Price_Item__r.Name;
+        aoas.pricingElementWrappers = null;
+        return aoas;
+    }
+
 
     @RemoteAction
     global static cspmb__Price_Item_Add_On_Price_Item_Association__c getCPAOAssociation(String cpaoaId) {
@@ -172,6 +246,7 @@ global with sharing class CSRemoteActionDelegation {
         }
     }
 
+    // UPDATE CP CHARGES
     @RemoteAction
     global static void updateRecurringPricing(String productId, Decimal recurringCharge) {
 
@@ -200,7 +275,7 @@ global with sharing class CSRemoteActionDelegation {
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
             Decimal roundHelper = recurringCharge * TAX;
-            cp.Displayed_Recurring_Price__c = roundHelper.setScale(2);
+            cp.Displayed_Recurring_Price__c = roundHelper; // .setScale(2); - if rounded is needed
             update(cp);
         }
 
@@ -280,7 +355,7 @@ global with sharing class CSRemoteActionDelegation {
         if (commercialProductsList.size() > 0) {
             cspmb__Price_Item__c cp = commercialProductsList[0];
             Decimal roundHelper = oneOffCharge * TAX;
-            cp.Displayed_One_Off_Price__c = roundHelper.setScale(2);
+            cp.Displayed_One_Off_Price__c = roundHelper;
             update(cp);
         }
 
@@ -309,6 +384,171 @@ global with sharing class CSRemoteActionDelegation {
             cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
             newRC.cspmb__pricing_element_type__c = OneOffPETId;
             newRC.cspmb__commercial_product__c = productId;
+            insert newRC;
+
+            pricingElId = newRC.Id;
+
+            // create coppra list
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRAList = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRAList.cspmb__pricing_element__c = pricingElId;
+            newCOPPRAList.cspmb__pricing_rule__c = starhubPricingRule;
+            newCOPPRAList.cspmb__association_type__c = 'Pricing change';
+            newCOPPRAList.cspmb__target_price__c = 'List';
+            newCOPPRAList.cspmb__one_off_adjustment_type__c = 'Price Override';
+            newCOPPRAList.cspmb__one_off_adjustment__c = oneOffCharge;
+            insert newCOPPRAList;
+
+            // create coppra sales
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRASales.cspmb__pricing_element__c = pricingElId;
+            newCOPPRASales.cspmb__pricing_rule__c = starhubPricingRule;
+            newCOPPRASales.cspmb__association_type__c = 'Pricing change';
+            newCOPPRASales.cspmb__target_price__c = 'Sales';
+            newCOPPRASales.cspmb__one_off_adjustment_type__c = 'Price Override';
+            newCOPPRASales.cspmb__one_off_adjustment__c = oneOffCharge;
+            insert newCOPPRASales;
+        }
+        return;
+    }
+
+    // UPDATE ADD ON CHARGES
+    @RemoteAction
+    global static void updateAddOnRecurringPricing(String productId, Decimal recurringCharge) {
+
+        String pricingElId = '';
+        String recurringPETId = '';
+
+        // get default pricing rule Id
+        List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing Rule for Starhub' LIMIT 1];
+        String starhubPricingRule = pricingRules[0].Id;
+
+        // get pricing element type for recurring charge
+        List<cspmb__Pricing_Element_Type__c> recurringPETL =
+        [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
+        WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+        AND Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
+        LIMIT 1];
+
+        if(recurringPETL.size() > 0) {
+            recurringPETId = recurringPETL[0].Id;
+        }
+
+        // get AOAS to update displayed prices
+        List<cspmb__Price_Item_Add_On_Price_Item_Association__c> addOnPriceItemAssociationsList =
+        [SELECT Id, Name, Displayed_Recurring_Price__c FROM
+                cspmb__Price_Item_Add_On_Price_Item_Association__c
+            WHERE Id =: productId];
+        if (addOnPriceItemAssociationsList.size() > 0) {
+            cspmb__Price_Item_Add_On_Price_Item_Association__c aoas = addOnPriceItemAssociationsList[0];
+            Decimal roundHelper = recurringCharge * TAX;
+            aoas.Displayed_Recurring_Price__c = roundHelper;
+            update(aoas);
+        }
+
+        // get existing recurring charges on selected ADAS that are of starhubPricingRule
+        List<cspmb__Pricing_Element__c> recurringList =
+        [SELECT Id, Name,
+            (SELECT Id, Name, cspmb__recurring_adjustment__c
+                FROM cspmb__commercial_product_pricing_rule_assocs__r
+                WHERE cspmb__pricing_rule__c = :starhubPricingRule)
+            FROM cspmb__Pricing_Element__c
+            WHERE cspmb__commercial_product_add_on_association__r.Id =: productId
+            AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+            AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
+            AND Id IN (SELECT cspmb__pricing_element__c
+                            FROM cspmb__Price_Item_Pricing_Rule_Association__c
+                            WHERE cspmb__pricing_rule__c = :starhubPricingRule)];
+
+        if (recurringList.size() > 0 && recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
+            for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : recurringList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
+                coppra.cspmb__recurring_adjustment__c = recurringCharge;
+                update coppra;
+            }
+        } else {
+            // create new pricing element
+            cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
+            newRC.cspmb__pricing_element_type__c = recurringPETId;
+            newRC.cspmb__commercial_product_add_on_association__c = productId;
+            insert newRC;
+
+            pricingElId = newRC.Id;
+
+            // create coppra list
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRAList = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRAList.cspmb__pricing_element__c = pricingElId;
+            newCOPPRAList.cspmb__pricing_rule__c = starhubPricingRule;
+            newCOPPRAList.cspmb__association_type__c = 'Pricing change';
+            newCOPPRAList.cspmb__target_price__c = 'List';
+            newCOPPRAList.cspmb__recurring_adjustment_type__c = 'Price Override';
+            newCOPPRAList.cspmb__recurring_adjustment__c = recurringCharge;
+            insert newCOPPRAList;
+
+            // create coppra sales
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRASales.cspmb__pricing_element__c = pricingElId;
+            newCOPPRASales.cspmb__pricing_rule__c = starhubPricingRule;
+            newCOPPRASales.cspmb__association_type__c = 'Pricing change';
+            newCOPPRASales.cspmb__target_price__c = 'Sales';
+            newCOPPRASales.cspmb__recurring_adjustment_type__c = 'Price Override';
+            newCOPPRASales.cspmb__recurring_adjustment__c = recurringCharge;
+            insert newCOPPRASales;
+        }
+    }
+
+    @RemoteAction
+    global static void updateAddOnOneOffPricing(String productId, Decimal oneOffCharge) {
+
+        String pricingElId = '';
+        String OneOffPETId = '';
+
+        // get default pricing rule
+        List<cspmb__Pricing_Rule__c> pricingRules = [SELECT Id, Name FROM cspmb__Pricing_Rule__c WHERE Name='Default Pricing Rule for Starhub' LIMIT 1];
+        String starhubPricingRule = pricingRules[0].Id;
+
+        // get pricing element type for recurring charge
+        List<cspmb__Pricing_Element_Type__c> oneOffPETL =
+        [SELECT Id, Name  FROM cspmb__Pricing_Element_Type__c
+        WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF AND Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF LIMIT 1];
+
+        if(oneOffPETL.size() > 0) {
+            OneOffPETId = oneOffPETL[0].Id;
+        }
+
+        // get AOAS to update displayed prices
+        List<cspmb__Price_Item_Add_On_Price_Item_Association__c> addOnPriceItemAssociationsList =
+        [SELECT Id, Name, Displayed_One_Off_Price__c FROM cspmb__Price_Item_Add_On_Price_Item_Association__c WHERE Id =: productId];
+        if (addOnPriceItemAssociationsList.size() > 0) {
+            cspmb__Price_Item_Add_On_Price_Item_Association__c aoas = addOnPriceItemAssociationsList[0];
+            Decimal roundHelper = oneOffCharge * TAX;
+            aoas.Displayed_One_Off_Price__c = roundHelper;
+            update(aoas);
+        }
+
+        // get existing recurring charges on selected AOAS that are of starhubPricingRule
+        List<cspmb__Pricing_Element__c> oneOffList =
+        [SELECT Id, Name,
+            (SELECT Id, Name, cspmb__one_off_adjustment__c
+                FROM cspmb__commercial_product_pricing_rule_assocs__r
+                WHERE cspmb__pricing_rule__c = :starhubPricingRule)
+            FROM cspmb__Pricing_Element__c
+            WHERE cspmb__commercial_product_add_on_association__r.Id =: productId
+            AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+            AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
+            AND Id IN (SELECT cspmb__pricing_element__c
+                            FROM cspmb__Price_Item_Pricing_Rule_Association__c
+                            WHERE cspmb__pricing_rule__c = :starhubPricingRule)];
+
+        // edit existing pricing element if exist
+        if (oneOffList.size() > 0 && oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r.size() > 0) {
+            for (cspmb__Price_Item_Pricing_Rule_Association__c coppra : oneOffList[0].cspmb__commercial_product_pricing_rule_assocs__r) {
+                coppra.cspmb__one_off_adjustment__c = oneOffCharge;
+                update(coppra);
+            }
+        } else {
+            // create new pricing element
+            cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
+            newRC.cspmb__pricing_element_type__c = OneOffPETId;
+            newRC.cspmb__commercial_product_add_on_association__c = productId;
             insert newRC;
 
             pricingElId = newRC.Id;
