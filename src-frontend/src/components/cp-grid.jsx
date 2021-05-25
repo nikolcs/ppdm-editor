@@ -30,9 +30,9 @@ class CPGrid extends React.Component {
     }
 
     state = {
-        visibleModal: undefined,
-        newPromotionModal: false,
-        createNewPRG: false,
+        showManagePromotionsModal: false,
+        showNewPromotionModal: false,
+        showCreateNewPRG: false,
 
         searchTerm: '',
         activeTab: 'CPs',
@@ -86,12 +86,13 @@ class CPGrid extends React.Component {
         this.setState({ detailsOneOffCharge: event.target.value});
     }
 
-    openModal = (modalId) => {
-        this.setState({visibleModal: modalId});
+    openModal = () => {
+        this.setState({showManagePromotionsModal: true});
     }
     closeModal = () => {
         this.setState({
-            visibleModal: undefined,
+            showManagePromotionsModal: false,
+
             activeProduct: '',
 
             detailsName: '',
@@ -170,7 +171,7 @@ class CPGrid extends React.Component {
     }
 
     openNewPromotionModal = () => {
-        this.setState({newPromotionModal: true})
+        this.setState({showNewPromotionModal: true})
     }
 
     createNewPromotion = () => {
@@ -316,7 +317,7 @@ class CPGrid extends React.Component {
                 result => {
                     console.log("getCommercialProduct in handleOnPackageClick")
                     console.log(result);
-                    this.setState({detailsName: result.Name, visibleModal: 'commercial-product-details', activeProduct: 'Package'});
+                    this.setState({detailsName: result.Name, activeProduct: 'Package'});
                 }
             );
         }
@@ -361,7 +362,7 @@ class CPGrid extends React.Component {
         const handleOnAddonClick = (id) => {
             VFRemotingService.getCPAOAssociation(id).then(
                 result => {
-                    this.setState({detailsName: result.cspmb__Add_On_Price_Item__r.Name, visibleModal: 'commercial-product-details', activeProduct: 'Addon'});
+                    this.setState({detailsName: result.cspmb__Add_On_Price_Item__r.Name, activeProduct: 'Addon'});
                     console.log("getCPAOAssociation in handleOnAddonClick");
                     console.log(result);
                 }
@@ -726,7 +727,7 @@ class CPGrid extends React.Component {
 
                 {/* MANAGE PROMOTIONS MODAL */}
                 <CSModal
-                    visible={this.state.visibleModal === 'Promotions'}
+                    visible={this.state.showManagePromotionsModal === true}
                     size="medium"
                     animated
                     closeButton
@@ -762,24 +763,24 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({visibleModal: ''})}
+                            onClick={() => this.setState({showManagePromotionsModal: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
                             //onClick={this.handleSave}
-                            onClick={() => this.setState({visibleModal: ''})}
+                            onClick={() => this.setState({showManagePromotionsModal: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
 
                 {/* CREATE NEW PROMOTION MODAL */}
                 <CSModal
-                    visible={this.state.newPromotionModal}
+                    visible={this.state.showNewPromotionModal}
                     size="small"
                     animated
                     closeButton
-                    onClose={() => this.setState({newPromotionModal: false})}
+                    onClose={() => this.setState({showNewPromotionModal: false})}
                     className="new-promotion-modal"
                 >
                     <CSModalHeader
@@ -803,10 +804,9 @@ class CPGrid extends React.Component {
                                         className="open-modal-btn"
                                         label="New"
                                         borderRadius="0 0.25rem 0.25rem 0"
-                                        onClick={() => this.setState({createNewPRG: true})}
+                                        onClick={() => this.setState({showCreateNewPRG: true})}
                                     />
                                 </div>
-
                             </div>
                             <CSInputText value="100 test" label="Pricing Rule" readOnly />
                             <CSInputText label="Code"/>
@@ -815,24 +815,24 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({newPromotionModal: false})}
+                            onClick={() => this.setState({showNewPromotionModal: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
                             //onClick={this.handleSave}
-                            onClick={() => this.setState({newPromotionModal: false})}
+                            onClick={() => this.setState({showNewPromotionModal: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
 
                 {/* CREATE NEW PRICING GROUP */}
                 <CSModal
-                    visible={this.state.createNewPRG}
+                    visible={this.state.showCreateNewPRG}
                     size="xsmall"
                     animated
                     closeButton
-                    onClose={() => this.setState({createNewPRG: false})}
+                    onClose={() => this.setState({showCreateNewPRG: false})}
                     className="create-new-prg-modal"
                 >
                     <CSModalHeader title="Create New Price Group Rule"/>
@@ -854,17 +854,12 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({createNewPRG: false})}
-                        />
-                        <CSButton
-                            label="Save and New"
-                            btnStyle="brand"
-                            onClick={() => this.setState({createNewPRG: false})}
+                            onClick={() => this.setState({showCreateNewPRG: false})}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={() => this.setState({createNewPRG: false})}
+                            onClick={() => this.setState({showCreateNewPRG: false})}
                         />
                     </CSModalFooter>
                 </CSModal>
