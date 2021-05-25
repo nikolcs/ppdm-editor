@@ -98,7 +98,7 @@ class CPGrid extends React.Component {
         this.setState({ detailsOneOffCharge: event.target.value});
     }
 
-    openModal = () => {
+    openModalManagePromotions = () => {
         this.setState({showManagePromotionsModal: true});
     }
     closeModal = () => {
@@ -208,13 +208,20 @@ class CPGrid extends React.Component {
             searchTerm: event.target.value
         });
     }
-
-
-
+    
     /* PROMOTIONS HANDLER */
-    handleBtnPromotions = () => {
+    handleBtnPromotions = (id) => {
         console.log("handleBtnPromotions called")
-        this.openModal('Promotions');
+        this.openModalManagePromotions();
+        this.handleOnPromotionOpen(id);
+    }
+
+    handleOnPromotionOpen = (id) => {
+        VFRemotingService.getCommercialProductPromotions(id).then(
+            result => {
+                console.log("getCommercialProductPromotions in handleOnPromotionOpen")
+                console.log(result);
+            })
     }
 
     openNewPromotionModal = () => {
@@ -652,7 +659,7 @@ class CPGrid extends React.Component {
                                                                 labelHidden
                                                                 iconName="tag"
                                                                 iconOrigin="cs"
-                                                                onClick={() => this.handleBtnPromotions()}
+                                                                onClick={() => this.handleBtnPromotions(row.Id)}
                                                             />
                                                         </CSTableCell>
                                                     </CSTableRow>
