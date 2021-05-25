@@ -14,6 +14,7 @@
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
+                getCommercialProductPromotions: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProductPromotions}',
                 getAddOn: '{!$RemoteAction.CSRemoteActionDelegation.getAddOn}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',
                 updateRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateRecurringPricing}',
