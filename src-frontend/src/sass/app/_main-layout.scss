@@ -163,9 +163,24 @@ html {
 
 .plm-wrapper {
     height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .app-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .plm-variants {
+            flex: 1;
+            display: flex;
+        }
+    }
 
     .cs-main-header.cs-main-header-neutral {
         display: none;
+    }
+    .react-grid-Grid {
+        min-height: 400px !important;
     }
 }
 

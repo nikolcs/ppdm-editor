@@ -594,10 +594,7 @@ class CPGrid extends React.Component {
                         ) : null}
                     </div>
                 }
-
-                <div className={this.state.activeTab === 'PLM' ? '' : 'hidden'}>
-                    <div className="plm-wrapper" id="lightning"></div>
-                </div>
+                <div className={this.state.activeTab === 'PLM' ? 'plm-wrapper' : 'plm-wrapper hidden'} id="lightning"></div>
                 <div className="table-wrapper">
                     {this.state.activeTab === 'CPs' &&
                         <CSTable>
