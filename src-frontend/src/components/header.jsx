@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    CSButton,
     CSMainHeader,
     CSMainHeaderLeft,
     CSMainHeaderRight,
@@ -8,11 +9,13 @@ import {
     CSImage,
 } from '@cloudsense/cs-ui-components';
 
+import {VFRemotingService} from '../remote'
+
 class Header extends React.Component {
     render() {
         return (
             <>
-                <CSMainHeader>
+                <CSMainHeader className="demo-main-header">
                     <CSMainHeaderIcon>
                         <CSIcon name="lead" origin="cs" frame color="#3cdbc0" />
                     </CSMainHeaderIcon>
@@ -20,6 +23,9 @@ class Header extends React.Component {
                         title="Pricing service ppdm support component"
                     />
                     <CSMainHeaderRight>
+                        <CSButton
+                            label="Sync All"
+                        />
                         <CSImage type="logo" height="2rem" />
                     </CSMainHeaderRight>
                 </CSMainHeader>

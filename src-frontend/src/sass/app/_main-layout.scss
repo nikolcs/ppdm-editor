@@ -20,12 +20,21 @@ html {
             flex-direction: column;
             height: 100%;
             min-height: calc(100vh - 1px);
-            .cs-main-header.cs-main-header-neutral {
+            /* OVERRIDE PLM STYLES */
+            .cs-input-text-wrapper .cs-input-text:read-only:focus {
+                box-shadow: 0 0 3px #0070d2 !important;
+            }
+            .demo-main-header.cs-main-header {
                 height: 4rem;
+                .cs-btn {
+                    margin-right: 0.5rem;
+                }
             }
         }
     }
 }
+
+
 
 .cs-tab-group .cs-tab-wrapper .cs-tab .cs-tab-name {
     line-height: initial;
@@ -178,6 +187,10 @@ html {
         .plm-variants {
             flex: 1;
             display: flex;
+            .plm-variants-product-grid {
+                display: flex;
+                flex-direction: column;
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     CSIcon,
+    CSSection,
     CSTable,
     CSTableHeader,
     CSTableBody,
@@ -208,7 +209,7 @@ class CPGrid extends React.Component {
             searchTerm: event.target.value
         });
     }
-    
+
     /* PROMOTIONS HANDLER */
     handleBtnPromotions = (id) => {
         console.log("handleBtnPromotions called")
@@ -852,26 +853,20 @@ class CPGrid extends React.Component {
                         title="Manage Promotions"
                         subtitle="Product here?"
                     />
-                    <CSModalBody padding="1rem 1.5rem 1rem 1.5rem">
+                    <CSModalBody padding="1rem 1.5rem 1rem 1.5rem" minHeight="40vh">
                         <CSButton
                             label="Create new promotion"
                             onClick={() => this.openNewPromotionModal()}
                             className="create-new-promotion-btn"
                         />
-                        <div className="promotions-wrapper">
-                            <div className="promotions-header">
-                                <div className="cell">Name</div>
-                                <div className="cell">Code</div>
-                            </div>
-                            <div className="promotion-item">
-                                <div className="cell">
-                                    test
-                                </div>
-                                <div className="cell">
-                                    test2
-                                </div>
-                            </div>
-                        </div>
+                        <CSSection title="Name" collapsible>
+                            <CSInputText label="Promotion Name" readOnly value="Summer 2020" />
+                            <CSInputText label="Code" readOnly value="Summer 2020" />
+                            <CSInputText label="Discount Type" readOnly value="Summer 2020" />
+                            <div className="placeholder"></div>
+                            <CSInputText label="some field" readOnly value="Summer 2020" />
+                            <CSInputText lable="some field" readOnly value="Summer 2020" />
+                        </CSSection>
                     </CSModalBody>
 
                     <CSModalFooter align="right">
