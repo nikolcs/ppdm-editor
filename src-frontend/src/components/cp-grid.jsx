@@ -131,6 +131,16 @@ class CPGrid extends React.Component {
         this.setState({ newPromotionPricingRule: event.target.value});
     }
 
+    closeNewPromotionModal = () => {
+        this.setState({
+            showNewPromotionModal: false,
+            newPromotionPricingRuleGroup: '',
+            newPromotionPricingAmount: '',
+            newPromotionPricingType: '',
+            newPromotionPricingRule: ''
+        })
+    }
+
     /* CREATE NEW PRICE GROUP RULE ONCHANGE HANDLERS */
     onChangeNewPRGName = (event) => {
         this.setState({ newPRGName: event.target.value});
@@ -972,7 +982,6 @@ class CPGrid extends React.Component {
                                     />
                                 </div>
                             </div>
-
                             <CSInputText label="Pricing Rule" readOnly onChange={this.onChangeNewPromotionPricingRule} value={this.state.newPromotionPricingRule}/>
                             <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
                             <CSSelect label="Type" onChange={option => this.onChangeNewPromotionPricingType(option)}>
@@ -986,13 +995,12 @@ class CPGrid extends React.Component {
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({showNewPromotionModal: false})}
+                            onClick={this.closeNewPromotionModal}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            //onClick={this.handleSave}
-                            onClick={() => this.setState({showNewPromotionModal: false})}
+                            onClick={this.closeNewPromotionModal}
                         />
                     </CSModalFooter>
                 </CSModal>
