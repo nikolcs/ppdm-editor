@@ -67,7 +67,7 @@ class CPGrid extends React.Component {
         newPRGName: '',
         newPRGCode: '',
         newPRGPriority: '',
-        newPRGCompoundingType: '',
+        newPRGCompoundingType: 'Inclusive',
 
         chargesSaving: false
     };
@@ -159,7 +159,6 @@ class CPGrid extends React.Component {
                 console.log(result);
                 this.closeNewPromotionModal();
                 this.handleOnPromotionOpen(this.state.Promotions.id);
-
             })
     }
 
@@ -183,8 +182,39 @@ class CPGrid extends React.Component {
             newPRGName: '',
             newPRGCode: '',
             newPRGPriority: '',
-            newPRGCompoundingType: ''
+            newPRGCompoundingType: 'Inclusive'
         })
+    }
+
+    saveNewPRG = () => {
+        console.log("saveNewPRG");
+        VFRemotingService.createNewPRG(
+            this.state.newPRGName,
+            this.state.newPRGCode,
+            this.state.newPRGPriority,
+            this.state.newPRGCompoundingType).then(
+            result => {
+                console.log("createNewPRG in saveNewPRG")
+                console.log(result);
+
+                VFRemotingService.getPricingRuleGroups().then(
+                    result => {
+                        console.log("getPricingRuleGroups in createNewPromotionHandler")
+                        console.log(result);
+                        let lookupHelper = {
+                            columns: [
+                                {key: 'Name', label: 'Name'},
+                                {key: 'cspmb__pricing_rule_group_code__c', label: 'Code'}
+                            ],
+                            data: result
+                        }
+                        this.setState({pricingRuleGroupLookup: lookupHelper});
+                        console.log(this.state.pricingRuleGroupLookup);
+                        this.closeNewPRGModal();
+                    }
+                );
+                // this.handleOnPromotionOpen(this.state.Promotions.id);
+            })
     }
 
     prepopulateCreateNewPriceGroupRule = () => {
@@ -1039,7 +1069,7 @@ class CPGrid extends React.Component {
                     size="xsmall"
                     animated
                     closeButton
-                    onClose={() => this.setState({showCreateNewPRG: false})}
+                    onClose={this.closeNewPRGModal}
                     className="create-new-prg-modal"
                 >
                     <CSModalHeader title="Create New Price Group Rule"/>
@@ -1070,7 +1100,7 @@ class CPGrid extends React.Component {
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={this.closeNewPRGModal}
+                            onClick={this.saveNewPRG}
                         />
                     </CSModalFooter>
                 </CSModal>

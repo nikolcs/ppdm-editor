@@ -185,4 +185,14 @@ export class VFRemotingService {
             [prgId, prId, cpId, amount, type]
         );
     };
+
+    static createNewPRG = (prgName, prgCode, prgPriority, prgCompounding) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.createNewPRG,
+            },
+            [prgName, prgCode, prgPriority, prgCompounding]
+        );
+    };
 }

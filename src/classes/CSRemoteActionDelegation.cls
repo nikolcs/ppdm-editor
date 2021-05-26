@@ -768,5 +768,35 @@ global with sharing class CSRemoteActionDelegation {
         }
 
     }
+
+    @RemoteAction
+    global static void createNewPRG(String prgName, String prgCode, Integer prgPriority, String prgCompounding) {
+
+        String newPRGId = '';
+        String newPRId = '';
+
+        // Create new PRG
+        cspmb__Pricing_Rule_Group__c newPRG = new cspmb__Pricing_Rule_Group__c();
+        newPRG.Name = prgName;
+        newPRG.cspmb__pricing_rule_group_code__c = prgCode;
+        newPRG.cspmb__priority__c = prgPriority;
+        newPRG.cspmb__rule_group_compounding_type__c = prgCompounding;
+        insert newPRG;
+        newPRGId = newPRG.Id;
+
+        // Create new PR
+        cspmb__Pricing_Rule__c newPR = new cspmb__Pricing_Rule__c();
+        newPR.Name = prgName + ' Rule';
+        newPR.cspmb__pricing_rule_code__c = prgCode + 'RULE';
+        newPR.cspmb__context__c = 'Cart';
+        insert newPR;
+        newPRId = newPR.Id;
+
+        // Create new PRG-PR ASOC
+        cspmb__Pricing_Rule_Group_Rule_Association__c newPRGPRAsoc = new cspmb__Pricing_Rule_Group_Rule_Association__c();
+        newPRGPRAsoc.cspmb__pricing_rule_group__c = newPRGId;
+        newPRGPRAsoc.cspmb__pricing_rule__c = newPRId;
+        insert newPRGPRAsoc;
+    }
 }
 
