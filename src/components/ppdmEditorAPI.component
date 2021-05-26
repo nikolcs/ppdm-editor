@@ -11,6 +11,7 @@
         window.CS.PPDM = {
             vfRemotingManager: Visualforce.remoting.Manager,
             actions: {
+                syncInvoker: '{!$RemoteAction.CSRemoteActionDelegation.syncInvoker}',
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
                 getPricingRuleGroups: '{!$RemoteAction.CSRemoteActionDelegation.getPricingRuleGroups}',
