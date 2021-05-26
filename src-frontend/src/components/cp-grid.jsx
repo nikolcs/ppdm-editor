@@ -58,6 +58,9 @@ class CPGrid extends React.Component {
         pricingRuleGroupLookup: {},
         newPromotionPricingRuleGroup: '',
         newPromotionPricingRule: '',
+        newPromotionPricingAmount: '',
+        newPromotionPricingType: '',
+        newPromotionPricingPriority: '',
         newPromotionCode: '',
 
         newPRGName: '',
@@ -114,17 +117,18 @@ class CPGrid extends React.Component {
 
 
     /* CREATE NEW PROMOTION ONCHANGE HANDLERS */
-
-
     onChangeLookup = (result) => {
         this.setState({ newPromotionPricingRuleGroup: result});
         console.log(this.state.newPromotionPricingRuleGroup);
     }
+    onChangeNewPromotionPricingAmount = (event) => {
+        this.setState({ newPromotionPricingAmount: event.target.value});
+    }
+    onChangeNewPromotionPricingType = (option) => {
+        this.setState({ newPromotionPricingType: option});
+    }
     onChangeNewPromotionPricingRule = (event) => {
         this.setState({ newPromotionPricingRule: event.target.value});
-    }
-    onChangeNewPromotionCode = (event) => {
-        this.setState({ newPromotionCode: event.target.value});
     }
 
     /* CREATE NEW PRICE GROUP RULE ONCHANGE HANDLERS */
@@ -968,13 +972,14 @@ class CPGrid extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <CSInputText value="100 test" label="Pricing Rule" readOnly />
-                            <CSInputText label="Amount" />
-                            <CSSelect label="Type">
+
+                            <CSInputText label="Pricing Rule" readOnly onChange={this.onChangeNewPromotionPricingRule} value={this.state.newPromotionPricingRule}/>
+                            <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
+                            <CSSelect label="Type" onChange={option => this.onChangeNewPromotionPricingType(option)}>
                                 <option>Recurring Charge</option>
                                 <option>One Off Charge</option>
                             </CSSelect>
-                            <CSInputText label="Priority" readOnly />
+                            <CSInputText label="Priority" readOnly value={this.state.newPromotionPricingPriority} />
                             <CSInputText label="Code" readOnly value={this.state.newPromotionPricingRuleGroup.cspmb__pricing_rule_group_code__c} />
                         </div>
                     </CSModalBody>
