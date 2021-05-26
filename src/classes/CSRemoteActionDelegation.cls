@@ -670,7 +670,8 @@ global with sharing class CSRemoteActionDelegation {
     }
 
     @RemoteAction
-    global static void createNewPromotion(String prgId, String prId, String cpId, Decimal amount, String type) {
+    global static void createNewPromotion(String prgId, String prId, String cpId, Decimal amount, String type,
+            String adjustmentType, String associationType) {
 
         String pricingElId = '';
 
@@ -713,10 +714,10 @@ global with sharing class CSRemoteActionDelegation {
             cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
             newCOPPRASales.cspmb__pricing_element__c = pricingElId;
             newCOPPRASales.cspmb__pricing_rule__c = prId;
-            newCOPPRASales.cspmb__association_type__c = 'Pricing change'; // need variable?
             newCOPPRASales.cspmb__target_price__c = 'Sales';
-            newCOPPRASales.cspmb__recurring_adjustment_type__c = 'Relative Discount'; // need variable?
             newCOPPRASales.cspmb__recurring_adjustment__c = amount;
+            newCOPPRASales.cspmb__recurring_adjustment_type__c = adjustmentType;
+            newCOPPRASales.cspmb__association_type__c = associationType;
             insert newCOPPRASales;
         }
 
@@ -760,10 +761,10 @@ global with sharing class CSRemoteActionDelegation {
             cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
             newCOPPRASales.cspmb__pricing_element__c = pricingElId;
             newCOPPRASales.cspmb__pricing_rule__c = prId;
-            newCOPPRASales.cspmb__association_type__c = 'Pricing change'; // need variable?
             newCOPPRASales.cspmb__target_price__c = 'Sales';
-            newCOPPRASales.cspmb__one_off_adjustment_type__c = 'Relative Discount'; // need variable?
             newCOPPRASales.cspmb__one_off_adjustment__c = amount;
+            newCOPPRASales.cspmb__one_off_adjustment_type__c = adjustmentType;
+            newCOPPRASales.cspmb__association_type__c = associationType;
             insert newCOPPRASales;
         }
 
