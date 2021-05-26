@@ -117,6 +117,16 @@ export class VFRemotingService {
         );
     };
 
+    static getCommercialProductAssociation = (id) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getCommercialProductAssociation,
+            },
+            [id]
+        );
+    };
+
     static getCommercialProductPromotions = (id) => {
         return VFRemotingService.invokeRemoteAction(
             {
@@ -171,6 +181,25 @@ export class VFRemotingService {
             {
                 options: { escape: false, buffer: false },
                 remoteActionName: CS.PPDM.actions.updateOneOffPricing,
+            },
+            [id, oneOffCharge]
+        );
+    };
+
+    static updateRecurringPackageMemberPricing = (id, recurringCharge) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateRecurringPackageMemberPricing,
+            },
+            [id, recurringCharge]
+        );
+    };
+    static updateOneOffPackageMemberPricing = (id, oneOffCharge) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.updateOneOffPackageMemberPricing,
             },
             [id, oneOffCharge]
         );

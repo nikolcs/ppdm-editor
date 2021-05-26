@@ -330,6 +330,41 @@ class CPGrid extends React.Component {
         })
     }
 
+    handlePackageMemberSave = () => {
+        console.log("handlePackageMemberSave");
+        const promises = [];
+        this.setState({chargesSaving : true});
+        if (this.state.detailsRecurringCharge) {
+            const updateRecurring = VFRemotingService.updateRecurringPackageMemberPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then();
+            promises.push(updateRecurring);
+        }
+        if (this.state.detailsOneOffCharge) {
+            const updateOneOff = VFRemotingService.updateOneOffPackageMemberPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then();
+            promises.push(updateOneOff);
+        }
+
+        Promise.all(promises).then( () => {
+            VFRemotingService.getCPs().then(
+                result => {
+                    this.setState({CPs: result, chargesSaving: false});
+                    console.log("getCPs");
+                    console.log(result);
+                    setTimeout(() => {
+                        this.setState( {
+                                showSuccessIndicator: true
+                            }, () =>
+                                setTimeout( () => {
+                                    this.setState({
+                                        showSuccessIndicator: false
+                                    })
+                                }, 750)
+                        )
+                    }, 1);
+                }
+            )
+        })
+    }
+
     handleAddOnSave = () => {
         console.log("handleAddOnSave");
         const promises = [];
@@ -587,6 +622,43 @@ class CPGrid extends React.Component {
             );
         }
 
+        const handleOnPackageMemberClick = (id) => {
+            VFRemotingService.getCommercialProductAssociation(id).then(
+                result => {
+                    console.log("getCommercialProductAssociation in handleOnPackageMemberClick")
+                    console.log(result);
+                    let recurringHelper = '';
+                    let oneOffHelper = '';
+                    if (result) {
+                        result.pricingElementWrappers?.map((pe) => {
+                            if (pe.type === 'One-off Charge') {
+                                pe.coppraWrappers?.map((coppra) => {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                        oneOffHelper = coppra.oneOffAdjustment;
+                                    }
+                                })
+                            }
+                            if (pe.type === 'Recurring Charge') {
+                                pe.coppraWrappers?.map((coppra) => {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                        recurringHelper = coppra.recurringAdjustment;
+                                    }
+                                })
+                            }
+                        })
+                        this.setState({
+                            detailsRecurringCharge: recurringHelper,
+                            detailsOneOffCharge: oneOffHelper,
+                            detailsName: result.name,
+                            detailsId: result.id,
+                            activeProduct: 'CP'
+                        });
+                    }
+
+                }
+            );
+        }
+
         const handleOnAOEditClick = (id) => {
             VFRemotingService.getAddOn(id).then(
                 result => {
@@ -737,6 +809,41 @@ class CPGrid extends React.Component {
                         <CSButton
                             label="Save"
                             btnStyle="brand"
+                        />
+                    </div>
+                </div>
+            </CSDropdown>
+
+        let chargesPackageMemberDropdown = (id) =>
+            <CSDropdown
+                mode="custom"
+                iconOrigin="cs"
+                iconName="currency_dollar"
+                onDropdownOpen={() => handleOnPackageMemberClick(id)}
+                onDropdownClose={() => clearState()}
+            >
+                <div className="dropdown-charges">
+                    <CSInputText
+                        label="One-Off Charge"
+                        value={this.state.detailsOneOffCharge}
+                        onChange={this.onChangeOneOff}
+                    />
+                    <CSInputText
+                        label="Recurring Charge"
+                        value={this.state.detailsRecurringCharge}
+                        onChange={this.onChangeRecurring}
+                    />
+                    <div className="dropdown-footer">
+                        { this.state.chargesSaving &&
+                        <CSSpinner color="brand" size="small" inline />
+                        }
+                        { !this.state.chargesSaving && this.state.showSuccessIndicator ?
+                            <CSIcon className="success-icon" name="success" color="#009540" /> : null
+                        }
+                        <CSButton
+                            label="Save"
+                            btnStyle="brand"
+                            onClick={this.handlePackageMemberSave}
                         />
                     </div>
                 </div>
@@ -957,14 +1064,14 @@ class CPGrid extends React.Component {
                                                             <CSTableCell text={row.Displayed_Recurring_Price__c} className="col-Recurring"/>
                                                             <CSTableCell className="col-Actions">
                                                                 {chargesDropdownMock(row.Displayed_One_Off_Price__c, row.Displayed_Recurring_Price__c)}
-                                                                <CSButton
-                                                                    label="Manage Promotions"
-                                                                    className="manage-promotions"
-                                                                    labelHidden
-                                                                    iconName="tag"
-                                                                    iconOrigin="cs"
-                                                                    onClick={() => this.handleBtnPromotions()}
-                                                                />
+                                                                {/*<CSButton*/}
+                                                                {/*    label="Manage Promotions"*/}
+                                                                {/*    className="manage-promotions"*/}
+                                                                {/*    labelHidden*/}
+                                                                {/*    iconName="tag"*/}
+                                                                {/*    iconOrigin="cs"*/}
+                                                                {/*    onClick={() => this.handleBtnPromotions()}*/}
+                                                                {/*/>*/}
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     }
@@ -1016,7 +1123,7 @@ class CPGrid extends React.Component {
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Actions">
-                                                                {chargesDropdownMock(cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c, cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c)}
+                                                                {chargesPackageMemberDropdown(cpAssociation.Id)}
                                                                 {/*<CSButton*/}
                                                                 {/*    label="Manage Promotions"*/}
                                                                 {/*    className="manage-promotions"*/}
