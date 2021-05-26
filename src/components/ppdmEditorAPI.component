@@ -22,6 +22,7 @@
                 updateOneOffPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateOneOffPricing}',
                 updateAddOnRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateAddOnRecurringPricing}',
                 updateAddOnOneOffPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateAddOnOneOffPricing}',
+                createNewPromotion: '{!$RemoteAction.CSRemoteActionDelegation.createNewPromotion}',
             },
             session: {
                 id: '{!$Api.Session_Id}'

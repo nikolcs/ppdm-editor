@@ -325,6 +325,31 @@ invokeAction = function (...args) {
             ]
             return delayResponse(data, args);
 
+        case "getPricingRuleGroups":
+            data = [
+                {
+                    "Id": "a1V4L000000CdmNUAS",
+                    "Name": "Default Pricing Rule Group",
+                    "cspmb__pricing_rule_group_code__c": "Group-001"
+                },
+                {
+                    "Id": "a1V4L000000ChaLUAS",
+                    "Name": "Starhub Default PriceBook",
+                    "cspmb__pricing_rule_group_code__c": "STH-001"
+                },
+                {
+                    "Id": "a1V4L000000CqAjUAK",
+                    "Name": "Starhub Indian 3MTH PriceBook",
+                    "cspmb__pricing_rule_group_code__c": "TVIND503MTH"
+                },
+                {
+                    "Id": "a1V4L000000CqAeUAK",
+                    "Name": "Starhub TV 24MTH CT Buy 2 Get 3 PriceBook",
+                    "cspmb__pricing_rule_group_code__c": "STH-TV-24MTHCT--2-3"
+                }
+            ]
+            return delayResponse(data, args);
+
         case "updateRecurringPricing":
             // data =
             return delayResponse(data, args);
@@ -421,7 +446,8 @@ window.CS.PPDM = {
         getPackages: 'getPackages',
         updateRecurringPricing: 'updateRecurringPricing',
         updateOneOffPricing: 'updateOneOffPricing',
-        getCommercialProductPromotions: 'getCommercialProductPromotions'
+        getCommercialProductPromotions: 'getCommercialProductPromotions',
+        getPricingRuleGroups: 'getPricingRuleGroups'
     },
     session: {
         id: 'Session_Id'

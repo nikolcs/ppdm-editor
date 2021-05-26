@@ -4,6 +4,8 @@ global with sharing class CSRemoteActionDelegation {
     static final String PRICING_ELEMENT_TYPE_NAME_ONE_OFF = 'One Off Charge';
     static final String PRICING_ELEMENT_TYPE_RECURRING = 'Recurring Charge';
     static final String PRICING_ELEMENT_TYPE_NAME_RECURRING = 'Recurring Charge';
+    static final String NEW_PROMOTION_TYPE_RECURRING = 'Recurring Charge';
+    static final String NEW_PROMOTION_TYPE_ONE_OFF = 'One Off Charge';
     static final String STARHUB_DEFAULT_PRICING_RULE = 'Default Pricing Rule for Starhub';
 
     static final Decimal TAX = 1; // 1 for now, leaving tax variable if something changes in the meantime
@@ -71,11 +73,19 @@ global with sharing class CSRemoteActionDelegation {
                     cspmb__commercial_product_add_on_association__r.Name,
                     cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Name,
                     cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Id,
+
                 (SELECT Id, Name,
                         cspmb__one_off_adjustment__c,
                         cspmb__recurring_adjustment__c,
                         cspmb__target_price__c,
-                        cspmb__pricing_rule__r.Name
+                        cspmb__association_type__c,
+                        cspmb__one_off_adjustment_type__c,
+                        cspmb__recurring_adjustment_type__c,
+                        cspmb__pricing_rule__r.Name,
+                        cspmb__pricing_rule__r.cspmb__pricing_rule_code__c,
+                        cspmb__pricing_rule__r.cspmb__description__c,
+                        cspmb__pricing_rule__r.cspmb__predicate_logic__c,
+                        cspmb__pricing_rule__r.cspmb__context__c
                 FROM cspmb__commercial_product_pricing_rule_assocs__r)
                 FROM cspmb__Pricing_Element__c
             WHERE cspmb__commercial_product_add_on_association__r.Id = : cpId];
@@ -317,7 +327,9 @@ global with sharing class CSRemoteActionDelegation {
     @RemoteAction
     global static List<cspmb__Pricing_Rule_Group__c> getPricingRuleGroups() {
         List<cspmb__Pricing_Rule_Group__c> prgList =
-        [SELECT Id, Name, cspmb__pricing_rule_group_code__c
+        [SELECT Id, Name, cspmb__pricing_rule_group_code__c, cspmb__priority__c,
+            (SELECT Id, Name, cspmb__pricing_rule__r.Name
+                FROM cspmb__pricing_rule_associations__r)
             FROM cspmb__Pricing_Rule_Group__c];
 
         if(prgList!=null && !prgList.isEmpty()){
@@ -655,6 +667,106 @@ global with sharing class CSRemoteActionDelegation {
             insert newCOPPRASales;
         }
         return;
+    }
+
+    @RemoteAction
+    global static void createNewPromotion(String prgId, String prId, String cpId, Decimal amount, String type) {
+
+        String pricingElId = '';
+
+        // RECURRING
+        if (type == NEW_PROMOTION_TYPE_RECURRING) {
+            String recurringPETId = '';
+            // get pricing element type for recurring charge
+            List<cspmb__Pricing_Element_Type__c> recurringPETL =
+                [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
+                WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                AND Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
+                LIMIT 1];
+
+            if(recurringPETL.size() > 0) {
+                recurringPETId = recurringPETL[0].Id;
+            }
+
+            // find if PE for Recurring charge exist
+            List<cspmb__Pricing_Element__c> recurringList =
+            [SELECT Id, Name
+                FROM cspmb__Pricing_Element__c
+                WHERE cspmb__commercial_product__r.Id =: cpId
+                AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING];
+
+            // get existing PE Id with recurring charge type
+            if (recurringList.size() > 0) {
+                pricingElId = recurringList[0].Id;
+            } else {
+                // create new pricing element
+                cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
+                newRC.cspmb__pricing_element_type__c = recurringPETId;
+                newRC.cspmb__commercial_product__c = cpId;
+                insert newRC;
+
+                pricingElId = newRC.Id;
+            }
+
+            // create coppra sales
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRASales.cspmb__pricing_element__c = pricingElId;
+            newCOPPRASales.cspmb__pricing_rule__c = prId;
+            newCOPPRASales.cspmb__association_type__c = 'Pricing change'; // need variable?
+            newCOPPRASales.cspmb__target_price__c = 'Sales';
+            newCOPPRASales.cspmb__recurring_adjustment_type__c = 'Relative Discount'; // need variable?
+            newCOPPRASales.cspmb__recurring_adjustment__c = amount;
+            insert newCOPPRASales;
+        }
+
+        // ONE OFF
+        else if (type == NEW_PROMOTION_TYPE_ONE_OFF) {
+            String oneOffPETId = '';
+
+            // get pricing element type for recurring charge
+            List<cspmb__Pricing_Element_Type__c> oneOffPETL =
+            [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
+                WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+                AND Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
+                LIMIT 1];
+
+            if(oneOffPETL.size() > 0) {
+                oneOffPETId = oneOffPETL[0].Id;
+            }
+
+            // find if PE for One Off charge exist
+            List<cspmb__Pricing_Element__c> oneOffList =
+            [SELECT Id, Name
+                FROM cspmb__Pricing_Element__c
+                WHERE cspmb__commercial_product__r.Id =: cpId
+                AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+                AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF];
+
+            // get existing PE Id with recurring charge type
+            if (oneOffList.size() > 0) {
+                pricingElId = oneOffList[0].Id;
+            } else {
+                // create new pricing element
+                cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
+                newRC.cspmb__pricing_element_type__c = oneOffPETId;
+                newRC.cspmb__commercial_product__c = cpId;
+                insert newRC;
+
+                pricingElId = newRC.Id;
+            }
+
+            // create coppra sales
+            cspmb__Price_Item_Pricing_Rule_Association__c newCOPPRASales = new cspmb__Price_Item_Pricing_Rule_Association__c();
+            newCOPPRASales.cspmb__pricing_element__c = pricingElId;
+            newCOPPRASales.cspmb__pricing_rule__c = prId;
+            newCOPPRASales.cspmb__association_type__c = 'Pricing change'; // need variable?
+            newCOPPRASales.cspmb__target_price__c = 'Sales';
+            newCOPPRASales.cspmb__one_off_adjustment_type__c = 'Relative Discount'; // need variable?
+            newCOPPRASales.cspmb__one_off_adjustment__c = amount;
+            insert newCOPPRASales;
+        }
+
     }
 }
 

@@ -58,8 +58,9 @@ class CPGrid extends React.Component {
         pricingRuleGroupLookup: {},
         newPromotionPricingRuleGroup: '',
         newPromotionPricingRule: '',
+        newPromotionPricingRuleId: '',
         newPromotionPricingAmount: '',
-        newPromotionPricingType: '',
+        newPromotionPricingType: 'Recurring Charge',
         newPromotionPricingPriority: '',
         newPromotionCode: '',
 
@@ -118,7 +119,12 @@ class CPGrid extends React.Component {
 
     /* CREATE NEW PROMOTION ONCHANGE HANDLERS */
     onChangeLookup = (result) => {
-        this.setState({ newPromotionPricingRuleGroup: result});
+        this.setState(
+            { newPromotionPricingRuleGroup: result,
+                newPromotionPricingRule: result.cspmb__pricing_rule_associations__r?.[0].cspmb__pricing_rule__r.Name,
+                newPromotionPricingRuleId: result.cspmb__pricing_rule_associations__r?.[0].cspmb__pricing_rule__r.Id,
+                newPromotionPricingPriority: result.cspmb__priority__c
+        });
         console.log(this.state.newPromotionPricingRuleGroup);
     }
     onChangeNewPromotionPricingAmount = (event) => {
@@ -126,9 +132,7 @@ class CPGrid extends React.Component {
     }
     onChangeNewPromotionPricingType = (option) => {
         this.setState({ newPromotionPricingType: option});
-    }
-    onChangeNewPromotionPricingRule = (event) => {
-        this.setState({ newPromotionPricingRule: event.target.value});
+        console.log(option);
     }
 
     closeNewPromotionModal = () => {
@@ -136,9 +140,57 @@ class CPGrid extends React.Component {
             showNewPromotionModal: false,
             newPromotionPricingRuleGroup: '',
             newPromotionPricingAmount: '',
-            newPromotionPricingType: '',
-            newPromotionPricingRule: ''
+            newPromotionPricingType: 'Recurring Charge',
+            newPromotionPricingRule: '',
+            newPromotionPricingRuleId: ''
         })
+    }
+
+    saveNewPromotion = () => {
+        console.log("saveNewPromotion");
+        VFRemotingService.createNewPromotion(
+            this.state.newPromotionPricingRuleGroup.Id,
+            this.state.newPromotionPricingRuleId,
+            this.state.Promotions.id,
+            this.state.newPromotionPricingAmount,
+            this.state.newPromotionPricingType).then(
+            result => {
+                console.log("createNewPromotion in saveNewPromotion")
+                console.log(result);
+                this.closeNewPromotionModal();
+            })
+
+        // this.setState({chargesSaving : true});
+        // if (this.state.detailsRecurringCharge) {
+        //     const updateRecurring = VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then();
+        //     promises.push(updateRecurring);
+        // }
+        // if (this.state.detailsOneOffCharge) {
+        //     const updateOneOff = VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then();
+        //     promises.push(updateOneOff);
+        // }
+        //
+        // Promise.all(promises).then( () => {
+        //     VFRemotingService.getCPs().then(
+        //         result => {
+        //             this.setState({CPs: result, chargesSaving: false});
+        //             console.log("getCPs");
+        //             console.log(result);
+        //             setTimeout(() => {
+        //                 this.setState( {
+        //                         showSuccessIndicator: true
+        //                     }, () =>
+        //                         setTimeout( () => {
+        //                             this.setState({
+        //                                 showSuccessIndicator: false
+        //                             })
+        //                         }, 750)
+        //                 )
+        //             }, 1);
+        //         }
+        //     )
+        // })
+
     }
 
     /* CREATE NEW PRICE GROUP RULE ONCHANGE HANDLERS */
@@ -187,6 +239,9 @@ class CPGrid extends React.Component {
             detailsId: '',
             detailsRecurringCharge: '',
             detailsOneOffCharge: '',
+
+            Promotions: '',
+
         });
         setTimeout(() => {
             this.setState( {
@@ -195,6 +250,13 @@ class CPGrid extends React.Component {
             })
         }, 150);
     }
+
+    // onClosePromotionsModal = () => {
+    //     this.setState({
+    //         showManagePromotionsModal: false,
+    //     })
+    //     this.closeModal();
+    // }
 
     handleSave = () => {
         console.log("handleSave");
@@ -918,14 +980,14 @@ class CPGrid extends React.Component {
                                         <CSInputText label="Pricing Rule Description" readOnly value={coppra.pricingRuleDescription} />
                                         <CSInputText label="Pricing Rule Code" readOnly value={coppra.pricingRuleCode} />
                                         <CSInputText label="Association Type" readOnly value={coppra.associationType} />
-                                        <CSInputText label="Pricing Rule Context" readOnly value={coppra.pricingRuleContext} />
-                                        <CSInputText label="Target Price" readOnly value={coppra.targetPrice} />
                                         { item.type === 'Recurring Charge' &&
                                             <CSInputText label="Recurring Adjustment" readOnly value={coppra.recurringAdjustment} />
                                         }
                                         { item.type === 'One-off Charge' &&
                                             <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
                                         }
+                                        <CSInputText label="Target Price" readOnly value={coppra.targetPrice} />
+                                        <CSInputText label="Pricing Rule Context" readOnly value={coppra.pricingRuleContext} />
                                     </CSSection>
                                 ))}
                             </React.Fragment>
@@ -934,14 +996,8 @@ class CPGrid extends React.Component {
 
                     <CSModalFooter align="right">
                         <CSButton
-                            label="Cancel"
-                            onClick={() => this.setState({showManagePromotionsModal: false})}
-                        />
-                        <CSButton
-                            label="Save"
-                            btnStyle="brand"
-                            //onClick={this.handleSave}
-                            onClick={() => this.setState({showManagePromotionsModal: false})}
+                            label="Close"
+                            onClick={this.closeModal}
                         />
                     </CSModalFooter>
                 </CSModal>
@@ -968,6 +1024,8 @@ class CPGrid extends React.Component {
                                         fieldToBeDisplayed="Name"
                                         label="PRG"
                                         labelHidden
+                                        className="ppdm-lookup"
+                                        value={this.state.newPromotionPricingRuleGroup.Id}
                                         lookupColumns={this.state.pricingRuleGroupLookup ? (this.state.pricingRuleGroupLookup.columns ? this.state.pricingRuleGroupLookup.columns : []) : []}
                                         lookupOptions={this.state.pricingRuleGroupLookup ? (this.state.pricingRuleGroupLookup.data ? this.state.pricingRuleGroupLookup.data : []) : []}
                                         borderRadius="0.25rem 0 0 0.25rem"
@@ -982,14 +1040,14 @@ class CPGrid extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <CSInputText label="Pricing Rule" readOnly onChange={this.onChangeNewPromotionPricingRule} value={this.state.newPromotionPricingRule}/>
+                            <CSInputText label="Pricing Rule" readOnly value={this.state.newPromotionPricingRule}/>
+                            <CSInputText label="Priority" readOnly value={this.state.newPromotionPricingPriority} />
+                            <CSInputText label="Code" readOnly value={this.state.newPromotionPricingRuleGroup.cspmb__pricing_rule_group_code__c} />
                             <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
-                            <CSSelect label="Type" onChange={option => this.onChangeNewPromotionPricingType(option)}>
+                            <CSSelect label="Type" value={this.state.newPromotionPricingType} onChange={option => this.onChangeNewPromotionPricingType(option)}>
                                 <option>Recurring Charge</option>
                                 <option>One Off Charge</option>
                             </CSSelect>
-                            <CSInputText label="Priority" readOnly value={this.state.newPromotionPricingPriority} />
-                            <CSInputText label="Code" readOnly value={this.state.newPromotionPricingRuleGroup.cspmb__pricing_rule_group_code__c} />
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
@@ -1000,7 +1058,7 @@ class CPGrid extends React.Component {
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={this.closeNewPromotionModal}
+                            onClick={this.saveNewPromotion}
                         />
                     </CSModalFooter>
                 </CSModal>

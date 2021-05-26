@@ -165,6 +165,7 @@ export class VFRemotingService {
             [id, recurringCharge]
         );
     };
+
     static updateAddOnOneOffPricing = (id, oneOffCharge) => {
         return VFRemotingService.invokeRemoteAction(
             {
@@ -172,6 +173,16 @@ export class VFRemotingService {
                 remoteActionName: CS.PPDM.actions.updateAddOnOneOffPricing,
             },
             [id, oneOffCharge]
+        );
+    };
+
+    static createNewPromotion = (prgId, prId, cpId, amount, type) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.createNewPromotion,
+            },
+            [prgId, prId, cpId, amount, type]
         );
     };
 }
