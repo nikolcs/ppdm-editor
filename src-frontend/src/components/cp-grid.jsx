@@ -244,12 +244,19 @@ class CPGrid extends React.Component {
         this.setState({showManagePromotionsModal: true});
     }
 
+    /* HANDLE BUTTON LINK CLICKS */
     handlePRRClick = (id) => {
         window.open(`/lightning/r/cspmb__Pricing_Rule__c/${id}/view`);
     }
-
     handlePRARClick = (id) => {
         window.open(`/lightning/r/cspmb__Price_Item_Pricing_Rule_Association__c/${id}/view`);
+    }
+
+    handleCPandPKGNameClick = (id) => {
+        window.open(`/lightning/r/cspmb__Price_Item__c/${id}/view`);
+    }
+    handleAddonNameClick = (id) => {
+        window.open(`/lightning/r/cspmb__Price_Item_Add_On_Price_Item_Association__c/${id}/view`);
     }
 
     closeModal = () => {
@@ -795,7 +802,9 @@ class CPGrid extends React.Component {
                                                         <CSTableCell className="col-Image">
                                                             <img src={row.Image_URL__c}/>
                                                         </CSTableCell>
-                                                        <CSTableCell text={row.Name} grow={2} className="col-Name"/>
+                                                        <CSTableCell grow={2} className="col-Name">
+                                                            <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)}>{row.Name}</button>
+                                                        </CSTableCell>
                                                         <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4}
                                                                      className="col-Description"/>
                                                         <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2}
@@ -857,7 +866,8 @@ class CPGrid extends React.Component {
                                                                         name="standard_objects"
                                                                     />
                                                                 </div>
-                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                                <button className="link-button" onClick={() => this.handleAddonNameClick(addonAssociation.Id)}>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</button>
+                                                                <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell
                                                                 text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}
@@ -925,7 +935,7 @@ class CPGrid extends React.Component {
                                                                     name="package_solid"
                                                                     origin="cs"
                                                                 />
-                                                                <span>{row.Name}</span>
+                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)}>{row.Name}</button>
                                                             </CSTableCell>
                                                             <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description"/>
                                                             <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode"/>
@@ -974,7 +984,8 @@ class CPGrid extends React.Component {
                                                                 <img src={cpAssociation.cspmb__member_commercial_product__r.Image_URL__c}/>
                                                             </CSTableCell>
                                                             <CSTableCell grow={2} className="col-Name">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Name}</span>
+                                                                <span></span>
+                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(cpAssociation.Id)}>{cpAssociation.cspmb__member_commercial_product__r.Name}</button>
                                                             </CSTableCell>
                                                             <CSTableCell grow={4} className="col-Description">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c}</span>
@@ -1039,11 +1050,11 @@ class CPGrid extends React.Component {
                                     <CSSection key={index} title={coppra.pricingRuleName} collapsible>
                                         <div className="field-wrapper">
                                             <CSLabel label="Pricing Rule Record"/>
-                                            <button onClick={() => this.handlePRRClick(coppra.pricingRuleId)}>{coppra.pricingRuleName}</button>
+                                            <button className="link-button" onClick={() => this.handlePRRClick(coppra.pricingRuleId)}>{coppra.pricingRuleName}</button>
                                         </div>
                                         <div className="field-wrapper">
                                             <CSLabel label="Pricing Rule Association Record"/>
-                                            <button onClick={() => this.handlePRARClick(coppra.id)}>{coppra.name}</button>
+                                            <button className="link-button" onClick={() => this.handlePRARClick(coppra.id)}>{coppra.name}</button>
                                         </div>
                                         <CSInputText label="Pricing Rule Code" readOnly value={coppra.pricingRuleCode} />
                                         <CSInputText label="Pricing Rule Description" readOnly value={coppra.pricingRuleDescription} />
