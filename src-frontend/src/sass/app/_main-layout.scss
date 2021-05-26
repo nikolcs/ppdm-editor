@@ -23,7 +23,7 @@ html {
             /* OVERRIDE PLM STYLES  --- check so it doesn't apply on plm */
             .new-promotion-modal, .manage-promotions-modal, .create-new-prg-modal {
                 .cs-input-text-wrapper .cs-input-text[read-only]:focus {
-                    box-shadow: 0 0 3px #0070d2 !important;
+                    box-shadow: none !important;
                 }
                 input, select {
                     height: 2rem !important;
@@ -41,8 +41,13 @@ html {
 
 
 
-.cs-tab-group .cs-tab-wrapper .cs-tab .cs-tab-name {
-    line-height: initial;
+.cs-tab-group .cs-tab-wrapper {
+    &.cs-tab-wrapper-large {
+        border-top: none;
+    }
+    .cs-tab .cs-tab-name {
+        line-height: initial;
+    }
 }
 
 .action-row {
@@ -81,7 +86,11 @@ html {
                 }
             }
         }
-        .addon-row,
+        .addon-row {
+            &.cs-table-row .cs-table-cell:nth-child(2) > .addon-icon-wrapper {
+                padding-left: 2rem;
+            }
+        }
         .package-cp-row {
             &.cs-table-row .cs-table-cell:nth-child(2) > span {
                 padding-left: 2rem;
@@ -90,7 +99,7 @@ html {
         .cs-table-row:last-child .cs-table-cell {
             border-bottom: 1px solid #dddbda;
         }
-        .pkg-icon {
+        .pkg-icon, .addon-icon {
             margin-right: 0.5rem;
             margin-top: 1px;
         }

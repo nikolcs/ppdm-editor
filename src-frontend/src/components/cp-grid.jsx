@@ -373,8 +373,8 @@ class CPGrid extends React.Component {
     /* PROMOTIONS HANDLER */
     handleBtnPromotions = (id) => {
         console.log("handleBtnPromotions called")
-        this.openModalManagePromotions();
         this.handleOnPromotionOpen(id);
+        this.openModalManagePromotions();
     }
 
     handleOnPromotionOpen = (id) => {
@@ -382,6 +382,22 @@ class CPGrid extends React.Component {
             result => {
                 this.setState({Promotions: result});
                 console.log("getCommercialProductPromotions in handleOnPromotionOpen")
+                console.log(result);
+
+            })
+    }
+
+    handleBtnAddonPromotions = (id) => {
+        console.log("handleBtnAddonPromotions called")
+        this.handleOnAddonPromotionOpen(id);
+        this.openModalManagePromotions();
+    }
+
+    handleOnAddonPromotionOpen = (id) => {
+        VFRemotingService.getAddOnPromotions(id).then(
+            result => {
+                this.setState({Promotions: result});
+                console.log("getAddonPromotions in handleOnAddonPromotionOpen")
                 console.log(result);
 
             })
@@ -826,8 +842,18 @@ class CPGrid extends React.Component {
                                                                     src={addonAssociation.cspmb__Add_On_Price_Item__r.Image_URL__c}/>
                                                             </CSTableCell>
                                                             <CSTableCell
-                                                                text={addonAssociation.cspmb__Add_On_Price_Item__r.Name}
-                                                                grow={2} className="col-Name"/>
+                                                                className="col-Name"
+                                                                grow={2}
+                                                            >
+                                                                <div className="addon-icon-wrapper">
+                                                                    <CSIcon
+                                                                        className="addon-icon"
+                                                                        title="Add On"
+                                                                        name="standard_objects"
+                                                                    />
+                                                                </div>
+                                                                <span>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</span>
+                                                            </CSTableCell>
                                                             <CSTableCell
                                                                 text={addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c}
                                                                 grow={4} className="col-Description"/>
@@ -848,7 +874,7 @@ class CPGrid extends React.Component {
                                                                     labelHidden
                                                                     iconName="tag"
                                                                     iconOrigin="cs"
-                                                                    onClick={() => this.handleBtnPromotions()}
+                                                                    onClick={() => this.handleBtnAddonPromotions(addonAssociation.Id)}
                                                                 />
                                                             </CSTableCell>
                                                         </CSTableRow>

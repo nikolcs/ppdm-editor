@@ -117,6 +117,16 @@ export class VFRemotingService {
         );
     };
 
+    static getAddOnPromotions = (id) => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getAddOnPromotions,
+            },
+            [id]
+        );
+    };
+
     static getAddOn = (id) => {
         return VFRemotingService.invokeRemoteAction(
             {
