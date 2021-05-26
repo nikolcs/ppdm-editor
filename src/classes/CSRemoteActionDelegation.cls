@@ -770,7 +770,7 @@ global with sharing class CSRemoteActionDelegation {
     }
 
     @RemoteAction
-    global static void createNewPRG(String prgName, String prgCode, Integer prgPriority, String prgCompounding) {
+    global static void createNewPRG(String prgName, String prgCode, Integer prgPriority, String prDescription) {
 
         String newPRGId = '';
         String newPRId = '';
@@ -780,7 +780,7 @@ global with sharing class CSRemoteActionDelegation {
         newPRG.Name = prgName;
         newPRG.cspmb__pricing_rule_group_code__c = prgCode;
         newPRG.cspmb__priority__c = prgPriority;
-        newPRG.cspmb__rule_group_compounding_type__c = prgCompounding;
+        newPRG.cspmb__rule_group_compounding_type__c = 'Inclusive';
         insert newPRG;
         newPRGId = newPRG.Id;
 
@@ -789,6 +789,7 @@ global with sharing class CSRemoteActionDelegation {
         newPR.Name = prgName + ' Rule';
         newPR.cspmb__pricing_rule_code__c = prgCode + 'RULE';
         newPR.cspmb__context__c = 'Cart';
+        newPR.cspmb__description__c = prDescription;
         insert newPR;
         newPRId = newPR.Id;
 

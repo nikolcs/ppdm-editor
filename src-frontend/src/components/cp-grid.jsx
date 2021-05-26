@@ -67,7 +67,7 @@ class CPGrid extends React.Component {
         newPRGName: '',
         newPRGCode: '',
         newPRGPriority: '',
-        newPRGCompoundingType: 'Inclusive',
+        newPRGDescription: '',
 
         chargesSaving: false
     };
@@ -172,8 +172,8 @@ class CPGrid extends React.Component {
     onChangeNewPRGPriority = (event) => {
         this.setState({ newPRGPriority: event.target.value});
     }
-    onChangeNewPRGCompoundingType = (option) => {
-        this.setState({ newPRGCompoundingType: option});
+    onChangenewPRGDescription = (event) => {
+        this.setState({ newPRGDescription: event.target.value});
     }
 
     closeNewPRGModal = () => {
@@ -182,7 +182,7 @@ class CPGrid extends React.Component {
             newPRGName: '',
             newPRGCode: '',
             newPRGPriority: '',
-            newPRGCompoundingType: 'Inclusive'
+            newPRGDescription: '',
         })
     }
 
@@ -192,7 +192,7 @@ class CPGrid extends React.Component {
             this.state.newPRGName,
             this.state.newPRGCode,
             this.state.newPRGPriority,
-            this.state.newPRGCompoundingType).then(
+            this.state.newPRGDescription).then(
             result => {
                 console.log("createNewPRG in saveNewPRG")
                 console.log(result);
@@ -222,7 +222,6 @@ class CPGrid extends React.Component {
             newPRGName: 'Huawei Spring 20%',
             newPRGCode: 'SPRING20',
             newPRGPriority: '500',
-            newPRGCompoundingType: 'Inclusive'
         });
     }
 
@@ -1080,23 +1079,20 @@ class CPGrid extends React.Component {
                 >
                     <CSModalHeader title="Create New Price Group Rule"/>
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
-                        <CSButton
-                            className="prepopulate-btn"
-                            label="prepopulate data"
-                            labelHidden
-                            iconName="edit"
-                            size="small"
-                            btnType="transparent"
-                            btnStyle="brand"
-                            onClick={this.prepopulateCreateNewPriceGroupRule}
-                        />
+                        {/*<CSButton*/}
+                        {/*    className="prepopulate-btn"*/}
+                        {/*    label="prepopulate data"*/}
+                        {/*    labelHidden*/}
+                        {/*    iconName="edit"*/}
+                        {/*    size="small"*/}
+                        {/*    btnType="transparent"*/}
+                        {/*    btnStyle="brand"*/}
+                        {/*    onClick={this.prepopulateCreateNewPriceGroupRule}*/}
+                        {/*/>*/}
                         <CSInputText label="Pricing Rule Group Name" onChange={this.onChangeNewPRGName} value={this.state.newPRGName} />
                         <CSInputText label="Pricing Rule Group Code" onChange={this.onChangeNewPRGCode} value={this.state.newPRGCode} />
                         <CSInputText label="Priority" onChange={this.onChangeNewPRGPriority} value={this.state.newPRGPriority} />
-                        <CSSelect label="Rule Group Compounding Type" onChange={option => this.onChangeNewPRGCompoundingType(option)} value={this.state.newPRGCompoundingType} >
-                            <option>Inclusive</option>
-                            <option>Exclusive</option>
-                        </CSSelect>
+                        <CSInputText label="Description" onChange={this.onChangenewPRGDescription} value={this.state.newPRGDescription} />
                     </CSModalBody>
                     <CSModalFooter align="right">
                         <CSButton
