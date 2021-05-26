@@ -249,6 +249,19 @@ invokeAction = function (...args) {
                                 "Displayed_One_Off_Price__c": 27.82,
                                 "Displayed_Recurring_Price__c": 13.19
                             }
+                        },
+                        {
+                            "cspmb__parent_commercial_product__c": "a1P4L000008rlhrUAA",
+                            "Id": "a134L000000kC2QQAU",
+                            "Name": "CPA-00003",
+                            "cspmb__member_commercial_product__c": "a1P4L000008rli0UAA",
+                            "cspmb__member_commercial_product__r": {
+                                "Id": "a1P4L000008rli0UAA",
+                                "Name": "cp-test",
+                                "cspmb__Price_Item_Code__c": "STH-BB-5000FB",
+                                "Displayed_One_Off_Price__c": 27.82,
+                                "Displayed_Recurring_Price__c": 13.19
+                            }
                         }
                     ]
                 },

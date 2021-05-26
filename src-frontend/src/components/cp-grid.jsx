@@ -821,10 +821,15 @@ class CPGrid extends React.Component {
                                                 </>
                                                 {this.state.showAddons && row.cspmb__Price_Item_Add_On_Price_Item_Association__r ? row.cspmb__Price_Item_Add_On_Price_Item_Association__r
                                                     .sort(this.rowSortAddon)
-                                                    .filter(() => {
+                                                    .filter((addonAssociation) => {
                                                         if (this.state.searchTerm) {
                                                             if (
-                                                                this.showCPAndAddons(row, true)
+                                                                this.showCPAndAddons(row, false) ||
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.Name || '').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (addonAssociation.cspmb__Add_On_Price_Item__r.cspmb__Add_On_Price_Item_Code__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (addonAssociation.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (addonAssociation.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase())
                                                             ) {
                                                                 return true;
                                                             } else {
@@ -943,10 +948,16 @@ class CPGrid extends React.Component {
                                                 </>
                                                 {this.state.showCPs && row.cspmb__member_commercial_product_associations__r ? row.cspmb__member_commercial_product_associations__r
                                                     .sort(this.rowSortCP)
-                                                    .filter(() => {
+                                                    .filter((CPAssociation) => {
                                                         if (this.state.searchTerm) {
                                                             if (
-                                                                this.showPackageAndCPs(row, true)
+                                                                this.showPackageAndCPs(row, false) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.Name ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.Rating__c ||'').toString().toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Code__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase()) ||
+                                                                (CPAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c ||'').toLowerCase().includes(this.state.searchTerm.toLowerCase())
                                                             ) {
                                                                 return true;
                                                             } else {
