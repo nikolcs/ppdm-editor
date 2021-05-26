@@ -7,17 +7,28 @@ import {
     CSMainHeaderIcon,
     CSIcon,
     CSImage,
+    CSSpinner
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
 
 class Header extends React.Component {
 
+    state = {
+        showSpinner: false
+    }
+
     handleSyncInvoker = () => {
         console.log("syncInvoker call")
+        this.setState({
+            showSpinner: true
+        })
         VFRemotingService.syncInvoker().then(
             () => {
                 console.log("syncInvoker finished")
+                this.setState({
+                    showSpinner: false
+                })
             }
         );
     }
@@ -40,6 +51,9 @@ class Header extends React.Component {
                         <CSImage type="logo" height="2rem" />
                     </CSMainHeaderRight>
                 </CSMainHeader>
+                {this.state.showSpinner &&
+                    <CSSpinner size="xlarge" label="Syncing..."/>
+                }
             </>
         );
     }
