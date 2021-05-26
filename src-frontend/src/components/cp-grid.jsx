@@ -63,6 +63,8 @@ class CPGrid extends React.Component {
         newPromotionPricingType: 'Recurring Charge',
         newPromotionPricingPriority: '',
         newPromotionCode: '',
+        newPromotionAdjustmentType: 'Absolute Discount',
+        newPromotionAssociationType: 'Pricing change',
 
         newPRGName: '',
         newPRGCode: '',
@@ -135,6 +137,14 @@ class CPGrid extends React.Component {
         console.log(option);
     }
 
+    onChangeNewPromotionAdjustmentType = (option) => {
+        this.setState({ newPromotionAdjustmentType: option});
+    }
+
+    onChangeNewPromotionAssociationType = (option) => {
+        this.setState({ newPromotionAssociationType: option});
+    }
+
     closeNewPromotionModal = () => {
         this.setState({
             showNewPromotionModal: false,
@@ -142,7 +152,9 @@ class CPGrid extends React.Component {
             newPromotionPricingAmount: '',
             newPromotionPricingType: 'Recurring Charge',
             newPromotionPricingRule: '',
-            newPromotionPricingRuleId: ''
+            newPromotionPricingRuleId: '',
+            newPromotionAdjustmentType: 'Absolute Discount',
+            newPromotionAssociationType: 'Pricing change',
         })
     }
 
@@ -153,7 +165,9 @@ class CPGrid extends React.Component {
             this.state.newPromotionPricingRuleId,
             this.state.Promotions.id,
             this.state.newPromotionPricingAmount,
-            this.state.newPromotionPricingType).then(
+            this.state.newPromotionPricingType,
+            this.state.newPromotionAdjustmentType,
+            this.state.newPromotionAssociationType).then(
             result => {
                 console.log("createNewPromotion in saveNewPromotion")
                 console.log(result);
@@ -1048,11 +1062,27 @@ class CPGrid extends React.Component {
                             <CSInputText label="Pricing Rule" readOnly value={this.state.newPromotionPricingRule}/>
                             <CSInputText label="Priority" readOnly value={this.state.newPromotionPricingPriority} />
                             <CSInputText label="Code" readOnly value={this.state.newPromotionPricingRuleGroup.cspmb__pricing_rule_group_code__c} />
-                            <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
-                            <CSSelect label="Type" value={this.state.newPromotionPricingType} onChange={option => this.onChangeNewPromotionPricingType(option)}>
+                            <CSSelect label="Charge Type" value={this.state.newPromotionPricingType} onChange={option => this.onChangeNewPromotionPricingType(option)}>
                                 <option>Recurring Charge</option>
                                 <option>One Off Charge</option>
                             </CSSelect>
+                            <CSSelect label="Association Type" value={this.state.newPromotionAssociationType} onChange={option => this.onChangeNewPromotionAssociationType(option)}>
+                                <option>Pricing change</option>
+                                <option>Predicate</option>
+                                <option>Promotional item</option>
+                            </CSSelect>
+                            <CSSelect
+                                label="X Adjustment Type" // add literlas, ovisno o selectu iznad
+                                value={this.state.newPromotionAdjustmentType}
+                                onChange={option => this.onChangeNewPromotionAdjustmentType(option)}
+                            >
+                                <option>Absolute Discount</option>
+                                <option>Relative Discount</option>
+                                <option>Price Override</option>
+                                <option>Initial Price</option>
+                            </CSSelect>
+                            <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
+
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
