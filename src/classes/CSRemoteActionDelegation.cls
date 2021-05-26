@@ -23,6 +23,7 @@ global with sharing class CSRemoteActionDelegation {
                         cspmb__one_off_adjustment_type__c,
                         cspmb__recurring_adjustment_type__c,
                         cspmb__pricing_rule__r.Name,
+                        cspmb__pricing_rule__r.Id,
                         cspmb__pricing_rule__r.cspmb__pricing_rule_code__c,
                         cspmb__pricing_rule__r.cspmb__description__c,
                         cspmb__pricing_rule__r.cspmb__predicate_logic__c,
@@ -50,6 +51,7 @@ global with sharing class CSRemoteActionDelegation {
                 cspmb__one_off_adjustment_type__c,
                 cspmb__recurring_adjustment_type__c,
                 cspmb__pricing_rule__r.Name,
+                cspmb__pricing_rule__r.Id,
                 cspmb__pricing_rule__r.cspmb__pricing_rule_code__c,
                 cspmb__pricing_rule__r.cspmb__description__c,
                 cspmb__pricing_rule__r.cspmb__predicate_logic__c,
@@ -82,6 +84,7 @@ global with sharing class CSRemoteActionDelegation {
                         cspmb__one_off_adjustment_type__c,
                         cspmb__recurring_adjustment_type__c,
                         cspmb__pricing_rule__r.Name,
+                        cspmb__pricing_rule__r.Id,
                         cspmb__pricing_rule__r.cspmb__pricing_rule_code__c,
                         cspmb__pricing_rule__r.cspmb__description__c,
                         cspmb__pricing_rule__r.cspmb__predicate_logic__c,
@@ -141,6 +144,7 @@ global with sharing class CSRemoteActionDelegation {
         public String RecurringAdjustmentType {get; set;}
         public String OneOffAdjustmentType {get; set;}
         public String pricingRuleName {get; set;}
+        public String pricingRuleId {get; set;}
         public String pricingRuleCode {get; set;}
         public String pricingRuleDescription {get; set;}
         public String pricingRulePredicateLogic {get; set;}
@@ -156,6 +160,7 @@ global with sharing class CSRemoteActionDelegation {
             this.RecurringAdjustmentType = coppra.cspmb__recurring_adjustment_type__c;
             this.OneOffAdjustmentType = coppra.cspmb__one_off_adjustment_type__c;
             this.pricingRuleName = coppra.cspmb__pricing_rule__r.Name;
+            this.pricingRuleId = coppra.cspmb__pricing_rule__r.Id;
             this.pricingRuleCode = coppra.cspmb__pricing_rule__r.cspmb__pricing_rule_code__c;
             this.pricingRuleDescription = coppra.cspmb__pricing_rule__r.cspmb__description__c;
             this.pricingRulePredicateLogic = coppra.cspmb__pricing_rule__r.cspmb__predicate_logic__c;
