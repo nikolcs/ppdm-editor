@@ -1057,9 +1057,9 @@ class CPGrid extends React.Component {
                             onClick={() => this.createNewPromotionHandler()}
                             className="create-new-promotion-btn"
                         />
-                        {this.state.Promotions.pricingElementWrappers && this.state.Promotions.pricingElementWrappers.map((item, index) => (
+                        {this.state.Promotions.pricingElementWrappers ? this.state.Promotions.pricingElementWrappers.map((item, index) => (
                             <React.Fragment key={index}>
-                                {item.coppraWrappers.map((coppra, index) => (
+                                {item.coppraWrappers.length ? item.coppraWrappers.map((coppra, index) => (
                                     <CSSection key={index} title={coppra.pricingRuleName} collapsible>
                                         <div className="field-wrapper">
                                             <CSLabel label="Pricing Rule Record"/>
@@ -1087,9 +1087,13 @@ class CPGrid extends React.Component {
                                         }
 
                                     </CSSection>
-                                ))}
+                                )) :
+                                    <div className="no-promotions-msg">No promotions to show</div>
+                                }
                             </React.Fragment>
-                        ))}
+                        )) :
+                            <div className="no-promotions-msg">No promotions to show</div>
+                        }
                     </CSModalBody>
 
                     <CSModalFooter align="right">
