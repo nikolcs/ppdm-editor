@@ -816,7 +816,7 @@ class CPGrid extends React.Component {
                                                             <img src={row.Image_URL__c}/>
                                                         </CSTableCell>
                                                         <CSTableCell grow={2} className="col-Name">
-                                                            <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)}>{row.Name}</button>
+                                                            <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)} title={row.Name}>{row.Name}</button>
                                                         </CSTableCell>
                                                         <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4}
                                                                      className="col-Description"/>
@@ -879,7 +879,7 @@ class CPGrid extends React.Component {
                                                                         name="standard_objects"
                                                                     />
                                                                 </div>
-                                                                <button className="link-button" onClick={() => this.handleAddonNameClick(addonAssociation.Id)}>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</button>
+                                                                <button className="link-button" onClick={() => this.handleAddonNameClick(addonAssociation.Id)} title={addonAssociation.cspmb__Add_On_Price_Item__r.Name}>{addonAssociation.cspmb__Add_On_Price_Item__r.Name}</button>
                                                                 <span></span>
                                                             </CSTableCell>
                                                             <CSTableCell
@@ -948,7 +948,7 @@ class CPGrid extends React.Component {
                                                                     name="package_solid"
                                                                     origin="cs"
                                                                 />
-                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)}>{row.Name}</button>
+                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(row.Id)} title={row.Name}>{row.Name}</button>
                                                             </CSTableCell>
                                                             <CSTableCell text={row.cspmb__Price_Item_Description__c} grow={4} className="col-Description"/>
                                                             <CSTableCell text={row.cspmb__Price_Item_Code__c} grow={2} className="col-CommercialProductCode"/>
@@ -998,7 +998,7 @@ class CPGrid extends React.Component {
                                                             </CSTableCell>
                                                             <CSTableCell grow={2} className="col-Name">
                                                                 <span></span>
-                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(cpAssociation.Id)}>{cpAssociation.cspmb__member_commercial_product__r.Name}</button>
+                                                                <button className="link-button" onClick={() => this.handleCPandPKGNameClick(cpAssociation.Id)} title={cpAssociation.cspmb__member_commercial_product__r.Name}>{cpAssociation.cspmb__member_commercial_product__r.Name}</button>
                                                             </CSTableCell>
                                                             <CSTableCell grow={4} className="col-Description">
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.cspmb__Price_Item_Description__c}</span>

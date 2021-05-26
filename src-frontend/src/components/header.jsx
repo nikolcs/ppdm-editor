@@ -6,8 +6,7 @@ import {
     CSMainHeaderRight,
     CSMainHeaderIcon,
     CSIcon,
-    CSImage,
-    CSSpinner
+    CSImage
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -44,16 +43,13 @@ class Header extends React.Component {
                         title="Product and Pricing Manager"
                     />
                     <CSMainHeaderRight>
-                        <CSButton
-                            label="Sync All"
-                            onClick={() => this.handleSyncInvoker()}
-                        />
+                        {/*<CSButton*/}
+                        {/*    label="Sync All"*/}
+                        {/*    onClick={() => this.handleSyncInvoker()}*/}
+                        {/*/>*/}
                         <CSImage type="logo" height="2rem" />
                     </CSMainHeaderRight>
                 </CSMainHeader>
-                {this.state.showSpinner &&
-                    <CSSpinner size="xlarge" label="Syncing..."/>
-                }
             </>
         );
     }
