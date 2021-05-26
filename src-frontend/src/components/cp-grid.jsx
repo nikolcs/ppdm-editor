@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     CSIcon,
+    CSLabel,
     CSSection,
     CSTable,
     CSTableHeader,
@@ -242,6 +243,15 @@ class CPGrid extends React.Component {
     openModalManagePromotions = () => {
         this.setState({showManagePromotionsModal: true});
     }
+
+    handlePRRClick = (id) => {
+        window.open(`/lightning/r/cspmb__Pricing_Rule__c/${id}/view`);
+    }
+
+    handlePRARClick = (id) => {
+        window.open(`/lightning/r/cspmb__Price_Item_Pricing_Rule_Association__c/${id}/view`);
+    }
+
     closeModal = () => {
         this.setState({
             showManagePromotionsModal: false,
@@ -990,17 +1000,25 @@ class CPGrid extends React.Component {
                             <React.Fragment key={index}>
                                 {item.coppraWrappers.map((coppra, index) => (
                                     <CSSection key={index} title={coppra.pricingRuleName} collapsible>
-                                        <CSInputText label="Pricing Rule Description" readOnly value={coppra.pricingRuleDescription} />
+                                        <div className="field-wrapper">
+                                            <CSLabel label="Pricing Rule Record"/>
+                                            <button onClick={() => this.handlePRRClick(coppra.pricingRuleId)}>{coppra.pricingRuleName}</button>
+                                        </div>
+                                        <div className="field-wrapper">
+                                            <CSLabel label="Pricing Rule Association Record"/>
+                                            <button onClick={() => this.handlePRARClick(coppra.id)}>{coppra.name}</button>
+                                        </div>
                                         <CSInputText label="Pricing Rule Code" readOnly value={coppra.pricingRuleCode} />
+                                        <CSInputText label="Pricing Rule Description" readOnly value={coppra.pricingRuleDescription} />
                                         <CSInputText label="Association Type" readOnly value={coppra.associationType} />
                                         <div className="placeholder"></div>
-                                        { item.type === 'Recurring Charge' &&
+                                        {item.type === 'Recurring Charge' &&
                                             <>
                                                 <CSInputText label="Recurring Adjustment Type" readOnly value={coppra.RecurringAdjustmentType} />
                                                 <CSInputText label="Recurring Adjustment" readOnly value={coppra.recurringAdjustment} />
                                             </>
                                         }
-                                        { item.type === 'One-off Charge' &&
+                                        {item.type === 'One-off Charge' &&
                                             <>
                                                 <CSInputText label="One Off Adjustment Type" readOnly value={coppra.OneOffAdjustmentType} />
                                                 <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
