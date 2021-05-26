@@ -303,7 +303,6 @@ class CPGrid extends React.Component {
     }
 
     createNewPromotionHandler = () => {
-        this.setState({showNewPromotionModal: true})
         // non-ux stuff
 
         VFRemotingService.getPricingRuleGroups().then(
@@ -313,12 +312,13 @@ class CPGrid extends React.Component {
                 let lookupHelper = {
                     columns: [
                         {key: 'Name', label: 'Name'},
-                        {key: 'cspmb__pricing_rule_group_code__c', label: 'Pricing Rule Group Code'}
+                        {key: 'cspmb__pricing_rule_group_code__c', label: 'Code'}
                     ],
                     data: result
                 }
                 this.setState({pricingRuleGroupLookup: lookupHelper});
                 console.log(this.state.pricingRuleGroupLookup);
+                this.setState({showNewPromotionModal: true})
             }
         );
     }
@@ -965,11 +965,11 @@ class CPGrid extends React.Component {
                                 <label>Pricing Rule Group</label>
                                 <div className="lookup-btn-wrapper">
                                     <CSLookup
-                                        fieldToBeDisplayed="Account"
-                                        label="Account"
+                                        fieldToBeDisplayed="Name"
+                                        label="PRG"
                                         labelHidden
-                                        lookupColumns={this.state.pricingRuleGroupLookup ? this.state.pricingRuleGroupLookup.column : ''}
-                                        lookupOptions={this.state.pricingRuleGroupLookup ? this.state.pricingRuleGroupLookup.data : ''}
+                                        lookupColumns={this.state.pricingRuleGroupLookup ? (this.state.pricingRuleGroupLookup.columns ? this.state.pricingRuleGroupLookup.columns : []) : []}
+                                        lookupOptions={this.state.pricingRuleGroupLookup ? (this.state.pricingRuleGroupLookup.data ? this.state.pricingRuleGroupLookup.data : []) : []}
                                         borderRadius="0.25rem 0 0 0.25rem"
                                         mode="client"
                                         onSelectChange={lookupResult => this.onChangeLookup(lookupResult)}
