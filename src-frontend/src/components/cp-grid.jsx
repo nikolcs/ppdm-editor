@@ -1117,10 +1117,10 @@ class CPGrid extends React.Component {
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Rating__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-OneOff">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c}</span>
+                                                                <span>{cpAssociation.Displayed_Recurring_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Recurring">
-                                                                <span>{cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c}</span>
+                                                                <span>{cpAssociation.Displayed_One_Off_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Actions">
                                                                 {chargesPackageMemberDropdown(cpAssociation.Id)}
