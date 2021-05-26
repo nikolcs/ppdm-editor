@@ -67,6 +67,16 @@ export class VFRemotingService {
         );
     };
 
+    static getPricingRuleGroups = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.getPricingRuleGroups
+            },
+            []
+        );
+    };
+
     static getCPAOAs = () => {
         return VFRemotingService.invokeRemoteAction(
             {

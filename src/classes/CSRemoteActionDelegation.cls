@@ -314,6 +314,19 @@ global with sharing class CSRemoteActionDelegation {
         }
     }
 
+    @RemoteAction
+    global static List<cspmb__Pricing_Rule_Group__c> getPricingRuleGroups() {
+        List<cspmb__Pricing_Rule_Group__c> prgList =
+        [SELECT Id, Name, cspmb__pricing_rule_group_code__c
+            FROM cspmb__Pricing_Rule_Group__c];
+
+        if(prgList!=null && !prgList.isEmpty()){
+            return prgList;
+        } else {
+            return  new List<cspmb__Pricing_Rule_Group__c>();
+        }
+    }
+
     // UPDATE CP CHARGES
     @RemoteAction
     global static void updateRecurringPricing(String productId, Decimal recurringCharge) {

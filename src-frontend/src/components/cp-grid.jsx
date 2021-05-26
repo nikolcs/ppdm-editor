@@ -54,7 +54,9 @@ class CPGrid extends React.Component {
         detailsRecurringCharge: '',
         detailsOneOffCharge: '',
 
-        chargesSaving: false
+        chargesSaving: false,
+
+        pricingRuleGroupLookup: {}
     };
 
     handleTabClick = (tabName) => {
@@ -231,6 +233,22 @@ class CPGrid extends React.Component {
     createNewPromotionHandler = () => {
         this.setState({showNewPromotionModal: true})
         // non-ux stuff
+
+        VFRemotingService.getPricingRuleGroups().then(
+            result => {
+                console.log("getPricingRuleGroups in createNewPromotionHandler")
+                console.log(result);
+                let lookupHelper = {
+                    columns: [
+                        {key: 'Name', label: 'Name'},
+                        {key: 'cspmb__pricing_rule_group_code__c', label: 'Pricing Rule Group Code'}
+                    ],
+                    data: result
+                }
+                this.setState({pricingRuleGroupLookup: lookupHelper});
+                console.log(this.state.pricingRuleGroupLookup);
+            }
+        );
     }
 
     componentDidMount() {

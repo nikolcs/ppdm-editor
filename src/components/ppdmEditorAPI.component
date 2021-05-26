@@ -13,6 +13,7 @@
             actions: {
                 getPackages: '{!$RemoteAction.CSRemoteActionDelegation.getPackages}',
                 getCPs: '{!$RemoteAction.CSRemoteActionDelegation.getCPs}',
+                getPricingRuleGroups: '{!$RemoteAction.CSRemoteActionDelegation.getPricingRuleGroups}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
                 getCommercialProductPromotions: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProductPromotions}',
                 getAddOn: '{!$RemoteAction.CSRemoteActionDelegation.getAddOn}',
