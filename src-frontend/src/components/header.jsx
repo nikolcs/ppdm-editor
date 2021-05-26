@@ -12,6 +12,16 @@ import {
 import {VFRemotingService} from '../remote'
 
 class Header extends React.Component {
+
+    handleSyncInvoker = () => {
+        console.log("syncInvoker call")
+        VFRemotingService.syncInvoker().then(
+            () => {
+                console.log("syncInvoker finished")
+            }
+        );
+    }
+
     render() {
         return (
             <>
@@ -25,6 +35,7 @@ class Header extends React.Component {
                     <CSMainHeaderRight>
                         <CSButton
                             label="Sync All"
+                            onClick={() => this.handleSyncInvoker()}
                         />
                         <CSImage type="logo" height="2rem" />
                     </CSMainHeaderRight>

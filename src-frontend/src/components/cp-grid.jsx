@@ -1059,7 +1059,7 @@ class CPGrid extends React.Component {
                         />
                         {this.state.Promotions.pricingElementWrappers ? this.state.Promotions.pricingElementWrappers.map((item, index) => (
                             <React.Fragment key={index}>
-                                {item.coppraWrappers.length ? item.coppraWrappers.map((coppra, index) => (
+                                {item.coppraWrappers?.length ? item.coppraWrappers.map((coppra, index) => (
                                     <CSSection key={index} title={coppra.pricingRuleName} collapsible>
                                         <div className="field-wrapper">
                                             <CSLabel label="Pricing Rule Record"/>

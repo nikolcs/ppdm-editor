@@ -47,6 +47,16 @@ export class VFRemotingService {
         });
     }
 
+    static syncInvoker = () => {
+        return VFRemotingService.invokeRemoteAction(
+            {
+                options: { escape: false, buffer: false },
+                remoteActionName: CS.PPDM.actions.syncInvoker,
+            },
+            []
+        );
+    };
+
     static getPackages = () => {
         return VFRemotingService.invokeRemoteAction(
             {
