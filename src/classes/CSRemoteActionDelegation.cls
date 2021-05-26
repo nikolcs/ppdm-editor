@@ -729,7 +729,7 @@ global with sharing class CSRemoteActionDelegation {
 
     @RemoteAction
     global static void createNewPromotion(String prgId, String prId, String cpId, Decimal amount, String type,
-            String adjustmentType, String associationType) {
+            String adjustmentType, String associationType, String activeProduct) {
 
         String pricingElId = '';
 
@@ -739,21 +739,32 @@ global with sharing class CSRemoteActionDelegation {
             // get pricing element type for recurring charge
             List<cspmb__Pricing_Element_Type__c> recurringPETL =
                 [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
-                WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
-                AND Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
-                LIMIT 1];
+                    WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                    AND Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING
+                    LIMIT 1];
 
             if(recurringPETL.size() > 0) {
                 recurringPETId = recurringPETL[0].Id;
             }
 
+            List<cspmb__Pricing_Element__c> recurringList = new List<cspmb__Pricing_Element__c>();
             // find if PE for Recurring charge exist
-            List<cspmb__Pricing_Element__c> recurringList =
-            [SELECT Id, Name
-                FROM cspmb__Pricing_Element__c
-                WHERE cspmb__commercial_product__r.Id =: cpId
-                AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
-                AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING];
+            // either CP or Add On Association
+            if(activeProduct == 'CP') {
+                recurringList =
+                    [SELECT Id, Name
+                        FROM cspmb__Pricing_Element__c
+                        WHERE cspmb__commercial_product__r.Id =: cpId
+                        AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                        AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING];
+            } else if(activeProduct == 'AddOn') {
+                recurringList =
+                    [SELECT Id, Name
+                        FROM cspmb__Pricing_Element__c
+                        WHERE cspmb__commercial_product_add_on_association__r.Id =: cpId
+                        AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_RECURRING
+                        AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_RECURRING];
+            }
 
             // get existing PE Id with recurring charge type
             if (recurringList.size() > 0) {
@@ -762,7 +773,11 @@ global with sharing class CSRemoteActionDelegation {
                 // create new pricing element
                 cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
                 newRC.cspmb__pricing_element_type__c = recurringPETId;
-                newRC.cspmb__commercial_product__c = cpId;
+                if(activeProduct == 'CP') {
+                    newRC.cspmb__commercial_product__c = cpId;
+                } else if (activeProduct == 'AddOn') {
+                    newRC.cspmb__commercial_product_add_on_association__c = cpId;
+                }
                 insert newRC;
 
                 pricingElId = newRC.Id;
@@ -783,33 +798,52 @@ global with sharing class CSRemoteActionDelegation {
         else if (type == NEW_PROMOTION_TYPE_ONE_OFF) {
             String oneOffPETId = '';
 
-            // get pricing element type for recurring charge
+            // get pricing element type for one off charge
             List<cspmb__Pricing_Element_Type__c> oneOffPETL =
-            [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
-                WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
-                AND Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
-                LIMIT 1];
+                [SELECT Id, Name FROM cspmb__Pricing_Element_Type__c
+                    WHERE cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+                    AND Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
+                    LIMIT 1];
 
             if(oneOffPETL.size() > 0) {
                 oneOffPETId = oneOffPETL[0].Id;
             }
 
-            // find if PE for One Off charge exist
-            List<cspmb__Pricing_Element__c> oneOffList =
-            [SELECT Id, Name
-                FROM cspmb__Pricing_Element__c
-                WHERE cspmb__commercial_product__r.Id =: cpId
-                AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
-                AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF];
+            List<cspmb__Pricing_Element__c> oneOffList = new List<cspmb__Pricing_Element__c>();
 
-            // get existing PE Id with recurring charge type
+            // find if PE for One Off charge exist
+            // either CP or Add On Association
+            if(activeProduct == 'CP') {
+                oneOffList = [
+                        SELECT Id, Name
+                        FROM cspmb__Pricing_Element__c
+                        WHERE cspmb__commercial_product__r.Id = :cpId
+                        AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+                        AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
+                ];
+            } else if (activeProduct == 'AddOn') {
+                oneOffList = [
+                        SELECT Id, Name
+                        FROM cspmb__Pricing_Element__c
+                        WHERE cspmb__commercial_product_add_on_association__r.Id = :cpId
+                        AND cspmb__pricing_element_type__r.cspmb__type__c = :PRICING_ELEMENT_TYPE_ONE_OFF
+                        AND cspmb__pricing_element_type__r.Name = :PRICING_ELEMENT_TYPE_NAME_ONE_OFF
+                ];
+            }
+
+            // get existing PE Id with one off charge type
             if (oneOffList.size() > 0) {
                 pricingElId = oneOffList[0].Id;
             } else {
                 // create new pricing element
                 cspmb__Pricing_Element__c newRC = new cspmb__Pricing_Element__c();
                 newRC.cspmb__pricing_element_type__c = oneOffPETId;
-                newRC.cspmb__commercial_product__c = cpId;
+                if(activeProduct == 'CP') {
+                    newRC.cspmb__commercial_product__c = cpId;
+                } else if (activeProduct == 'AddOn') {
+                    newRC.cspmb__commercial_product_add_on_association__c = cpId;
+                }
+
                 insert newRC;
 
                 pricingElId = newRC.Id;
