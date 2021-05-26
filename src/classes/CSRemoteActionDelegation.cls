@@ -99,6 +99,38 @@ global with sharing class CSRemoteActionDelegation {
         }
     }
 
+    @RemoteAction
+    global static AddOnAsocWrapper getAddOnPromotions(String cpId) {
+        List<cspmb__Pricing_Element__c> pricingElements =
+        [SELECT Id, Name,
+                cspmb__pricing_element_type__r.cspmb__type__c,
+                cspmb__commercial_product_add_on_association__r.Id,
+                cspmb__commercial_product_add_on_association__r.Name,
+                cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Id,
+                cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Name,
+            (SELECT Id, Name,
+                cspmb__one_off_adjustment__c,
+                cspmb__recurring_adjustment__c,
+                cspmb__target_price__c,
+                cspmb__association_type__c,
+                cspmb__one_off_adjustment_type__c,
+                cspmb__recurring_adjustment_type__c,
+                cspmb__pricing_rule__r.Name,
+                cspmb__pricing_rule__r.Id,
+                cspmb__pricing_rule__r.cspmb__pricing_rule_code__c,
+                cspmb__pricing_rule__r.cspmb__description__c,
+                cspmb__pricing_rule__r.cspmb__predicate_logic__c,
+                cspmb__pricing_rule__r.cspmb__context__c
+            FROM cspmb__commercial_product_pricing_rule_assocs__r)
+        FROM cspmb__Pricing_Element__c
+        WHERE cspmb__commercial_product_add_on_association__r.Id = : cpId];
+        if (pricingElements.size() > 0) {
+            return toAddOnAsocWrapperWithPromotions(pricingElements);
+        } else {
+            return toAddOnAsocWrapperWithoutPriceItem(cpId);
+        }
+    }
+
 
     global class CommercialProductWrapper {
         public Id id {get; set;}
@@ -228,6 +260,27 @@ global with sharing class CSRemoteActionDelegation {
             for (cspmb__Price_Item_Pricing_Rule_Association__c asoc : pe.cspmb__commercial_product_pricing_rule_assocs__r) {
                 CoppraWrapper c = new CoppraWrapper(asoc);
                 elem.coppraWrappers.add(c);
+            }
+            aoas.pricingElementWrappers.add(elem);
+        }
+        aoas.id = listPE[0].cspmb__commercial_product_add_on_association__r.Id;
+        aoas.name = listPE[0].cspmb__commercial_product_add_on_association__r.Name;
+        aoas.addOnID = listPE[0].cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Id;
+        aoas.addOnName = listPE[0].cspmb__commercial_product_add_on_association__r.cspmb__Add_On_Price_Item__r.Name;
+
+        return aoas;
+    }
+
+    static AddOnAsocWrapper toAddOnAsocWrapperWithPromotions(List<cspmb__Pricing_Element__c> listPE) {
+        AddOnAsocWrapper aoas = new AddOnAsocWrapper();
+
+        for(cspmb__Pricing_Element__c pe : listPE) {
+            PricingElementWrapper elem = new PricingElementWrapper(pe);
+            for (cspmb__Price_Item_Pricing_Rule_Association__c asoc : pe.cspmb__commercial_product_pricing_rule_assocs__r) {
+                if (asoc.cspmb__pricing_rule__r.Name != STARHUB_DEFAULT_PRICING_RULE) {
+                    CoppraWrapper c = new CoppraWrapper(asoc);
+                    elem.coppraWrappers.add(c);
+                }
             }
             aoas.pricingElementWrappers.add(elem);
         }
