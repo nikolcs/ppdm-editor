@@ -353,25 +353,46 @@ invokeAction = function (...args) {
                                 "recurringAdjustment": 100,
                                 "RecurringAdjustmentType": "Relative Discount",
                                 "targetPrice": "Sales"
-                            },
+                            }
+                        ],
+                        "id": "a1S4L000001A2dCUAS",
+                        "name": "PE-000049",
+                        "type": "Recurring Charge"
+                    },
+                    {
+                        "coppraWrappers": [
                             {
                                 "associationType": "Pricing change",
-                                "id": "a1N4L000000kIZXUA2",
-                                "name": "CPPRA-000105",
+                                "id": "a1N4L000000kIZmUAM",
+                                "name": "CPPRA-000109",
+                                "oneOffAdjustment": 36,
                                 "OneOffAdjustmentType": "Relative Discount",
                                 "pricingRuleCode": "STH-TV-24MTHCT-2-3-Promos",
                                 "pricingRuleContext": "Cart",
                                 "pricingRuleDescription": "Starhub TV Buy 2 Get 3",
                                 "pricingRuleName": "Starhub TV 24MTH CT Buy 2 Get 3 Rule",
                                 "pricingRulePredicateLogic": "CPPRA-000104",
-                                "recurringAdjustment": 100,
+                                "RecurringAdjustmentType": "Relative Discount",
+                                "targetPrice": "Sales"
+                            },
+                            {
+                                "associationType": "Pricing change",
+                                "id": "a1N4L000000kIZhUAM",
+                                "name": "CPPRA-000108",
+                                "oneOffAdjustment": 50,
+                                "OneOffAdjustmentType": "Relative Discount",
+                                "pricingRuleCode": "STH-TV-24MTHCT-2-3-Promos",
+                                "pricingRuleContext": "Cart",
+                                "pricingRuleDescription": "Starhub TV Buy 2 Get 3",
+                                "pricingRuleName": "Starhub TV 24MTH CT Buy 2 Get 3 Rule",
+                                "pricingRulePredicateLogic": "CPPRA-000104",
                                 "RecurringAdjustmentType": "Relative Discount",
                                 "targetPrice": "Sales"
                             }
                         ],
-                        "id": "a1S4L000001A2dCUAS",
-                        "name": "PE-000049",
-                        "type": "Recurring Charge"
+                        "id": "a1S4L000001A2qdUAC",
+                        "name": "PE-000061",
+                        "type": "One-off Charge"
                     }
                 ]
             }

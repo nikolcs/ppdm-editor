@@ -849,7 +849,7 @@ class CPGrid extends React.Component {
                 >
                     <CSModalHeader
                         title="Manage Promotions"
-                        subtitle="Product here?"
+                        subtitle={this.state.Promotions.name}
                     />
                     <CSModalBody padding="1rem 1.5rem 1rem 1.5rem" minHeight="40vh">
                         <CSButton
@@ -857,13 +857,25 @@ class CPGrid extends React.Component {
                             onClick={() => this.createNewPromotionHandler()}
                             className="create-new-promotion-btn"
                         />
-                        <CSSection title="Promotion Name" collapsible>
-                            <CSInputText label="Code" readOnly value="Summer 2020" />
-                            <CSInputText label="Discount Type" readOnly value="Summer 2020" />
-                            <div className="placeholder"></div>
-                            <CSInputText label="some field" readOnly value="Summer 2020" />
-                            <CSInputText lable="some field" readOnly value="Summer 2020" />
-                        </CSSection>
+                        {this.state.Promotions.pricingElementWrappers && this.state.Promotions.pricingElementWrappers.map((item, index) => (
+                            <React.Fragment key={index}>
+                                {item.coppraWrappers.map((coppra, index) => (
+                                    <CSSection key={index} title={coppra.pricingRuleName} collapsible>
+                                        <CSInputText label="Pricing Rule Description" readOnly value={coppra.pricingRuleDescription} />
+                                        <CSInputText label="Pricing Rule Code" readOnly value={coppra.pricingRuleCode} />
+                                        <CSInputText label="Association Type" readOnly value={coppra.associationType} />
+                                        <CSInputText label="Pricing Rule Context" readOnly value={coppra.pricingRuleContext} />
+                                        <CSInputText label="Target Price" readOnly value={coppra.targetPrice} />
+                                        { item.type === 'Recurring Charge' &&
+                                            <CSInputText label="Recurring Adjustment" readOnly value={coppra.recurringAdjustment} />
+                                        }
+                                        { item.type === 'One-off Charge' &&
+                                            <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
+                                        }
+                                    </CSSection>
+                                ))}
+                            </React.Fragment>
+                        ))}
                     </CSModalBody>
 
                     <CSModalFooter align="right">
