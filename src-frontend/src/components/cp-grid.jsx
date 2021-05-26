@@ -743,7 +743,7 @@ class CPGrid extends React.Component {
                 }
                 <div className={this.state.activeTab === 'PLM' ? 'plm-wrapper' : 'plm-wrapper hidden'} id="lightning"></div>
                 {this.state.activeTab === 'CPs' &&
-                    <div className="table-wrapper">
+                    <div className="ppdm-table-wrapper">
                         <CSTable>
                             {/* COMMERCIAL PRODUCT TABLE */}
                             <CSTableHeader>
@@ -853,7 +853,7 @@ class CPGrid extends React.Component {
                     </div>
                 }
                 {this.state.activeTab === 'Packages' &&
-                    <div className="table-wrapper">
+                    <div className="ppdm-table-wrapper">
                         <CSTable>
                             {/* PACKAGES WITH CPs TABLE */}
                             <CSTableHeader>
@@ -1072,7 +1072,7 @@ class CPGrid extends React.Component {
                                 <option>Promotional item</option>
                             </CSSelect>
                             <CSSelect
-                                label="X Adjustment Type" // add literlas, ovisno o selectu iznad
+                                label={`${this.state.newPromotionPricingType === 'Recurring Charge' ? 'Recurring' : 'One Off'} Adjustment Type`}
                                 value={this.state.newPromotionAdjustmentType}
                                 onChange={option => this.onChangeNewPromotionAdjustmentType(option)}
                             >
