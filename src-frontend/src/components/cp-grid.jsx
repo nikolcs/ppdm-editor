@@ -982,14 +982,14 @@ class CPGrid extends React.Component {
                                         <div className="placeholder"></div>
                                         { item.type === 'Recurring Charge' &&
                                             <>
-                                                <CSInputText label="Recurring Adjustment" readOnly value={coppra.recurringAdjustment} />
                                                 <CSInputText label="Recurring Adjustment Type" readOnly value={coppra.RecurringAdjustmentType} />
+                                                <CSInputText label="Recurring Adjustment" readOnly value={coppra.recurringAdjustment} />
                                             </>
                                         }
                                         { item.type === 'One-off Charge' &&
                                             <>
-                                                <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
                                                 <CSInputText label="One Off Adjustment Type" readOnly value={coppra.OneOffAdjustmentType} />
+                                                <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
                                             </>
                                         }
 
