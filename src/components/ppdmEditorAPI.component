@@ -16,6 +16,7 @@
                 getPricingRuleGroups: '{!$RemoteAction.CSRemoteActionDelegation.getPricingRuleGroups}',
                 getCommercialProduct: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProduct}',
                 getCommercialProductPromotions: '{!$RemoteAction.CSRemoteActionDelegation.getCommercialProductPromotions}',
+                getAddOnPromotions: '{!$RemoteAction.CSRemoteActionDelegation.getAddOnPromotions}',
                 getAddOn: '{!$RemoteAction.CSRemoteActionDelegation.getAddOn}',
                 getCPAOAssociation: '{!$RemoteAction.CSRemoteActionDelegation.getCPAOAssociation}',
                 updateRecurringPricing: '{!$RemoteAction.CSRemoteActionDelegation.updateRecurringPricing}',
