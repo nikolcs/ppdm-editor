@@ -800,12 +800,6 @@ class CPGrid extends React.Component {
                         value={recurring ? Number(recurring / 1.07).toFixed(2) : '0'}
                     />
                     <div className="dropdown-footer">
-                        { this.state.chargesSaving &&
-                            <CSSpinner color="brand" size="small" inline />
-                        }
-                        { !this.state.chargesSaving && this.state.showSuccessIndicator &&
-                            <CSIcon className="success-icon" name="success" color="#009540" />
-                        }
                         <CSButton
                             label="Save"
                             btnStyle="brand"
