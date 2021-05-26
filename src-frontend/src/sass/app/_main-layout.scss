@@ -21,11 +21,13 @@ html {
             height: 100%;
             min-height: calc(100vh - 1px);
             /* OVERRIDE PLM STYLES  --- check so it doesn't apply on plm */
-            .cs-input-text-wrapper .cs-input-text[read-only]:focus {
-                box-shadow: 0 0 3px #0070d2 !important;
-            }
-            .cs-modal input, .cs-modal select, .cs-modal input, .cs-modal select {
-                height: 2rem !important;
+            .new-promotion-modal, .manage-promotions-modal, .create-new-prg-modal {
+                .cs-input-text-wrapper .cs-input-text[read-only]:focus {
+                    box-shadow: 0 0 3px #0070d2 !important;
+                }
+                input, select {
+                    height: 2rem !important;
+                }
             }
             .demo-main-header.cs-main-header {
                 height: 4rem;

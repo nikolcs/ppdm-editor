@@ -19,6 +19,7 @@ import {
     CSLookup,
     CSTabGroup,
     CSTab, CSSpinner,
+    CSSelect, CSOption
 } from '@cloudsense/cs-ui-components';
 
 import {VFRemotingService} from '../remote'
@@ -54,9 +55,17 @@ class CPGrid extends React.Component {
         detailsRecurringCharge: '',
         detailsOneOffCharge: '',
 
-        chargesSaving: false,
+        pricingRuleGroupLookup: {},
+        newPromotionPricingRuleGroup: '',
+        newPromotionPricingRule: '',
+        newPromotionCode: '',
 
-        pricingRuleGroupLookup: {}
+        newPRGName: '',
+        newPRGCode: '',
+        newPRGPriority: '',
+        newPRGCompoundingType: '',
+
+        chargesSaving: false
     };
 
     handleTabClick = (tabName) => {
@@ -92,6 +101,7 @@ class CPGrid extends React.Component {
         }
     }
 
+
     handleInputOnChange = (event) => {
         this.setState({ detailsName: event.target.value});
     }
@@ -100,6 +110,54 @@ class CPGrid extends React.Component {
     }
     onChangeOneOff = (event) => {
         this.setState({ detailsOneOffCharge: event.target.value});
+    }
+
+
+    /* CREATE NEW PROMOTION ONCHANGE HANDLERS */
+
+
+    onChangeLookup = (result) => {
+        this.setState({ newPromotionPricingRuleGroup: result});
+        console.log(this.state.newPromotionPricingRuleGroup);
+    }
+    onChangeNewPromotionPricingRule = (event) => {
+        this.setState({ newPromotionPricingRule: event.target.value});
+    }
+    onChangeNewPromotionCode = (event) => {
+        this.setState({ newPromotionCode: event.target.value});
+    }
+
+    /* CREATE NEW PRICE GROUP RULE ONCHANGE HANDLERS */
+    onChangeNewPRGName = (event) => {
+        this.setState({ newPRGName: event.target.value});
+    }
+    onChangeNewPRGCode = (event) => {
+        this.setState({ newPRGCode: event.target.value});
+    }
+    onChangeNewPRGPriority = (event) => {
+        this.setState({ newPRGPriority: event.target.value});
+    }
+    onChangeNewPRGCompoundingType = (option) => {
+        this.setState({ newPRGCompoundingType: option});
+    }
+
+    closeNewPRGModal = () => {
+        this.setState({
+            showCreateNewPRG: false,
+            newPRGName: '',
+            newPRGCode: '',
+            newPRGPriority: '',
+            newPRGCompoundingType: ''
+        })
+    }
+
+    prepopulateCreateNewPriceGroupRule = () => {
+        this.setState({
+            newPRGName: 'Huawei Spring 20%',
+            newPRGCode: 'SPRING20',
+            newPRGPriority: '500',
+            newPRGCompoundingType: 'Inclusive'
+        });
     }
 
     openModalManagePromotions = () => {
@@ -347,42 +405,6 @@ class CPGrid extends React.Component {
     }
 
     render() {
-        const sampleLookup = {
-            columns: [
-                {key: 'Account', label: 'Account'},
-                {key: 'Industry', label: 'Industry'}
-            ],
-            data: [
-                {Id: 1, Account: 'Acme', Industry: 'Manufacturing'},
-                {Id: 2, Account: 'Global Media', Industry: 'Industry'},
-                {Id: 3, Account: 'Salesforce', Industry: 'Software'},
-                {Id: 4, Account: 'Elisa', Industry: 'Telecommunications'},
-                {Id: 5, Account: 'Facebook', Industry: 'Social media'},
-                {Id: 6, Account: 'Google', Industry: 'Technology'},
-                {Id: 7, Account: 'Spotify', Industry: 'Streaming and media'},
-                {Id: 8, Account: 'British Gas', Industry: 'Energy'},
-                {Id: 9, Account: 'Columbia Pictures', Industry: 'Film'},
-                {Id: 10, Account: 'Rimac', Industry: 'Car manufacturing'},
-                {Id: 11, Account: 'News Corp', Industry: 'Mass media'},
-                {Id: 12, Account: 'Telstra', Industry: 'Telecommunications'},
-                {Id: 13, Account: 'Netflix', Industry: 'Production'},
-                {Id: 14, Account: 'Instagram', Industry: 'Social media'},
-                {Id: 15, Account: 'Vodafone', Industry: 'Telecommunications'},
-                {Id: 16, Account: 'Apple', Industry: 'Software'},
-                {Id: 17, Account: 'Amazon', Industry: 'E-commerce'},
-                {Id: 18, Account: 'Ikea', Industry: 'Furniture retail'},
-                {Id: 19, Account: 'Microsoft', Industry: 'Software'},
-                {Id: 20, Account: 'Visa', Industry: 'Finance'},
-                {Id: 21, Account: 'IBM', Industry: 'Software'},
-                {Id: 22, Account: 'eBay', Industry: 'E-commerce'},
-                {Id: 23, Account: 'Oracle', Industry: 'Software'},
-                {Id: 24, Account: 'Tesla', Industry: 'Car manufacturing'},
-                {Id: 25, Account: 'YouTube', Industry: 'Streaming and media'},
-                {Id: 26, Account: 'O2', Industry: 'Telecommunications'},
-                {Id: 27, Account: 'Warner Bros. Pictures', Industry: 'Film'}
-            ]
-        };
-
         const handleOnPackageClick = (id) => {
             VFRemotingService.getCommercialProduct(id).then(
                 result => {
@@ -921,6 +943,7 @@ class CPGrid extends React.Component {
                 >
                     <CSModalHeader
                         title="Create New Promotion"
+                        subtitle={this.state.Promotions.name}
                     />
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
@@ -931,10 +954,11 @@ class CPGrid extends React.Component {
                                         fieldToBeDisplayed="Account"
                                         label="Account"
                                         labelHidden
-                                        lookupColumns={sampleLookup.columns}
-                                        lookupOptions={sampleLookup.data}
+                                        lookupColumns={this.state.pricingRuleGroupLookup ? this.state.pricingRuleGroupLookup.column : ''}
+                                        lookupOptions={this.state.pricingRuleGroupLookup ? this.state.pricingRuleGroupLookup.data : ''}
                                         borderRadius="0.25rem 0 0 0.25rem"
                                         mode="client"
+                                        onSelectChange={lookupResult => this.onChangeLookup(lookupResult)}
                                     />
                                     <CSButton
                                         className="open-modal-btn"
@@ -945,7 +969,13 @@ class CPGrid extends React.Component {
                                 </div>
                             </div>
                             <CSInputText value="100 test" label="Pricing Rule" readOnly />
-                            <CSInputText label="Code"/>
+                            <CSInputText label="Amount" />
+                            <CSSelect label="Type">
+                                <option>Recurring Charge</option>
+                                <option>One Off Charge</option>
+                            </CSSelect>
+                            <CSInputText label="Priority" readOnly />
+                            <CSInputText label="Code" readOnly value={this.state.newPromotionPricingRuleGroup.cspmb__pricing_rule_group_code__c} />
                         </div>
                     </CSModalBody>
                     <CSModalFooter align="right">
@@ -962,7 +992,7 @@ class CPGrid extends React.Component {
                     </CSModalFooter>
                 </CSModal>
 
-                {/* CREATE NEW PRICING GROUP */}
+                {/* CREATE NEW PRICING RULE GROUP */}
                 <CSModal
                     visible={this.state.showCreateNewPRG}
                     size="xsmall"
@@ -981,21 +1011,25 @@ class CPGrid extends React.Component {
                             size="small"
                             btnType="transparent"
                             btnStyle="brand"
+                            onClick={this.prepopulateCreateNewPriceGroupRule}
                         />
-                        <CSInputText label="Pricing Rule Group Name"/>
-                        <CSInputText label="Pricing Rule Group Code"/>
-                        <CSInputText label="Priority"/>
-                        <CSInputText label="Rule Group Compounding Type"/>
+                        <CSInputText label="Pricing Rule Group Name" onChange={this.onChangeNewPRGName} value={this.state.newPRGName} />
+                        <CSInputText label="Pricing Rule Group Code" onChange={this.onChangeNewPRGCode} value={this.state.newPRGCode} />
+                        <CSInputText label="Priority" onChange={this.onChangeNewPRGPriority} value={this.state.newPRGPriority} />
+                        <CSSelect label="Rule Group Compounding Type" onChange={option => this.onChangeNewPRGCompoundingType(option)} value={this.state.newPRGCompoundingType} >
+                            <option>Inclusive</option>
+                            <option>Exclusive</option>
+                        </CSSelect>
                     </CSModalBody>
                     <CSModalFooter align="right">
                         <CSButton
                             label="Cancel"
-                            onClick={() => this.setState({showCreateNewPRG: false})}
+                            onClick={this.closeNewPRGModal}
                         />
                         <CSButton
                             label="Save"
                             btnStyle="brand"
-                            onClick={() => this.setState({showCreateNewPRG: false})}
+                            onClick={this.closeNewPRGModal}
                         />
                     </CSModalFooter>
                 </CSModal>
