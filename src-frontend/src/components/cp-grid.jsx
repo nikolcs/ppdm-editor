@@ -158,39 +158,9 @@ class CPGrid extends React.Component {
                 console.log("createNewPromotion in saveNewPromotion")
                 console.log(result);
                 this.closeNewPromotionModal();
+                this.handleOnPromotionOpen(this.state.Promotions.id);
+
             })
-
-        // this.setState({chargesSaving : true});
-        // if (this.state.detailsRecurringCharge) {
-        //     const updateRecurring = VFRemotingService.updateRecurringPricing(this.state.detailsId, this.state.detailsRecurringCharge || 0).then();
-        //     promises.push(updateRecurring);
-        // }
-        // if (this.state.detailsOneOffCharge) {
-        //     const updateOneOff = VFRemotingService.updateOneOffPricing(this.state.detailsId, this.state.detailsOneOffCharge || 0).then();
-        //     promises.push(updateOneOff);
-        // }
-        //
-        // Promise.all(promises).then( () => {
-        //     VFRemotingService.getCPs().then(
-        //         result => {
-        //             this.setState({CPs: result, chargesSaving: false});
-        //             console.log("getCPs");
-        //             console.log(result);
-        //             setTimeout(() => {
-        //                 this.setState( {
-        //                         showSuccessIndicator: true
-        //                     }, () =>
-        //                         setTimeout( () => {
-        //                             this.setState({
-        //                                 showSuccessIndicator: false
-        //                             })
-        //                         }, 750)
-        //                 )
-        //             }, 1);
-        //         }
-        //     )
-        // })
-
     }
 
     /* CREATE NEW PRICE GROUP RULE ONCHANGE HANDLERS */
