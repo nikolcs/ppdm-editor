@@ -11,6 +11,11 @@ global with sharing class CSRemoteActionDelegation {
     static final Decimal TAX = 1; // 1 for now, leaving tax variable if something changes in the meantime
 
     @RemoteAction
+    global static void syncInvoker() {
+        PRESyncInvoker.getLastSynchronisations();
+    }
+
+    @RemoteAction
     global static CommercialProductWrapper getCommercialProduct(String cpId) {
         List<cspmb__Pricing_Element__c> pricingElements =
             [SELECT Id, Name,
