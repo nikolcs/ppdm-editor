@@ -986,8 +986,6 @@ class CPGrid extends React.Component {
                                         { item.type === 'One-off Charge' &&
                                             <CSInputText label="One Off Adjustment" readOnly value={coppra.oneOffAdjustment} />
                                         }
-                                        <CSInputText label="Target Price" readOnly value={coppra.targetPrice} />
-                                        <CSInputText label="Pricing Rule Context" readOnly value={coppra.pricingRuleContext} />
                                     </CSSection>
                                 ))}
                             </React.Fragment>

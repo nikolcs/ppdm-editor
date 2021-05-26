@@ -20,7 +20,7 @@ class Header extends React.Component {
                         <CSIcon name="lead" origin="cs" frame color="#3cdbc0" />
                     </CSMainHeaderIcon>
                     <CSMainHeaderLeft
-                        title="Pricing service ppdm support component"
+                        title="Product and Pricing Manager"
                     />
                     <CSMainHeaderRight>
                         <CSButton
