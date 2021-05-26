@@ -344,10 +344,10 @@ class CPGrid extends React.Component {
         }
 
         Promise.all(promises).then( () => {
-            VFRemotingService.getCPs().then(
+            VFRemotingService.getPackages().then(
                 result => {
-                    this.setState({CPs: result, chargesSaving: false});
-                    console.log("getCPs");
+                    this.setState({Packages: result, chargesSaving: false});
+                    console.log("getPackages");
                     console.log(result);
                     setTimeout(() => {
                         this.setState( {
@@ -1117,10 +1117,10 @@ class CPGrid extends React.Component {
                                                                 <span>{cpAssociation.cspmb__member_commercial_product__r.Rating__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-OneOff">
-                                                                <span>{cpAssociation.Displayed_Recurring_Price__c}</span>
+                                                                <span>{cpAssociation.Displayed_One_Off_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Recurring">
-                                                                <span>{cpAssociation.Displayed_One_Off_Price__c}</span>
+                                                                <span>{cpAssociation.Displayed_Recurring_Price__c}</span>
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Actions">
                                                                 {chargesPackageMemberDropdown(cpAssociation.Id)}
