@@ -154,11 +154,13 @@ class CPGrid extends React.Component {
             newPromotionPricingType: 'Recurring Charge',
             newPromotionPricingRule: '',
             newPromotionPricingRuleId: '',
+            newPromotionPricingPriority: '',
             newPromotionAdjustmentType: 'Absolute Discount',
             newPromotionAssociationType: 'Pricing change',
         })
     }
 
+    /* used for CP and Addon new promotion modal save */
     saveNewPromotion = () => {
         console.log("saveNewPromotion");
         VFRemotingService.createNewPromotion(
@@ -168,12 +170,17 @@ class CPGrid extends React.Component {
             this.state.newPromotionPricingAmount,
             this.state.newPromotionPricingType,
             this.state.newPromotionAdjustmentType,
-            this.state.newPromotionAssociationType).then(
+            this.state.newPromotionAssociationType,
+            this.state.activeProduct).then(
             result => {
                 console.log("createNewPromotion in saveNewPromotion")
                 console.log(result);
+                if (this.state.activeProduct === 'CP') {
+                    this.handleOnPromotionOpen(this.state.Promotions.id);
+                } else if (this.state.activeProduct === 'AddOn') {
+                    this.handleOnAddonPromotionOpen(this.state.Promotions.id);
+                }
                 this.closeNewPromotionModal();
-                this.handleOnPromotionOpen(this.state.Promotions.id);
             })
     }
 
@@ -387,7 +394,10 @@ class CPGrid extends React.Component {
     handleOnPromotionOpen = (id) => {
         VFRemotingService.getCommercialProductPromotions(id).then(
             result => {
-                this.setState({Promotions: result});
+                this.setState({
+                    Promotions: result,
+                    activeProduct: 'CP'
+                });
                 console.log("getCommercialProductPromotions in handleOnPromotionOpen")
                 console.log(result);
 
@@ -403,7 +413,10 @@ class CPGrid extends React.Component {
     handleOnAddonPromotionOpen = (id) => {
         VFRemotingService.getAddOnPromotions(id).then(
             result => {
-                this.setState({Promotions: result});
+                this.setState({
+                    Promotions: result,
+                    activeProduct: 'AddOn'
+                });
                 console.log("getAddonPromotions in handleOnAddonPromotionOpen")
                 console.log(result);
 
@@ -731,7 +744,7 @@ class CPGrid extends React.Component {
 
         return (
             <>
-                <CSTabGroup variant="large">
+                <CSTabGroup variant="large" className="ppdm-tabs">
                     <CSTab
                         name="PLM"
                         onClick={() => this.handleTabClick('PLM')}
@@ -785,7 +798,7 @@ class CPGrid extends React.Component {
                                 <CSTableCell text="Description" grow={4} className="col-Description"/>
                                 <CSTableCell text="Commercial Product Code" grow={2} className="col-CommercialProductCode"/>
                                 <CSTableCell text="Rating" className="col-Rating"/>
-                                <CSTableCell text="Displayed One off" className="col-OneOff"/>
+                                <CSTableCell text="Displayed One Off" className="col-OneOff"/>
                                 <CSTableCell text="Displayed Recurring" className="col-Recurring"/>
                                 <CSTableCell text="Actions" className="col-Actions"/>
                             </CSTableHeader>
@@ -913,7 +926,7 @@ class CPGrid extends React.Component {
                                 <CSTableCell text="Description" grow={4} className="col-Description" />
                                 <CSTableCell text="Commercial Product Code" grow={2}  className="col-CommercialProductCode" />
                                 <CSTableCell text="Rating" className="col-Rating" />
-                                <CSTableCell text="Displayed One off"  className="col-OneOff" />
+                                <CSTableCell text="Displayed One Off"  className="col-OneOff" />
                                 <CSTableCell text="Displayed Recurring"  className="col-Recurring" />
                                 <CSTableCell text="Actions" className="col-Actions" />
                             </CSTableHeader>
@@ -1036,7 +1049,7 @@ class CPGrid extends React.Component {
                 >
                     <CSModalHeader
                         title="Manage Promotions"
-                        subtitle={this.state.Promotions.name}
+                        subtitle={this.state.activeProduct === 'AddOn' ? `${this.state.Promotions.name} • ${this.state.Promotions.addOnName}` : this.state.Promotions.name}
                     />
                     <CSModalBody padding="1rem 1.5rem 1rem 1.5rem" minHeight="40vh">
                         <CSButton
@@ -1093,21 +1106,21 @@ class CPGrid extends React.Component {
                     size="small"
                     animated
                     closeButton
-                    onClose={() => this.setState({showNewPromotionModal: false})}
+                    onClose={() => this.closeNewPromotionModal()}
                     className="new-promotion-modal"
                 >
                     <CSModalHeader
                         title="Create New Promotion"
-                        subtitle={this.state.Promotions.name}
+                        subtitle={this.state.activeProduct === 'AddOn' ? `${this.state.Promotions.name} • ${this.state.Promotions.addOnName}` : this.state.Promotions.name}
                     />
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         <div className="column-wrapper">
                             <div className="field-wrapper">
-                                <label>Pricing Rule Group</label>
+                                <CSLabel required label="Pricing Rule Group" />
                                 <div className="lookup-btn-wrapper">
                                     <CSLookup
                                         fieldToBeDisplayed="Name"
-                                        label="PRG"
+                                        label="Pricing Rule Group"
                                         labelHidden
                                         className="ppdm-lookup"
                                         value={this.state.newPromotionPricingRuleGroup.Id}
@@ -1116,6 +1129,7 @@ class CPGrid extends React.Component {
                                         borderRadius="0.25rem 0 0 0.25rem"
                                         mode="client"
                                         onSelectChange={lookupResult => this.onChangeLookup(lookupResult)}
+                                        required
                                     />
                                     <CSButton
                                         className="open-modal-btn"
@@ -1147,7 +1161,7 @@ class CPGrid extends React.Component {
                                 <option>Price Override</option>
                                 <option>Initial Price</option>
                             </CSSelect>
-                            <CSInputText label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
+                            <CSInputText required label="Amount" onChange={this.onChangeNewPromotionPricingAmount} value={this.state.newPromotionPricingAmount} />
 
                         </div>
                     </CSModalBody>
@@ -1158,6 +1172,7 @@ class CPGrid extends React.Component {
                         />
                         <CSButton
                             label="Save"
+                            disabled={!this.state.newPromotionPricingAmount || !this.state.newPromotionPricingRuleGroup}
                             btnStyle="brand"
                             onClick={this.saveNewPromotion}
                         />
@@ -1173,7 +1188,7 @@ class CPGrid extends React.Component {
                     onClose={this.closeNewPRGModal}
                     className="create-new-prg-modal"
                 >
-                    <CSModalHeader title="Create New Price Group Rule"/>
+                    <CSModalHeader title="Create New Price Rule Group"/>
                     <CSModalBody padding="1.5rem 1.5rem 1rem 1.5rem">
                         {/*<CSButton*/}
                         {/*    className="prepopulate-btn"*/}
@@ -1185,8 +1200,8 @@ class CPGrid extends React.Component {
                         {/*    btnStyle="brand"*/}
                         {/*    onClick={this.prepopulateCreateNewPriceGroupRule}*/}
                         {/*/>*/}
-                        <CSInputText label="Pricing Rule Group Name" onChange={this.onChangeNewPRGName} value={this.state.newPRGName} />
-                        <CSInputText label="Pricing Rule Group Code" onChange={this.onChangeNewPRGCode} value={this.state.newPRGCode} />
+                        <CSInputText required label="Pricing Rule Group Name" onChange={this.onChangeNewPRGName} value={this.state.newPRGName} />
+                        <CSInputText required label="Pricing Rule Group Code" onChange={this.onChangeNewPRGCode} value={this.state.newPRGCode} />
                         <CSInputText label="Priority" onChange={this.onChangeNewPRGPriority} value={this.state.newPRGPriority} />
                         <CSInputText label="Description" onChange={this.onChangenewPRGDescription} value={this.state.newPRGDescription} />
                     </CSModalBody>
@@ -1198,6 +1213,7 @@ class CPGrid extends React.Component {
                         <CSButton
                             label="Save"
                             btnStyle="brand"
+                            disabled={!this.state.newPRGName || !this.state.newPRGCode}
                             onClick={this.saveNewPRG}
                         />
                     </CSModalFooter>

@@ -94,6 +94,12 @@
                 }
                 .cs-btn {
                     margin-left: -2px;
+                    &::after {
+                        border-radius: 0 0.25rem 0.25rem 0 !important;
+                    }
+                }
+                .cs-lookup-wrapper .cs-lookup-input-wrapper .cs-selected-input-option {
+                    padding: 0 1.75rem 0 2rem;
                 }
             }
         }

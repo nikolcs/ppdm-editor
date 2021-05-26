@@ -42,12 +42,16 @@ html {
 
 
 
-.cs-tab-group .cs-tab-wrapper {
+.ppdm-tabs.cs-tab-group .cs-tab-wrapper {
+    margin-top: -1px;
     &.cs-tab-wrapper-large {
         border-top: none;
     }
-    .cs-tab .cs-tab-name {
-        line-height: initial;
+    .cs-tab {
+        font-weight: normal;
+        .cs-tab-name {
+            line-height: initial;
+        }
     }
 }
 

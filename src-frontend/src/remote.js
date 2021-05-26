@@ -186,13 +186,13 @@ export class VFRemotingService {
         );
     };
 
-    static createNewPromotion = (prgId, prId, cpId, amount, type, adjustmentType, associationType) => {
+    static createNewPromotion = (prgId, prId, cpId, amount, type, adjustmentType, associationType, activeProduct) => {
         return VFRemotingService.invokeRemoteAction(
             {
                 options: { escape: false, buffer: false },
                 remoteActionName: CS.PPDM.actions.createNewPromotion,
             },
-            [prgId, prId, cpId, amount, type, adjustmentType, associationType]
+            [prgId, prId, cpId, amount, type, adjustmentType, associationType, activeProduct]
         );
     };
 
