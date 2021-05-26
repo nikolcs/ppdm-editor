@@ -1017,14 +1017,14 @@ class CPGrid extends React.Component {
                                                             </CSTableCell>
                                                             <CSTableCell className="col-Actions">
                                                                 {chargesDropdownMock(cpAssociation.cspmb__member_commercial_product__r.Displayed_One_Off_Price__c, cpAssociation.cspmb__member_commercial_product__r.Displayed_Recurring_Price__c)}
-                                                                <CSButton
-                                                                    label="Manage Promotions"
-                                                                    className="manage-promotions"
-                                                                    labelHidden
-                                                                    iconName="tag"
-                                                                    iconOrigin="cs"
-                                                                    onClick={() => this.handleBtnPromotions()}
-                                                                />
+                                                                {/*<CSButton*/}
+                                                                {/*    label="Manage Promotions"*/}
+                                                                {/*    className="manage-promotions"*/}
+                                                                {/*    labelHidden*/}
+                                                                {/*    iconName="tag"*/}
+                                                                {/*    iconOrigin="cs"*/}
+                                                                {/*    onClick={() => this.handleBtnPromotions()}*/}
+                                                                {/*/>*/}
                                                             </CSTableCell>
                                                         </CSTableRow>
                                                     )) : null
