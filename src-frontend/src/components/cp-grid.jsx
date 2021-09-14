@@ -39,7 +39,7 @@ class CPGrid extends React.Component {
 
         searchTerm: '',
         activeTab: 'CPs',
-        showAddons: true,
+        showAddons: false,
         showCPs: true,
 
         Packages: '',
@@ -72,7 +72,9 @@ class CPGrid extends React.Component {
         newPRGPriority: '',
         newPRGDescription: '',
 
-        chargesSaving: false
+        chargesSaving: false,
+
+        showPLM: false
     };
 
     handleTabClick = (tabName) => {
@@ -596,14 +598,14 @@ class CPGrid extends React.Component {
                         result.pricingElementWrappers?.map((pe) => {
                             if (pe.type === 'One-off Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         oneOffHelper = coppra.oneOffAdjustment;
                                     }
                                 })
                             }
                             if (pe.type === 'Recurring Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         recurringHelper = coppra.recurringAdjustment;
                                     }
                                 })
@@ -633,14 +635,14 @@ class CPGrid extends React.Component {
                         result.pricingElementWrappers?.map((pe) => {
                             if (pe.type === 'One-off Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         oneOffHelper = coppra.oneOffAdjustment;
                                     }
                                 })
                             }
                             if (pe.type === 'Recurring Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         recurringHelper = coppra.recurringAdjustment;
                                     }
                                 })
@@ -670,14 +672,14 @@ class CPGrid extends React.Component {
                         result.pricingElementWrappers?.map((pe) => {
                             if (pe.type === 'One-off Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         oneOffHelper = coppra.oneOffAdjustment;
                                     }
                                 })
                             }
                             if (pe.type === 'Recurring Charge') {
                                 pe.coppraWrappers?.map((coppra) => {
-                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Default Pricing Rule for Starhub') {
+                                    if (coppra.targetPrice === 'List' && coppra.pricingRuleName === 'Quadplay Pricing rule') {
                                         recurringHelper = coppra.recurringAdjustment;
                                     }
                                 })
@@ -846,11 +848,13 @@ class CPGrid extends React.Component {
         return (
             <>
                 <CSTabGroup variant="large" className="ppdm-tabs">
-                    <CSTab
-                        name="PLM"
-                        onClick={() => this.handleTabClick('PLM')}
-                        active={this.state.activeTab === 'PLM'}
-                    />
+                    {this.state.showPLM &&
+                        <CSTab
+                            name="PLM"
+                            onClick={() => this.handleTabClick('PLM')}
+                            active={this.state.activeTab === 'PLM'}
+                        />
+                    }
                     <CSTab
                         name="Commercial Products"
                         onClick={() => this.handleTabClick('CPs')}

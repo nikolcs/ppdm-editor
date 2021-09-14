@@ -6,7 +6,7 @@ global with sharing class CSRemoteActionDelegation {
     static final String PRICING_ELEMENT_TYPE_NAME_RECURRING = 'Recurring Charge';
     static final String NEW_PROMOTION_TYPE_RECURRING = 'Recurring Charge';
     static final String NEW_PROMOTION_TYPE_ONE_OFF = 'One Off Charge';
-    static final String STARHUB_DEFAULT_PRICING_RULE = 'Default Pricing Rule for Starhub';
+    static final String STARHUB_DEFAULT_PRICING_RULE = 'Quadplay Pricing rule';
 
     static final Decimal TAX = 1; // 1 for now, leaving tax variable if something changes in the meantime
 
@@ -450,7 +450,7 @@ global with sharing class CSRemoteActionDelegation {
                 FROM cspmb__Price_Item_Add_On_Price_Item_Association__r)
                 FROM cspmb__Price_Item__c
                 WHERE cspmb__Role__c = 'Commercial Product'
-                AND cspmb__Price_Item_Code__c LIKE 'STH%' // !STARHUB
+                AND cspmb__Price_Item_Code__c LIKE 'QPM%' // !STARHUB
             ];
         if(cps!=null && !cps.isEmpty()){
             return cps;
@@ -1134,4 +1134,3 @@ global with sharing class CSRemoteActionDelegation {
         return ;
     }
 }
-
